@@ -1,0 +1,29 @@
+﻿html, body { height: 100%; min-height: 100%; font: 14px/1.5 'Microsoft YaHei',arial,tahoma,\5b8b\4f53,sans-serif; }
+#loading { display: none; text-align: center; position: absolute; z-index: 999999999; left: 0; top: 0; width: 100%; height: 100%; padding-top: 20%; background-color: #fff; filter: alpha(opacity=90); -moz-opacity: 0.9; opacity: 0.9; }
+/*adminlte*/
+.small-box-footer a { color: white !important; }
+    .small-box-footer a:hover, .small-box-footer a:active, .small-box-footer a:focus { color: #333 !important; }
+.control-sidebar-menu .form-control { border: 0; }
+.skin-blue .sidebar-light .sidebar-menu > li > a { color: #333; }
+.skin-blue .sidebar-light .sidebar-menu > li:hover > a, .skin-blue .sidebar-light .sidebar-menu > li.active > a { background: none; color: #0073b7; border-bottom: 1px solid #eee; border-top: 1px solid #eee; }
+.skin-blue .sidebar-light .sidebar-menu > li > .treeview-menu { background: none; color: #333; }
+.skin-blue .sidebar-light .treeview-menu > li.active > a, .skin-blue .sidebar-light .treeview-menu > li > a:hover { color: #0073b7; }
+.skin-blue .sidebar-light .treeview-menu > li > a { color: #666; }
+.todo-list > li.active { border-left: 2px solid #0073b7; border-radius: 0; color: #0073b7; }
+.todo-list > li .text { font-weight: normal !important; }
+/*adminlte end*
+/*jquery.validate*/
+input.error { border: 1px dashed red; }
+label.error { color: red; font-size: 12px; margin-left: 4px; padding-left: 20px; background: url("/content/images/close_16.png") left no-repeat; }
+/*jquery.validate end*/
+/*base*/
+.umar-t1 { margin-top: 2px; }
+.umar-t2 { margin-top: 4px; }
+/*base end*/
+.datepicker { z-index: 999999 !important; }
+.dataTables_wrapper.no-footer .dataTables_scrollBody { border-bottom: 1px solid #ddd !important; }
+.tooltip { text-wrap: normal; word-break: keep-all; }
+.validation-summary-errors { color: #a94442; }
+.input-validation-error { border: 1px solid #a94442; }
+.field-validation-error { color: #a94442; }
+    .field-validation-error:before { content: "ㄨ"; }

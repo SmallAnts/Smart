@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link href="/content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="/content/font-awesome.min.css" rel="stylesheet" />
+    @RenderSection("head", required: false)
+    <link href="/content/adminlte/css/adminlte.min.css" rel="stylesheet">
+    <link href="/content/adminlte/css/skins/skin-blue.min.css" rel="stylesheet" />
+    <link href="/content/sweetalert.css" rel="stylesheet" />
+    <link href="/content/site.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <script src="/scripts/html5shiv.js"></script>
+    <script src="/scripts/respond.min.js"></script>
+    <![endif]-->
+    <!--[if !IE]><!-->
+    <!--<![endif]-->
+    <script src="/scripts/jquery-2.1.4.min.js"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini @ViewBag.BodyClass">
+    @if (IsSectionDefined("header") || IsSectionDefined("footer"))
+    {
+        <div class="wrapper">
+            @if (IsSectionDefined("header"))
+            {
+                @RenderSection("header", required: false)
+            }
+            @if (ViewBag.ShowLeftSide != false)
+            {
+                @Html.Partial("_LeftSide")
+            }
+            @if (ViewBag.ShowRightSide != false)
+            {
+                @Html.Action("RightSide", "home")
+            }
+            <div class="content-wrapper">
+                @RenderBody()
+            </div>
+            @if (IsSectionDefined("footer"))
+            {
+                @RenderSection("footer", required: false)
+            }
+        </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
+    <div class="loading" id="loading">
+        <img src="/content/images/loading.gif" />
+    </div>
+    <script src="/scripts/jquery.slimscroll.min.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+    <script src="/scripts/app.min.js"></script>
+    <script src="/scripts/sweetalert.min.js"></script>
+    <script src="/scripts/common.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
