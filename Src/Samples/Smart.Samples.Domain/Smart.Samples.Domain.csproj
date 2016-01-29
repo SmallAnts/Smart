@@ -62,12 +62,6 @@
     <Compile Include="Validators\UserInfoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Models.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Models.txt</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\Framework\Smart.Core\Smart.Core.csproj">
       <Project>{0400237a-7a93-4bed-b788-bd54d7e132c0}</Project>
       <Name>Smart.Core</Name>

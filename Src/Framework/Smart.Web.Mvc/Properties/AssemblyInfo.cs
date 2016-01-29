@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Smart.Web.Mvc")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SmallAnts")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Smart.Web.Mvc")]
 [assembly: AssemblyCopyright("Copyright © LiuJunfei 2015")]
 [assembly: AssemblyTrademark("")]

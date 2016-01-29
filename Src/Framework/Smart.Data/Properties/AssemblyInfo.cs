@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("Smart.Data")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Smart 数据访问模块")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SmallAnts")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Smart.Data")]
 [assembly: AssemblyCopyright("Copyright © LiuJunfei 2015")]
 [assembly: AssemblyTrademark("")]
