@@ -22,6 +22,8 @@ bld/
 [Oo]bj/
 [Pp]ackages/
 TestResults/
+nuget/
+lib/
 
 # Visual Studio 2015 cache/options directory
 .vs/
