@@ -4,6 +4,10 @@ using System.Linq.Expressions;
 
 namespace Smart.Core.Data
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Orderable<T>
     {
         private IQueryable<T> _queryable;
