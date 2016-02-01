@@ -55,6 +55,8 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="T4\GeneratorHelper.ttinclude" />
+    <Content Include="T4\ModelsGenerator.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Smart.Core\Smart.Core.csproj">

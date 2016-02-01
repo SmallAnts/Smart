@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using Smart.Core.Utilites;
+using Newtonsoft.Json;
 
 namespace Smart.Core.Extensions
 {
@@ -253,6 +254,7 @@ namespace Smart.Core.Extensions
         {
             return InputCodeUtility.GetFirstPinYin(value);
         }
+
         /// <summary>
         /// 获取字符串的全拼
         /// </summary>
@@ -261,6 +263,17 @@ namespace Smart.Core.Extensions
         public static string GetQuanPin(this string value)
         {
             return InputCodeUtility.GetPinYin(value);
+        }
+
+        /// <summary>
+        /// JSON 字符串反序列化为对象
+        /// </summary>
+        /// <typeparam name="T">反序列化的对象类型</typeparam>
+        /// <param name="json">JSON字符串</param>
+        /// <returns></returns>
+        public static T DeserializeObject<T>(this string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
         }
     }
 }

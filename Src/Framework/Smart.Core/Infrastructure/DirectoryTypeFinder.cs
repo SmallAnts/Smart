@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
 using Smart.Core.Extensions;
+using System.Text.RegularExpressions;
 
 namespace Smart.Core.Infrastructure
 {
@@ -13,6 +14,7 @@ namespace Smart.Core.Infrastructure
     /// </summary>
     public class DirectoryTypeFinder : ITypeFinder
     {
+        private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^AjaxControlToolkit|^Antlr3|^Autofac|^AutoMapper|^Castle|^ComponentArt|^CppCodeProvider|^DotNetOpenAuth|^EntityFramework|^EPPlus|^FluentValidation|^ImageResizer|^itextsharp|^log4net|^MaxMind|^MbUnit|^MiniProfiler|^Mono.Math|^MvcContrib|^Newtonsoft|^NHibernate|^nunit|^Org.Mentalis|^PerlRegex|^QuickGraph|^Recaptcha|^Remotion|^RestSharp|^Rhino|^Telerik|^Iesi|^TestDriven|^TestFu|^UserAgentStringLibrary|^VJSharpCodeProvider|^WebActivator|^WebDev|^WebGrease";
         private IList<Assembly> _assemblies;
         public IList<Assembly> Assemblies
         {
@@ -26,12 +28,17 @@ namespace Smart.Core.Infrastructure
                 path = GetBinDirectory();
             }
             var files = new DirectoryInfo(path).GetFiles(searchPattern);
+
             foreach (var file in files)
             {
                 var filename = file.FullName.ToLower();
                 if (fileFilter == null || fileFilter(filename))
                 {
-                    Assemblies.Add(LoadAssembly(filename));
+                    var assembly = LoadAssembly(filename);
+                    if (!Matches(assembly.FullName, assemblySkipLoadingPattern))
+                    {
+                        Assemblies.Add(assembly);
+                    }
                 }
             }
         }
@@ -68,6 +75,10 @@ namespace Smart.Core.Infrastructure
             }
             return AppDomain.CurrentDomain.BaseDirectory;
         }
+        protected virtual bool Matches(string assemblyFullName, string pattern)
+        {
+            return Regex.IsMatch(assemblyFullName, pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        }
 
         private static Assembly LoadAssembly(string codeBase)
         {
@@ -83,5 +94,6 @@ namespace Smart.Core.Infrastructure
             }
             return Assembly.Load(assemblyName);
         }
+
     }
 }

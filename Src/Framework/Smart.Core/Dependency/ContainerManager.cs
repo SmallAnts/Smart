@@ -51,6 +51,7 @@ namespace Smart.Core.DependencyManagement
             builder.RegisterInstance(config.TypeFinder).As<ITypeFinder>().SingleInstance();
             builder.RegisterInstance(config).As<SmartConfig>().SingleInstance();
             builder.RegisterInstance(this).As<IContainerManager>().SingleInstance();
+            builder.RegisterType<Caching.HttpCache>().Named<Caching.ICache>("smart.lang").SingleInstance();
             builder.Update(this._container);
 
             #endregion
@@ -61,7 +62,7 @@ namespace Smart.Core.DependencyManagement
             var dependencies = config.TypeFinder.ForTypesDerivedFrom<IDependency>().ToList();
             foreach (var dependency in dependencies)
             {
-                var reg = builder.RegisterType(dependency) 
+                var reg = builder.RegisterType(dependency)
                     .AsImplementedInterfaces() // 注册所有接口
                     .PropertiesAutowired(); // 自动属性注入
                 if (typeof(ISingletonDependency).IsAssignableFrom(dependency))
@@ -118,11 +119,6 @@ namespace Smart.Core.DependencyManagement
             {
                 config = new SmartConfig();
             }
-            if (config.TypeFinder == null)
-            {
-                config.TypeFinder = new DirectoryTypeFinder();
-            }
-
             // 注册依赖
             RegisterDependencies(config);
 
