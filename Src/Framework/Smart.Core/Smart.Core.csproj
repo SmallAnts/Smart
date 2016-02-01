@@ -78,7 +78,7 @@
     <Compile Include="Infrastructure\IStartupTask.cs" />
     <Compile Include="Infrastructure\ITypeFinder.cs" />
     <Compile Include="Infrastructure\Singleton.cs" />
-    <Compile Include="Localization\Localizer.cs" />
+    <Compile Include="Localization\Language.cs" />
     <Compile Include="Infrastructure\IService.cs" />
     <Compile Include="ProxyGenerator.cs" />
     <Compile Include="SmartContext.cs" />
