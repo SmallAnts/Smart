@@ -16,7 +16,9 @@ namespace Smart.Core.Configuration
             {
                 this.DisplayMiniProfiler = displayMiniprofiler.AsBool();
             }
+            this.Language = ConfigurationManager.AppSettings["Smart:Language"];
         }
+        public string Language { get; set; }
         /// <summary>
         /// 获取或设置是否忽略执行启动任务
         /// </summary>
@@ -26,7 +28,6 @@ namespace Smart.Core.Configuration
         /// 显示 MiniProfiler
         /// </summary>
         public bool DisplayMiniProfiler { get; set; }
-
 
         private Infrastructure.ITypeFinder _typeFinder;
         /// <summary>

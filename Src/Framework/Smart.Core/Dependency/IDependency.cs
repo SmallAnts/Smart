@@ -1,4 +1,4 @@
-﻿namespace Smart.Core.DependencyManagement
+﻿namespace Smart.Core.Dependency
 {
     /// <summary>
     /// <para>实现该接口的类将自动注册到IOC容器中</para>

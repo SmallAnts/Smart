@@ -1,11 +1,11 @@
 ﻿using Smart.Core.Data;
 using Smart.Samples.Domain.Entites;
-using Smart.Core.DependencyManagement;
+using Smart.Core.Dependency;
 using Smart.Samples.Domain.Context;
 
 namespace Smart.Samples.Services
 {
-    internal class UserService : IUserService, IDependency
+    internal class UserService : ServiceBase, IUserService, IDependency
     {
         IRepository<UserInfo> _userinfoRepository;
 

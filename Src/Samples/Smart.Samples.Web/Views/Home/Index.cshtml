@@ -1,11 +1,41 @@
 ﻿@{
     ViewBag.Title = "主页";
 }
+
+@section head{
+    <link href="/scripts/jqgrid/css/ui.jqgrid-bootstrap.css" rel="stylesheet" />
+}
 @section header{
     @Html.Partial("_Header")
 }
-<section class="content"></section>
+<section class="content">
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+</section>
 @section scripts{
+    @Scripts.Render("~/js/jqgrid")
     <script>
+        $(function () {
+            $("#jqGrid").jqGrid({
+                caption: 'Demo',
+                url: 'FirstGrid',
+                datatype: "json",
+                mtype: "post",
+                colModel: [
+                   { label: 'Category Name', name: 'CategoryName', width: 75 },
+                   { label: 'Product Name', name: 'ProductName', width: 90 },
+                   { label: 'Country', name: 'Country', width: 100 },
+                   { label: 'Price', name: 'Price', width: 80, sorttype: 'integer' },
+                   // sorttype is used only if the data is loaded locally or loadonce is set to true
+                   { label: 'Quantity', name: 'Quantity', width: 80, sorttype: 'number' }
+                ],
+                viewrecords: true, // show the current page, data rang and total records on the toolbar
+                width: 780,
+                height: 200,
+                rowNum: 30,
+                loadonce: true, // this is just for the demo
+                pager: "#jqGridPager"
+            });
+        });
     </script>
 }

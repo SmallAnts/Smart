@@ -6,22 +6,24 @@
     <title>@ViewBag.Title</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link href="/content/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link href="/content/font-awesome.min.css" rel="stylesheet" />
     @RenderSection("head", required: false)
-    <link href="/content/adminlte/css/adminlte.min.css" rel="stylesheet">
-    <link href="/content/adminlte/css/skins/skin-blue.min.css" rel="stylesheet" />
-    <link href="/content/sweetalert.css" rel="stylesheet" />
-    <link href="/content/site.css" rel="stylesheet" />
+    @Styles.Render("~/css/base")
     <!--[if lt IE 9]>
-    <script src="/scripts/html5shiv.js"></script>
-    <script src="/scripts/respond.min.js"></script>
+    @Scripts.Render("~/js/ie8")
+    <script src="/scripts/jquery-1.12.0.min.js"></script>
     <![endif]-->
-    <!--[if !IE]><!-->
-    <!--<![endif]-->
-    <script src="/scripts/jquery-2.1.4.min.js"></script>
+    <!--[if gt IE 8]>
+    @Scripts.Render("~/js/jquery")
+    @Scripts.Render("~/js/swal")
+    <![endif]-->
+    <!--[if !IE]> -->
+    @Scripts.Render("~/js/jquery")
+    @Scripts.Render("~/js/swal")
+    <!-- <![endif]-->
     @StackExchange.Profiling.MiniProfiler.RenderIncludes()
 </head>
 <body class="hold-transition skin-blue sidebar-mini @ViewBag.BodyClass">
+    <div class="loading" id="loading"><img src="/content/images/loading.gif" /></div>
     @if (IsSectionDefined("header") || IsSectionDefined("footer"))
     {
         <div class="wrapper">
@@ -46,18 +48,9 @@
             }
         </div>
     }
-    else
-    {
+    else {
         @RenderBody()
-    }
-    <div class="loading" id="loading">
-        <img src="/content/images/loading.gif" />
-    </div>
-    <script src="/scripts/jquery.slimscroll.min.js"></script>
-    <script src="/scripts/bootstrap.min.js"></script>
-    <script src="/scripts/app.min.js"></script>
-    <script src="/scripts/sweetalert.min.js"></script>
-    <script src="/scripts/common.js"></script>
+    }@Scripts.Render("~/js/base")
     @RenderSection("scripts", required: false)
 </body>
 </html>

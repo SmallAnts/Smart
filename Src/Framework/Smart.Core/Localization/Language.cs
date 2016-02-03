@@ -1,14 +1,16 @@
-﻿using Smart.Core.Extensions;
+﻿using Smart.Core.Configuration;
+using Smart.Core.Extensions;
 using System;
 using System.IO;
 
 namespace Smart.Core.Localization
 {
-    public class Language
+    public static class Language
     {
         public static string Get(string key, params object[] args)
         {
-            return GetByLang("zh-CN", key, args);
+            var config = SmartContext.Current.Resolve<SmartConfig>();
+            return GetByLang(config.Language ?? "zh-CN", key, args);
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿using Smart.Core.Configuration;
 
-namespace Smart.Core.DependencyManagement
+namespace Smart.Core.Dependency
 {
     /// <summary>
     /// 容器，控制对象的生命周期和对象间的关系

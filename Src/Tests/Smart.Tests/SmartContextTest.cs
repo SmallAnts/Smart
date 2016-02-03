@@ -41,7 +41,7 @@ namespace Smart.Tests
         }
     }
 
-    class DemoDependencyRegister : Core.DependencyManagement.IDependencyRegistrar
+    class DemoDependencyRegister : Core.Dependency.IDependencyRegistrar
     {
         public int Order { get { return 0; } }
 
@@ -77,13 +77,13 @@ namespace Smart.Tests
         public T1 Entity1 { get; set; }
         public T1 Entity2 { get; set; }
     }
-    interface IService1 : Core.DependencyManagement.IDependency
+    interface IService1 : Core.Dependency.IDependency
     {
     }
-    interface IService2 : Core.DependencyManagement.ISingletonDependency
+    interface IService2 : Core.Dependency.ISingletonDependency
     {
     }
-    interface IService3 : Core.DependencyManagement.ITransientDependency
+    interface IService3 : Core.Dependency.ITransientDependency
     {
     }
     abstract class ServiceBase

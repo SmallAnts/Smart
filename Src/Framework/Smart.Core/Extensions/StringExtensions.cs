@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Smart.Core.Utilites;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Smart.Core.Extensions
 {
@@ -10,8 +11,6 @@ namespace Smart.Core.Extensions
     /// </summary>
     public static class StringExtensions
     {
-        private static Regex rxChinese = new Regex("^[\u4e00-\u9fa5]+$", RegexOptions.Compiled);
-
         #region 字符检查 Is
 
         /// <summary>检查字符串的值是否为null或空。</summary>
@@ -72,9 +71,67 @@ namespace Smart.Core.Extensions
         /// <returns>true 如果 <paramref name="value" /> 全是中文; 否则, false.</returns>
         public static bool IsChinese(this string value)
         {
-            return rxChinese.IsMatch(value);
+            return Regex.IsMatch(value, @"^[\u4e00-\u9fa5]+$");
+        }
+        /// <summary>
+        /// 是否是邮编格式字符串
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsZip(this string value)
+        {
+            return Regex.IsMatch(value, @"^[1-9]\d{5}$");
+        }
+        /// <summary>
+        /// 是否是数字字符串
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsNumber(this string value)
+        {
+            return Regex.IsMatch(value, @"^[0-9]+$");
+        }
+        /// <summary>
+        /// 验证字符串EMAIL地址
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsEmail(this string value)
+        {
+            return Regex.IsMatch(value, @"^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$");
+        }
+        /// <summary>
+        /// 验证字符串URL地址
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsUrl(this string value)
+        {
+            return Regex.IsMatch(value, @"[a-zA-z]+://[^\s]*"); //^http://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$
         }
 
+        /// <summary>
+        /// 验证字符串是否是数值类型
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsNumericString(string value)
+        {
+            double result;
+            return (double.TryParse(value, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out result));
+        }
+
+        /// <summary>
+        /// 指示所指定的正则表达式是否使用指定的匹配选项在指定的输入字符串中找到了匹配项。
+        /// </summary>
+        /// <param name="value">输入字符串</param>
+        /// <param name="regex">正则表达式</param>
+        /// <param name="options">匹配选项</param>
+        /// <returns></returns>
+        public static bool IsMatch(this string value, string regex, RegexOptions options = RegexOptions.Singleline)
+        {
+            return Regex.IsMatch(value, regex, options);
+        }
         #endregion
 
         #region 类型转换 As
@@ -235,12 +292,44 @@ namespace Smart.Core.Extensions
 
         #endregion
 
+        #region 单词转换 To
+
+        /// <summary>
+        /// 每个单词首字母大写
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        public static string ToTitleCase(this string word)
+        {
+            return Regex.Replace(word, @"\b([a-z])", m => m.Captures[0].Value.ToUpper());
+        }
+
+        /// <summary>
+        /// 将单词转换为首字母大写形式
+        /// </summary>
+        /// <param name="word">单词</param>
+        /// <returns></returns>
+        public static string ToInitialUppercase(this string word)
+        {
+            return String.Concat(word.Substring(0, 1).ToUpper(), word.Substring(1).ToLower());
+        }
+
+        /// <summary>
+        /// 将单词转换为首字母小写形式
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        public static string ToInitialLowercase(this string word)
+        {
+            return String.Concat(word.Substring(0, 1).ToLower(), word.Substring(1));
+        }
+
         /// <summary>
         /// 获取字符串的五笔码
         /// </summary>
         /// <param name="value">要转换的值。</param>
         /// <returns>转换后的字符串。</returns>
-        public static string GetWuBiMa(this string value)
+        public static string ToFivePenCode(this string value)
         {
             return InputCodeUtility.GetWuBiMa(value);
         }
@@ -250,21 +339,23 @@ namespace Smart.Core.Extensions
         /// </summary>
         /// <param name="value">要转换的值。</param>
         /// <returns>转换后的字符串。</returns>
-        public static string GetJianPin(this string value)
+        public static string ToAcronyms(this string value)
         {
             return InputCodeUtility.GetFirstPinYin(value);
         }
 
         /// <summary>
-        /// 获取字符串的全拼
+        /// 获取汉字字符串的全拼形式
         /// </summary>
         /// <param name="value">要转换的值。</param>
         /// <returns>转换后的字符串。</returns>
-        public static string GetQuanPin(this string value)
+        public static string ToCompleteSpellings(this string value)
         {
             return InputCodeUtility.GetPinYin(value);
         }
 
+        #endregion
+        
         /// <summary>
         /// JSON 字符串反序列化为对象
         /// </summary>
@@ -274,6 +365,17 @@ namespace Smart.Core.Extensions
         public static T DeserializeObject<T>(this string json)
         {
             return JsonConvert.DeserializeObject<T>(json);
+        }
+
+        /// <summary>
+        /// 以该字符串为键值获取本地化语言。
+        /// </summary>
+        /// <param name="key">语言键值</param>
+        /// <param name="args">格式化参数</param>
+        /// <returns></returns>
+        public static string T(this string key, params object[] args)
+        {
+            return Localization.Language.Get(key, args);
         }
     }
 }

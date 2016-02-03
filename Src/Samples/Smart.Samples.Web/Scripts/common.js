@@ -24,7 +24,9 @@ $.ajaxSetup({
         swal(status, matchs[1], "error");
     }
 });
-swal.setDefaults({ cancelButtonText: '取消', confirmButtonText: "确定" });
+if (window.swal && swal.setDefaults) {
+    swal.setDefaults({ cancelButtonText: '取消', confirmButtonText: "确定" });
+}
 function loading(status) {
     if (_loadingFlag && status) $("#loading").show();
     else $("#loading").hide();

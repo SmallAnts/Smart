@@ -1,10 +1,13 @@
 ﻿using System;
 using Smart.Core.Extensions;
 using System.Web.Mvc;
+using Smart.Web.Mvc;
+using System.Collections.Generic;
+using Smart.Web.Mvc.UI.JqGrid;
 
 namespace Smart.Samples.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         Services.IUserService _userService;
         public HomeController(
@@ -19,22 +22,39 @@ namespace Smart.Samples.Web.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public JsonResult FirstGrid(int page, int rows)
+        {
+            var list = new List<dynamic>();
+            list.Add(new
+            {
+                CategoryName = "Produce",
+                ProductName = "Uncle Bob's Organic Dried Pears",
+                Country = "UK",
+                Price = 340.00,
+                Quantity = 134
+            });
+            list.Add(new
+            {
+                CategoryName = "Produce",
+                ProductName = "Manjimup Dried Apples",
+                Country = "UK",
+                Price = 38.0,
+                Quantity = 34
+            });
+            return Json(new GridData { Total = 100, Page = page, Rows = list });
+        }
+
         [HttpPost]
         public ActionResult Index(string id)
         {
             return View();
         }
-        public ActionResult FluentValidation() { return View(); }
-
-        [HttpPost]
-        public ActionResult FluentValidation(Models.SignInModel userinfo)
+        public ActionResult LeftSide() { return PartialView("_LeftSide"); }
+        public ActionResult RightSide()
         {
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction("Index");
-            }
-
-            return View(userinfo);
+            return PartialView("_RightSide");
         }
 
         public ActionResult SignIn() { return View(); }
@@ -56,10 +76,7 @@ namespace Smart.Samples.Web.Controllers
             return View(model);
         }
 
-        public ActionResult LeftSide() { return PartialView("_LeftSide"); }
-        public ActionResult RightSide()
-        {
-            return PartialView("_RightSide");
-        }
+        public ActionResult ForgotPassword() { return View(); }
+
     }
 }

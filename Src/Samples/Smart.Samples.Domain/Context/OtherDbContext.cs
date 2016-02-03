@@ -10,7 +10,11 @@ namespace Smart.Samples.Domain.Context
     {
         static OtherDbContext()
         {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SampleDbContext>());
+#if DEBUG
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<OtherDbContext>());
+#else
+            Database.SetInitializer<OtherDbContext>(null);
+#endif
         }
         public OtherDbContext() : base("name=OtherConnection")
         {

@@ -1,48 +1,47 @@
-﻿using Autofac.Integration.Mvc;
-using Smart.Core;
-using Smart.Core.Configuration;
-using Smart.Core.Infrastructure;
+﻿using Smart.Core;
 using StackExchange.Profiling;
-using StackExchange.Profiling.Data;
 using StackExchange.Profiling.EntityFramework6;
 using StackExchange.Profiling.Mvc;
 using System;
-using System.Data.Entity;
-using System.Data.Entity.Core.Common;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Optimization;
 using System.Web.Routing;
+using Smart.Web.Mvc.Extensions;
 
 namespace Smart.Samples.Web
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
+            new SmartContext().InitializeMvc();
+
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 
-            SmartContext.Initialize(new SmartConfig()
+            if (SmartContext.Config.DisplayMiniProfiler == true)
             {
-                //TypeFinder = new DirectoryTypeFinder(null, "Smart*.dll"),
-                OnDependencyRegistered = container =>
-                {
-                    DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
-                }
-            });
-
-            GlobalFilters.Filters.Add(new ProfilingActionFilter());
-            MiniProfilerEF6.Initialize();
+                MiniProfilerEF6.Initialize();
+            }
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            MiniProfiler.Start();
+            if (SmartContext.Config.DisplayMiniProfiler == true)
+            {
+                MiniProfiler.Start();
+            }
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
-            MiniProfiler.Stop();
+            if (SmartContext.Config.DisplayMiniProfiler == true)
+            {
+                MiniProfiler.Stop();
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Smart.Core.Configuration;
 using Smart.Core.Data;
-using Smart.Core.DependencyManagement;
+using Smart.Core.Dependency;
 using Smart.Data;
 using System.Data.Entity;
 

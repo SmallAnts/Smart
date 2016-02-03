@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Smart.Core.Configuration;
 
-namespace Smart.Core.DependencyManagement
+namespace Smart.Core.Dependency
 {
     /// <summary>
     /// 自定义依赖注册接口

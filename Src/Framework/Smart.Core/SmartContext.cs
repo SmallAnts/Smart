@@ -1,7 +1,6 @@
 ﻿using Smart.Core.Configuration;
-using Smart.Core.DependencyManagement;
+using Smart.Core.Dependency;
 using Smart.Core.Infrastructure;
-using Smart.Core.Localization;
 using System.Runtime.CompilerServices;
 
 namespace Smart.Core
@@ -12,8 +11,6 @@ namespace Smart.Core
     public class SmartContext
     {
         #region 属性
-
-        public static Language T { get; set; }
 
         /// <summary>
         /// 获取配置信息

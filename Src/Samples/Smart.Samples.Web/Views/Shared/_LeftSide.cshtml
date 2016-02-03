@@ -76,10 +76,10 @@
     $("#btn-exit").click(function () {
         var url = $(this).attr("href");
         swal({
-            title: "退出登录?", text: "点击【确定】按钮退出登录！", type: "warning",
+            title: "确认退出?", text: "点击【确定】按钮退出登录！", type: "warning",
             showCancelButton: true,
-        }, function () {
-            location.href = url;
+        }, function (isConfirm) {
+            if (isConfirm) location.href = url;
         });
         return false;
     });

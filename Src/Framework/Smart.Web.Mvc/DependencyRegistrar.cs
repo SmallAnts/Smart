@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
 using Smart.Core.Configuration;
-using Smart.Core.DependencyManagement;
+using Smart.Core.Dependency;
 using System.Linq;
 
 namespace Smart.Web.Mvc

@@ -4,7 +4,7 @@ using Smart.Core.Extensions;
 using Smart.Core.Infrastructure;
 using System.Linq;
 
-namespace Smart.Core.DependencyManagement
+namespace Smart.Core.Dependency
 {
     /// <summary>
     /// 默认IOC容器（控制对象的生命周期和对象间的关系）（基于Autofac实现）
@@ -13,7 +13,7 @@ namespace Smart.Core.DependencyManagement
     {
         #region 私有字段
 
-        private Autofac.IContainer _container;
+        internal Autofac.IContainer _container;
 
         #endregion
 
