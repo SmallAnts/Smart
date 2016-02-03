@@ -44,6 +44,7 @@
     <Compile Include="UserService\IUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserService\UserService.cs" />
+    <Compile Include="UserService\UserServiceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Smart.Core\Smart.Core.csproj">

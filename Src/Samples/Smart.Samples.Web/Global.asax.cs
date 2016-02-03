@@ -1,7 +1,6 @@
 ﻿using Smart.Core;
 using StackExchange.Profiling;
 using StackExchange.Profiling.EntityFramework6;
-using StackExchange.Profiling.Mvc;
 using System;
 using System.Web;
 using System.Web.Mvc;

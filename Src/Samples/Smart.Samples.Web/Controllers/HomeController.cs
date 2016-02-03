@@ -4,6 +4,8 @@ using System.Web.Mvc;
 using Smart.Web.Mvc;
 using System.Collections.Generic;
 using Smart.Web.Mvc.UI.JqGrid;
+using Smart.Samples.Services.Extensions;
+using System.Threading.Tasks;
 
 namespace Smart.Samples.Web.Controllers
 {
@@ -59,13 +61,13 @@ namespace Smart.Samples.Web.Controllers
 
         public ActionResult SignIn() { return View(); }
         [HttpPost]
-        public ActionResult SignIn(Models.SignInModel model)
+        public async Task<ActionResult> SignIn(Models.SignInModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var user = _userService.SiginIn(model.Email, model.Password);
+            var user = await _userService.SiginInAsync(model.Email, model.Password);
             if (user != null)
             {
                 return RedirectToAction("Index");
