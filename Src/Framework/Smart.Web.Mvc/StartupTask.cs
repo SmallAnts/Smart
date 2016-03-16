@@ -11,7 +11,7 @@ namespace Smart.Web.Mvc
 
         public void Execute()
         {
-            // 设置FluentValidation 作为默认的验证提供程序
+            // 设置 FluentValidation 作为默认的验证提供程序
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new AttributedValidatorFactory()));
         }

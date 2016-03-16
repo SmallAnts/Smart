@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.Validation;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Smart.Data.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class DbEntityValidationExceptionExtensions
     {
         /// <summary>
         /// 获取完整错误信息
         /// </summary>
-        /// <param name="exc">Exception</param>
+        /// <param name="ex">Exception</param>
         /// <returns>Error</returns>
         public static string GetFullErrorText(this DbEntityValidationException ex)
         {

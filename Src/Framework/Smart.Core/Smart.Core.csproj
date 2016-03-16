@@ -56,8 +56,6 @@
   <ItemGroup>
     <Compile Include="Caching\CacheInfo`T.cs" />
     <Compile Include="Data\IRepository`T.cs" />
-    <Compile Include="Data\IEntity.cs" />
-    <Compile Include="Data\Orderable.cs" />
     <Compile Include="Dependency\IDependency.cs" />
     <Compile Include="Extensions\CacheExtensions.cs" />
     <Compile Include="Caching\HttpCache.cs" />

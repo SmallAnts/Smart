@@ -1,16 +1,16 @@
-﻿using Smart.Core.Data;
-using Smart.Samples.Domain.Entites;
+﻿using Smart.Samples.Domain.Entites;
 using Smart.Core.Dependency;
-using Smart.Samples.Domain.Context;
+using Smart.Data.EF;
+using System.Transactions;
 
 namespace Smart.Samples.Services
 {
     internal class UserService : ServiceBase, IUserService, IDependency
     {
-        IRepository<UserInfo> _userinfoRepository;
+        IEFRepository<UserInfo> _userinfoRepository;
 
         public UserService(
-            IRepository<UserInfo> userinfoRepository
+            IEFRepository<UserInfo> userinfoRepository
             )
         {
             _userinfoRepository = userinfoRepository;
@@ -18,7 +18,7 @@ namespace Smart.Samples.Services
 
         public UserInfo Get(int id)
         {
-            return _userinfoRepository.Get(id);
+            return _userinfoRepository.GetById(id);
         }
 
         public UserInfo SiginIn(string email, string password)

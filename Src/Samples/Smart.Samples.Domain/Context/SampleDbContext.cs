@@ -1,9 +1,10 @@
-﻿using System.Data.Entity;
+﻿using Smart.Data.EF;
+using System.Data.Entity;
 using System.Reflection;
 
 namespace Smart.Samples.Domain.Context
 {
-    internal class SampleDbContext : Data.EFDbContext
+    internal class SampleDbContext : EFDbContext
     {
         static SampleDbContext()
         {

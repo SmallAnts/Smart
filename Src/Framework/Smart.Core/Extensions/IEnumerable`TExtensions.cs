@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Smart.Core.Extensions
 {
@@ -8,6 +10,21 @@ namespace Smart.Core.Extensions
     /// </summary>
     public static class IEnumerableExtensions
     {
+        /// <summary>
+        /// 验证集合类型是否为null或零长度
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static bool IsEmpty(this IEnumerable array)
+        {
+            if (array == null) return true;
+            foreach (var item in array)
+            {
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// 返回按指定字符分隔的字符串
         /// </summary>

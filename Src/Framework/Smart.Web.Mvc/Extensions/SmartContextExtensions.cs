@@ -28,6 +28,9 @@ namespace Smart.Web.Mvc.Extensions
                 DependencyResolver.SetResolver(new AutofacDependencyResolver(cm._container));
             }
 
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new SmartRazorViewEngine());
+
             return cm;
         }
     }

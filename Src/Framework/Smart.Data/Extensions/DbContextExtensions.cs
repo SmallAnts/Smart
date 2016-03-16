@@ -39,7 +39,7 @@ namespace Smart.Data.Extensions
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="db"></param>
-        /// <param name="entity">要更新的实体</param>
+        /// <param name="entites">要更新的实体</param>
         /// <param name="updateProperties">要更新的字段</param>
         /// <param name="ignoreProperties">要忽略更新的字段</param>
         public static void Update<TEntity>(this DbContext db, IEnumerable<TEntity> entites,

@@ -3,6 +3,7 @@ using Smart.Core.Configuration;
 using Smart.Core.Data;
 using Smart.Core.Dependency;
 using Smart.Data;
+using Smart.Data.EF;
 using System.Data.Entity;
 
 namespace Smart.Samples.Domain
@@ -15,8 +16,8 @@ namespace Smart.Samples.Domain
         {
             builder.RegisterType<Context.SampleDbContext>().As<DbContext>().InstancePerLifetimeScope();
             builder.RegisterType<Context.OtherDbContext>().As<Context.IOtherDbContext>().InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(EFRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(EFRepository<,>)).As(typeof(IRepository<,>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(EFRepository<>)).As(typeof(IEFRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(EFRepository<,>)).As(typeof(IEFRepository<,>)).InstancePerLifetimeScope();
         }
     }
 }

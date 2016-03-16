@@ -1,56 +1,46 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link href="/content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <meta name="description" content="smart" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <link rel="Shortcut Icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/assets/css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/assets/css/sweetalert/sweetalert.css" />
     @RenderSection("head", required: false)
-    @Styles.Render("~/css/base")
-    <!--[if lt IE 9]>
-    @Scripts.Render("~/js/ie8")
-    <script src="/scripts/jquery-1.12.0.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/ace/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" href="/assets/css/ace/ace-skins.min.css" />
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/assets/css/ace/ace-part2.min.css" class="ace-main-stylesheet" />
+        <link rel="stylesheet" href="/assets/css/ace/ace-ie.min.css" />
     <![endif]-->
+    <!-- ace settings handler -->
+    <script src="/assets/js/lab.config.js"></script>
+    <script src="/assets/js/lab/lab.min.js"></script>
+    <script>$LAB.script("/assets/js/ace/ace-extra.min.js")</script>
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+    <!--[if lte IE 8]>
+    <script>
+        $LAB.script("/assets/js/html5/html5shiv.min.js")
+                .script("/assets/js/html5/respond.min.js")
+                .script("/assets/js/dialog/swal-ie.js")
+    </script>
+    <![endif]-->
+    @*@StackExchange.Profiling.MiniProfiler.RenderIncludes()*@
+</head>
+<body class="no-skin @ViewBag.BodyClass">
+    @RenderBody()
     <!--[if gt IE 8]>
-    @Scripts.Render("~/js/jquery")
-    @Scripts.Render("~/js/swal")
+        <script>$LAB.script("/assets/js/sweetalert/sweetalert.min.js")</script>
     <![endif]-->
     <!--[if !IE]> -->
-    @Scripts.Render("~/js/jquery")
-    @Scripts.Render("~/js/swal")
+    <script>$LAB.script("/assets/js/dialog/sweetalert.min.js")</script>
     <!-- <![endif]-->
-    @StackExchange.Profiling.MiniProfiler.RenderIncludes()
-</head>
-<body class="hold-transition skin-blue sidebar-mini @ViewBag.BodyClass">
-    <div class="loading" id="loading"><img src="/content/images/loading.gif" /></div>
-    @if (IsSectionDefined("header") || IsSectionDefined("footer"))
-    {
-        <div class="wrapper">
-            @if (IsSectionDefined("header"))
-            {
-                @RenderSection("header", required: false)
-            }
-            @if (ViewBag.ShowLeftSide != false)
-            {
-                @Html.Partial("_LeftSide")
-            }
-            @if (ViewBag.ShowRightSide != false)
-            {
-                @Html.Action("RightSide", "home")
-            }
-            <div class="content-wrapper">
-                @RenderBody()
-            </div>
-            @if (IsSectionDefined("footer"))
-            {
-                @RenderSection("footer", required: false)
-            }
-        </div>
-    }
-    else {
-        @RenderBody()
-    }@Scripts.Render("~/js/base")
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

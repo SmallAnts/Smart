@@ -5,8 +5,17 @@ using System.IO;
 
 namespace Smart.Core.Localization
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class Language
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static string Get(string key, params object[] args)
         {
             var config = SmartContext.Current.Resolve<SmartConfig>();
@@ -22,7 +31,7 @@ namespace Smart.Core.Localization
         /// <returns></returns>
         public static string GetByLang(string lang, string key, params object[] args)
         {
-            var cache = SmartContext.Current.Resolve<Caching.ICache>("smart.lang");
+            var cache = SmartContext.Current.Resolve<Caching.ICache>("smart.httpCache");
             var resources = cache.Get<dynamic>(lang, () =>
             {
                 var filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Lang", lang + ".json");

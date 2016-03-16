@@ -3,7 +3,7 @@
 namespace Smart.Samples.Domain.Entites
 {
     [Validator(typeof(Validators.UserInfoValidator))]
-    public class UserInfo : Core.Data.IEntity
+    public class UserInfo 
     {
         public int Id { get; set; }
         public string Name { get; set; }

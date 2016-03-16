@@ -1,13 +1,6 @@
-﻿using Smart.Core.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Smart.Samples.Domain.Entites
+﻿namespace Smart.Samples.Domain.Entites
 {
-    public class AccountInfo : IEntity
+    public class AccountInfo
     {
         public int Id { get; set; }
         public string Name { get; set; }

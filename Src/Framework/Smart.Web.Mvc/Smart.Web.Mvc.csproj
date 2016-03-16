@@ -16,19 +16,21 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\lib\net45\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\lib\net45\Smart.Web.Mvc.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\lib\net45\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\..\lib\net45\Smart.Web.Mvc.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
@@ -55,6 +57,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -88,14 +91,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControllerBase.cs" />
+    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="SmartRazorViewEngine.cs" />
     <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Extensions\WebPageBaseExtensions.cs" />
     <Compile Include="Extensions\SmartContextExtensions.cs" />
     <Compile Include="JsonResultEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartupTask.cs" />
+    <Compile Include="UI\Menu.cs" />
     <Compile Include="UI\FullCalendar\EventObject.cs" />
+    <Compile Include="UI\JqGrid\Column.cs" />
+    <Compile Include="UI\JqGrid\DataReaders\JsonReader.cs" />
+    <Compile Include="UI\JqGrid\Options\AjaxGridOptions.cs" />
+    <Compile Include="UI\JqGrid\Options\AjaxSelectOptions.cs" />
+    <Compile Include="UI\JqGrid\Options\EditFormOptions.cs" />
+    <Compile Include="UI\JqGrid\Options\EditOptions.cs" />
+    <Compile Include="UI\JqGrid\EditRules.cs" />
+    <Compile Include="UI\JqGrid\Enums.cs" />
+    <Compile Include="UI\JqGrid\Grid.cs" />
     <Compile Include="UI\JqGrid\GridData.cs" />
+    <Compile Include="UI\JqGrid\BindArgs.cs" />
+    <Compile Include="UI\JqGrid\Options\GroupingView.cs" />
+    <Compile Include="UI\Nav.cs" />
+    <Compile Include="UI\Shortcut.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

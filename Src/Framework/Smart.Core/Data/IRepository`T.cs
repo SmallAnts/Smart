@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 
 namespace Smart.Core.Data
 {
@@ -9,23 +6,22 @@ namespace Smart.Core.Data
     /// Repository 接口
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
-    public interface IRepository<T> where T : class, IEntity
+    public interface IRepository<T>
     {
-        void Insert(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+        int Insert(T entity);
 
-        T Get(object id);
-        T Get(Expression<Func<T, bool>> predicate);
+        int Delete(T entity);
 
-        IQueryable<T> Table { get; }
-        IQueryable<T> TableNoTracking { get; }
+        int Update(T entity);
 
-        bool Exists(Expression<Func<T, bool>> predicate);
-        int Count(Expression<Func<T, bool>> predicate);
-        IEnumerable<T> Fetch(Expression<Func<T, bool>> predicate);
-        IEnumerable<T> Fetch(Expression<Func<T, bool>> predicate, Action<Orderable<T>> order);
-        IEnumerable<T> Fetch(Expression<Func<T, bool>> predicate, Action<Orderable<T>> order, int skip, int count);
+        T GetById(object id);
+
+        T Get(string predicate, params object[] args);
+
+        IEnumerable<T> Query(string sql, params object[] args);
+
+        int Execute(string sql, params object[] args);
+
     }
 
     /// <summary>
@@ -33,7 +29,7 @@ namespace Smart.Core.Data
     /// </summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <typeparam name="TDbContext">用来标识不同数据库的空接口</typeparam>
-    public interface IRepository<TEntity, TDbContext> : IRepository<TEntity> where TEntity : class, IEntity
+    public interface IRepository<TEntity, TDbContext> : IRepository<TEntity>
     {
     }
 }

@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "SpaIndex";
+}
+@section head{
+    <link href="~/Assets/css/jqueryui/jquery-ui.custom.min.css" rel="stylesheet" />
+    <link href="~/Assets/css/jqgrid/ui.jqgrid.min.css" rel="stylesheet" />
+}
+@Html.Partial("_navbar")
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try { ace.settings.check('main-container', 'fixed') } catch (e) { }
+    </script>
+    <div id="sidebar">
+    </div>
+    <div class="main-content">
+        @*@Html.Partial("_settingsBox")*@
+        <div class="main-content-inner">
+        </div>
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
+</div>
+@section scripts{
+    <script>
+        $LAB.script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
+                .script("/assets/js/bootstrap/bootstrap.min.js",
+                          "/assets/js/ace/ace-elements.min.js",
+                          "/assets/js/ace/ace.min.js",
+                          "/assets/js/common.js")
+                .wait(function () {
+                    init_navbar();
+                    init_sidebar();
+                });
+
+        function init_navbar() {
+            $("#btn-exit").click(function () {
+                var url = $(this).attr("href");
+                swal({
+                    title: "退出系统?", text: "点击【确定】按钮退出登录！", type: "warning",
+                    showCancelButton: true,
+                }, function (isConfirm) {
+                    if (isConfirm) location.href = url;
+                });
+                return false;
+            });
+        }
+
+        function init_sidebar() {
+            $("#sidebar").sidebar({
+                url: '/account/sidebar',
+                //shortcuts: [
+                //    { buttonClass: "btn-success", iconClass: "fa-signal" },
+                //    { buttonClass: "btn-info", iconClass: "fa-pencil" },
+                //    { buttonClass: "btn-warning", iconClass: "fa-users" },
+                //    { buttonClass: "btn-danger", iconClass: "fa-cogs" }],
+                onComplete: function () {
+                    $("#sidebar li a").click(function (ev) {
+                        var href = $(this).attr('href');
+                        if (href[0] != "#") href = "#" + href;
+                        if (window.location.hash == href) gotoUrl(href);
+                    });
+                    $(window).on('hashchange', function (e) {
+                        var href = getHref(window.location.hash);
+                        if (!href) return false;
+                        return gotoUrl(href);
+                    });
+                    var href = getHref(window.location.hash);
+                    if (!href) window.location.hash = '#/demo/charts/index';
+                    else $(window).triggerHandler('hashchange');
+                }
+            });
+        }
+    </script>
+}

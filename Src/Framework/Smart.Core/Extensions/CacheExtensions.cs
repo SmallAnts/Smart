@@ -3,6 +3,9 @@ using System;
 
 namespace Smart.Core.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class CacheExtensions
     {
         /// <summary>

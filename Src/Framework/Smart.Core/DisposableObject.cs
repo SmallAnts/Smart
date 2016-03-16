@@ -8,14 +8,6 @@ namespace Smart.Core
     public abstract class DisposableObject : IDisposable
     {
         /// <summary>
-        /// 
-        /// </summary>
-        protected DisposableObject()
-        {
-            IsDisposed = false;
-        }
-
-        /// <summary>
         /// 获取是否已经释放或重置非托管资源
         /// </summary>
         public bool IsDisposed { get; private set; }
@@ -24,16 +16,17 @@ namespace Smart.Core
         /// 
         /// </summary>
         /// <param name="disposing"></param>
-        protected abstract void Dispose(bool disposing);
+        protected virtual void Dispose(bool disposing)
+        {
+            IsDisposed = true;
+        }
 
         /// <summary>
         /// 执行与释放或重置非托管资源相关的应用程序定义的任务。
         /// </summary>
         public void Dispose()
         {
-            if (IsDisposed) return;
-            Dispose(true);
-            IsDisposed = true;
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 

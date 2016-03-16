@@ -1,0 +1,43 @@
+﻿@foreach (var menu in Model)
+{
+    <li class="">
+        <a href="@menu.Url">
+            <i class="menu-icon fa @menu.PrimaryIcon"></i>
+            <span class="menu-text"> @menu.Text</span>
+            <b class="arrow fa fa-angle-down @menu.SecondIcon"></b>
+        </a>
+        <b class="arrow"></b>
+        @if (menu.SubMenus != null)
+        {
+            <ul class="submenu">
+                @foreach (var item in menu.SubMenus)
+                {
+                    <li class="">
+                        <a href="@item.Url">
+                            <i class="menu-icon fa @item.PrimaryIcon"></i>
+                            <span class="menu-text"> @item.Text</span>
+                            <b class="arrow fa fa-angle-down @item.SecondIcon"></b>
+                        </a>
+                        <b class="arrow"></b>
+                        @if (item.SubMenus != null)
+                        {
+                            <ul class="submenu">
+                                @foreach (var item2 in item.SubMenus)
+                            {
+                                    <li class="">
+                                        <a href="@item2.Url">
+                                            <i class="menu-icon fa @item2.PrimaryIcon"></i>
+                                            <span class="menu-text"> @item2.Text</span>
+                                            <b class="arrow fa fa-angle-down @item2.SecondIcon"></b>
+                                        </a>
+                                        <b class="arrow"></b>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    </li>
+}

@@ -51,7 +51,7 @@ namespace Smart.Core.Dependency
             builder.RegisterInstance(config.TypeFinder).As<ITypeFinder>().SingleInstance();
             builder.RegisterInstance(config).As<SmartConfig>().SingleInstance();
             builder.RegisterInstance(this).As<IContainerManager>().SingleInstance();
-            builder.RegisterType<Caching.HttpCache>().Named<Caching.ICache>("smart.lang").SingleInstance();
+            builder.RegisterType<Caching.HttpCache>().Named<Caching.ICache>("smart.httpCache").SingleInstance();
             builder.Update(this._container);
 
             #endregion

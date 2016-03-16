@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using Smart.Data.EF;
+using System.Data.Entity;
 using System.Reflection;
 
 namespace Smart.Samples.Domain.Context
@@ -6,7 +7,7 @@ namespace Smart.Samples.Domain.Context
     // 多数据库支持
     public interface IOtherDbContext { }
 
-    internal class OtherDbContext : Data.EFDbContext, IOtherDbContext
+    internal class OtherDbContext : EFDbContext, IOtherDbContext
     {
         static OtherDbContext()
         {

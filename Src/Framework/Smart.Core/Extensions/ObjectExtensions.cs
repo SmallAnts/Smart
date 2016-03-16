@@ -100,10 +100,11 @@ namespace Smart.Core.Extensions
             {
                 settings = new JsonSerializerSettings()
                 {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore // 忽略循环引用
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore, // 忽略循环引用
+                    NullValueHandling = NullValueHandling.Ignore,
                 };
             }
-            var json = JsonConvert.SerializeObject(value, Formatting.None, settings);
+            var json = JsonConvert.SerializeObject(value, formatting, settings);
             return json;
         }
 
@@ -114,17 +115,21 @@ namespace Smart.Core.Extensions
         /// <param name="formatting"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
-        public static Task<string> ToJsonAsync(this object value, Formatting formatting = Formatting.None, JsonSerializerSettings settings = null)
+        public static async Task<string> ToJsonAsync(this object value, Formatting formatting = Formatting.None, JsonSerializerSettings settings = null)
         {
-            if (settings == null)
+            var task = Task.Factory.StartNew(() =>
             {
-                settings = new JsonSerializerSettings()
+                if (settings == null)
                 {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore // 忽略循环引用
-                };
-            }
-            var task = Task.Factory.StartNew(() => JsonConvert.SerializeObject(value, formatting, settings));
-            return task;
+                    settings = new JsonSerializerSettings()
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore, // 忽略循环引用
+                        NullValueHandling = NullValueHandling.Ignore,
+                    };
+                }
+                return JsonConvert.SerializeObject(value, formatting, settings);
+            });
+            return await task;
         }
     }
 }
