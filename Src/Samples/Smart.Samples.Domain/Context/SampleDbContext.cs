@@ -1,6 +1,7 @@
 ﻿using Smart.Data.EF;
 using System.Data.Entity;
 using System.Reflection;
+using Smart.Data.Extensions;
 
 namespace Smart.Samples.Domain.Context
 {
@@ -14,13 +15,16 @@ namespace Smart.Samples.Domain.Context
             Database.SetInitializer<SampleDbContext>(null);
 #endif
         }
+
         public SampleDbContext() : base("name=DefaultConnection")
         {
         }
-        protected override void OnPreModelCreating(DbModelBuilder modelBuilder, Assembly assembly)
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            assembly = Assembly.GetExecutingAssembly();
-            base.OnPreModelCreating(modelBuilder, assembly);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.AddMappings(Assembly.GetExecutingAssembly());
         }
     }
 }

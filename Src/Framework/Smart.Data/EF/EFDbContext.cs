@@ -1,8 +1,4 @@
-using System;
 using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Reflection;
 
 namespace Smart.Data.EF
 {
@@ -13,10 +9,13 @@ namespace Smart.Data.EF
     {
         #region 构造函数
 
-        public EFDbContext() : base("name=DefaultConnection")
+        /// <summary>
+        /// 
+        /// </summary>
+        public EFDbContext() : this("name=DefaultConnection")
         {
-            //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -28,28 +27,5 @@ namespace Smart.Data.EF
         }
 
         #endregion
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            OnPreModelCreating(modelBuilder, Assembly.GetExecutingAssembly());
-            base.OnModelCreating(modelBuilder);
-        }
-        protected virtual void OnPreModelCreating(DbModelBuilder modelBuilder, Assembly assembly)
-        {
-            if (assembly == null) return;
-
-            // 自动添加映射配置
-            var typesToRegister = assembly.GetTypes()
-                .Where(type => !String.IsNullOrEmpty(type.Namespace))
-                .Where(type => type.BaseType != null && type.BaseType.IsGenericType &&
-                    type.BaseType.GetGenericTypeDefinition() == typeof(EntityTypeConfiguration<>));
-
-            foreach (var type in typesToRegister)
-            {
-                dynamic configurationInstance = Activator.CreateInstance(type);
-                modelBuilder.Configurations.Add(configurationInstance);
-            }
-
-        }
     }
 }
