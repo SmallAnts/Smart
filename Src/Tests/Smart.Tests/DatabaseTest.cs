@@ -3,6 +3,8 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
 using System.Data.Common;
+using Smart.Data.Extensions;
+using Smart.Core.Extensions;
 
 namespace Smart.Tests
 {
@@ -23,6 +25,32 @@ namespace Smart.Tests
                         join b in accountRepo.Table on a.Name equals b.Name
                         select new { a, b };
 
+        }
+
+        [TestMethod]
+        public void TestMethod2()
+        {
+            var db = new Samples.Domain.Context.SampleDbContext();
+            var rep = new Data.EF.EFRepository<Samples.Domain.Entites.UserInfo>(db);
+            var list = rep.GetPage(2, 2, "1=1");
+        }
+
+        [TestMethod]
+        public void TestMethod3()
+        {
+            var db = new Samples.Domain.Context.SampleDbContext();
+            var rep = new Data.EF.EFRepository<Samples.Domain.Entites.UserInfo>(db);
+            var user = new Samples.Domain.Entites.UserInfo { Name = "2341" };
+            var ret = rep.Insert(user);
+            var tb = db.QueryDataTable("select * from userinfo where name=@0", "2341");
+            var ls = db.QueryDynamic("select * from userinfo where name=@0", "2341");
+            var tbjson = tb.ToJson();
+            var lsjson = ls.ToJson();
+            var find = rep.TableNoTracking.ToList();
+            //var entity = rep.GetById(1);
+            //entity.Name = "fdsafdsafdsa";
+            //rep.Update(entity);
+            var ret2 = rep.Update(new Samples.Domain.Entites.UserInfo { Id = 2, Name = "updat城e9999" });
         }
     }
 }

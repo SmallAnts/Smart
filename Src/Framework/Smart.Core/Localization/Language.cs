@@ -35,13 +35,17 @@ namespace Smart.Core.Localization
             var resources = cache.Get<dynamic>(lang, () =>
             {
                 var filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Lang", lang + ".json");
-                if (!File.Exists(filename)) throw new SmartException("未找到语言文件 " + filename);
+                if (!File.Exists(filename))
+                {
+                    return key.Contains("ξ") ? key.Split('ξ')[1] : key;
+                    //throw new SmartException("未找到语言文件 " + filename);
+                }
                 using (var sr = new StreamReader(filename))
                 {
                     try
                     {
                         var json = sr.ReadToEnd();
-                        return json.DeserializeObject<dynamic>();
+                        return json.JsonDeserialize<dynamic>();
                     }
                     catch (Exception ex)
                     {
@@ -50,7 +54,7 @@ namespace Smart.Core.Localization
                 }
             });
             var value = resources[key];
-            if (value == null) return key; // 未找到语言值，直接返回 KEY
+            if (value == null) return key.Contains("ξ") ? key.Split('ξ')[1] : key;  // 未找到语言值，直接返回 KEY
             return args == null || args.Length == 0 ? value : string.Format(value, args);
         }
     }

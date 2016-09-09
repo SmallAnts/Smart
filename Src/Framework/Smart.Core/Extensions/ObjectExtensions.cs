@@ -93,21 +93,27 @@ namespace Smart.Core.Extensions
         /// <param name="value"></param>
         /// <param name="formatting"></param>
         /// <param name="settings"></param>
+        /// <param name="nullValue"></param>
+        /// <param name="referenceLoop"></param>
         /// <returns></returns>
-        public static string ToJson(this object value, Formatting formatting = Formatting.None, JsonSerializerSettings settings = null)
+        public static string ToJson(this object value,
+            Formatting formatting = Formatting.None,
+            NullValueHandling nullValue = NullValueHandling.Ignore,
+            ReferenceLoopHandling referenceLoop = ReferenceLoopHandling.Ignore,
+            JsonSerializerSettings settings = null)
         {
             if (settings == null)
             {
                 settings = new JsonSerializerSettings()
                 {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore, // 忽略循环引用
-                    NullValueHandling = NullValueHandling.Ignore,
+                    ReferenceLoopHandling = referenceLoop, // 忽略循环引用
+                    NullValueHandling = nullValue,
                 };
             }
             var json = JsonConvert.SerializeObject(value, formatting, settings);
             return json;
         }
-
+#if NET45
         /// <summary>
         ///  将对象序列化为JSON字符串，循环引用的对象将被忽略
         /// </summary>
@@ -131,5 +137,7 @@ namespace Smart.Core.Extensions
             });
             return await task;
         }
+
+#endif
     }
 }

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
-using Smart.Core.Extensions;
-using System.Text.RegularExpressions;
 
 namespace Smart.Core.Infrastructure
 {
@@ -14,20 +13,20 @@ namespace Smart.Core.Infrastructure
     /// </summary>
     public class DirectoryTypeFinder : ITypeFinder
     {
-        private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^AjaxControlToolkit|^Antlr3|^Autofac|^AutoMapper|^Castle|^ComponentArt|^CppCodeProvider|^DotNetOpenAuth|^EntityFramework|^EPPlus|^FluentValidation|^ImageResizer|^itextsharp|^log4net|^MaxMind|^MbUnit|^MiniProfiler|^Mono.Math|^MvcContrib|^Newtonsoft|^NHibernate|^nunit|^Org.Mentalis|^PerlRegex|^QuickGraph|^Recaptcha|^Remotion|^RestSharp|^Rhino|^Telerik|^Iesi|^TestDriven|^TestFu|^UserAgentStringLibrary|^VJSharpCodeProvider|^WebActivator|^WebDev|^WebGrease";
+        private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^AjaxControlToolkit|^Antlr3|^Autofac|^AutoMapper|^Castle|^ComponentArt|^CppCodeProvider|^DotNetOpenAuth|^EntityFramework|^EPPlus|^FluentValidation|^ImageResizer|^itextsharp|^log4net|^MaxMind|^MbUnit|^MiniProfiler|^Mono.Math|^MvcContrib|^Newtonsoft|^NHibernate|^nunit|^Org.Mentalis|^PerlRegex|^QuickGraph|^Recaptcha|^Remotion|^RestSharp|^Rhino|^Telerik|^Iesi|^TestDriven|^TestFu|^UserAgentStringLibrary|^VJSharpCodeProvider|^WebActivator|^WebDev|^WebGrease|^d3dcompiler_43|^icudt|^libcef|^libegl|^libglesv2|^sqlite.interop|^widevinecdmadapter";
         private IList<Assembly> _assemblies;
         public IList<Assembly> Assemblies
         {
             get { return _assemblies ?? (_assemblies = new List<Assembly>()); }
         }
 
-        public DirectoryTypeFinder(string path = null, string searchPattern = "*.dll", Predicate<string> fileFilter = null)
+        public DirectoryTypeFinder(string path = null, string searchPattern = "*.dll", Predicate<string> fileFilter = null, SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             if (string.IsNullOrEmpty(path))
             {
                 path = GetBinDirectory();
             }
-            var files = new DirectoryInfo(path).GetFiles(searchPattern);
+            var files = new DirectoryInfo(path).GetFiles(searchPattern, searchOption);
 
             foreach (var file in files)
             {
@@ -35,6 +34,7 @@ namespace Smart.Core.Infrastructure
                 if (fileFilter == null || fileFilter(filename))
                 {
                     var assembly = LoadAssembly(filename);
+                    if (assembly == null) continue;
                     if (!Matches(assembly.FullName, assemblySkipLoadingPattern))
                     {
                         Assemblies.Add(assembly);
@@ -92,8 +92,30 @@ namespace Smart.Core.Infrastructure
                 assemblyName = new AssemblyName();
                 assemblyName.CodeBase = codeBase;
             }
-            return Assembly.Load(assemblyName);
+            catch (Exception ex)
+            {
+                Log("Smart.Core.Infrastructure.LoadAssembly: " + ex.Message);
+                return null;
+            }
+            try
+            {
+                return Assembly.Load(assemblyName);
+            }
+            catch (Exception ex)
+            {
+                Log("Smart.Core.Infrastructure.LoadAssembly: " + ex.Message);
+                return null;
+                //throw;
+            }
         }
 
+        public static void Log(string message)
+        {
+            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log\\log_" + DateTime.Today.ToString("yyyyMMdd") + ".txt");
+            Directory.CreateDirectory(Path.GetDirectoryName(file));
+            File.AppendAllText(file, DateTime.Now.ToString() + " > " + message + Environment.NewLine);
+        }
     }
 }
+
+

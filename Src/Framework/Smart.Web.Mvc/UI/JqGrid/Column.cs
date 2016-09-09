@@ -6,6 +6,9 @@ using Smart.Core.Extensions;
 
 namespace Smart.Web.Mvc.UI.JqGrid
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Column
     {
         #region 私有字段
@@ -16,7 +19,7 @@ namespace Smart.Web.Mvc.UI.JqGrid
         private string _classes;
 
         private string _customFormatter;
-        private Formatters? _formatter;
+        private string _formatter;
         private string _formatOptions;
 
         private bool? _fixedWidth;
@@ -209,7 +212,7 @@ namespace Smart.Web.Mvc.UI.JqGrid
         /// <param name = "formatter"></param>
         /// <param name = "customFormatter"></param>
         /// <param name = "formatOptions"></param>
-        public Column SetFormatter(Formatters formatter = Formatters.Custom, string customFormatter = null, string formatOptions = "")
+        public Column SetFormatter(string formatter = "custom", string customFormatter = null, string formatOptions = "")
         {
             _customFormatter = customFormatter;
             _formatter = formatter;
@@ -395,16 +398,16 @@ namespace Smart.Web.Mvc.UI.JqGrid
             if (_firstSortOrder.HasValue) script.AppendFormat("firstsortorder:'{0}',", _firstSortOrder.ToString().ToLower());
 
             if (_fixedWidth.HasValue)
-                script.AppendFormat("fixed:{0},", _fixedWidth.Value.ToString().ToLower());
+                script.AppendFormat("fixed:{0},", _fixedWidth.Value);
 
-            if (_formatter.HasValue && _formatter == Formatters.Custom && !_customFormatter.IsEmpty())
+            if (_formatter != null && _formatter == "custom" && !_customFormatter.IsEmpty())
                 script.AppendFormat("formatter:{0},", _customFormatter);
 
-            if (_formatter.HasValue && _formatter != Formatters.Custom)
-                script.AppendFormat("formatter:'{0}',", _formatter.ToString().ToLower());
+            if (_formatter != null && _formatter != "custom")
+                script.AppendFormat("formatter:'{0}',", _formatter.ToLower());
 
-            if (_formatter.HasValue && !_formatOptions.IsEmpty())
-                script.Append("formatter:'" + _formatter.ToString().ToLower() + "', formatoptions: {" + _formatOptions + "},");
+            if (_formatter != null && !_formatOptions.IsEmpty())
+                script.Append("formatter:'" + _formatter.ToString().ToLower() + "', formatoptions: " + _formatOptions + ",");
 
             if (_hidden.HasValue) script.AppendFormat("hidden:{0},", _hidden.Value.ToString().ToLower());
 

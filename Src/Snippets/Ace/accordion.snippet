@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+	xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>accordion 折叠面板</Title>
+			<Author>LiuJunfei</Author>
+			<Description>通过扩展面板组件建立了一个简单的手风琴。</Description>
+			<Shortcut>ace-accordion</Shortcut>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>id</ID>
+					<ToolTip>ID</ToolTip>
+					<Default>accordion</Default>
+				</Literal>
+				<Literal>
+					<ID>heading1</ID>
+					<ToolTip>手风琴对象的标题</ToolTip>
+					<Default>标题 1</Default>
+				</Literal>
+				<Literal>
+					<ID>content1</ID>
+					<ToolTip>手风琴对象的内容</ToolTip>
+					<Default>内容 1</Default>
+				</Literal>
+				<Literal>
+					<ID>heading2</ID>
+					<ToolTip>二级手风琴的标题</ToolTip>
+					<Default>标题 2</Default>
+				</Literal>
+				<Literal>
+					<ID>content2</ID>
+					<ToolTip>二级手风琴的内容</ToolTip>
+					<Default>内容 2</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="HTML">
+				<![CDATA[
+<div class="accordion-style1 panel-group" id="$id$">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#$id$" href="#$id$-one">
+					<i data-icon-show="ace-icon fa fa-angle-right" data-icon-hide="ace-icon fa fa-angle-down" class="bigger-110 ace-icon fa fa-angle-right"></i>
+					$heading1$
+				</a>
+			</h4>
+		</div>
+		<div id="$id$-one" class="panel-collapse collapse in">
+			<div class="panel-body">
+				$content1$
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#$id$" href="#$id$-two">
+					<i data-icon-show="ace-icon fa fa-angle-right" data-icon-hide="ace-icon fa fa-angle-down" class="bigger-110 ace-icon fa fa-angle-right"></i>
+					$heading2$
+				</a>
+			</h4>
+		</div>
+		<div id="$id$-two" class="panel-collapse collapse in">
+			<div class="panel-body">
+				$content2$
+			</div>
+		</div>
+	</div>
+</div>]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

@@ -42,6 +42,7 @@ namespace Smart.Web.Mvc.UI.JqGrid
 
     public enum Formatters
     {
+        Actions,
         Integer,
         Number,
         Currency,

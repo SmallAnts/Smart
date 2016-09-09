@@ -10,7 +10,7 @@ namespace Smart.Tests.CoreExtensionsTests
         [TestMethod]
         public void TestDeserializeObject()
         {
-            var json = "{\"test.001\":\"test\"}".DeserializeObject<dynamic>();
+            var json = "{\"test.001\":\"test\"}".JsonDeserialize<dynamic>();
             var test = json["test.001"];
             var test2 = json["test.002"];
             Assert.AreEqual(test.ToString(), "test");

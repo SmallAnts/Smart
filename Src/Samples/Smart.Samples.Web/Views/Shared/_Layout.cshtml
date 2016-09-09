@@ -21,7 +21,7 @@
     <!-- ace settings handler -->
     <script src="/assets/js/lab.config.js"></script>
     <script src="/assets/js/lab/lab.min.js"></script>
-    <script>$LAB.script("/assets/js/ace/ace-extra.min.js")</script>
+    <script src="/assets/js/ace/ace-extra.min.js"></script>
     <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
     <!--[if lte IE 8]>
     <script>
@@ -30,7 +30,7 @@
                 .script("/assets/js/dialog/swal-ie.js")
     </script>
     <![endif]-->
-    @*@StackExchange.Profiling.MiniProfiler.RenderIncludes()*@
+    @StackExchange.Profiling.MiniProfiler.RenderIncludes()
 </head>
 <body class="no-skin @ViewBag.BodyClass">
     @RenderBody()

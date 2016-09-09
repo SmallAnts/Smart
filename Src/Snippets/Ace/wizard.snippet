@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+	xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>wizard 步骤向导</Title>
+			<Author>LiuJunfei</Author>
+			<Description>步骤向导</Description>
+			<Shortcut>ace-wizard</Shortcut>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>id</ID>
+					<ToolTip>Id</ToolTip>
+					<Default>wizard</Default>
+				</Literal>
+				<Literal>
+					<ID>step1title</ID>
+					<ToolTip>步骤1标题</ToolTip>
+					<Default>Step1</Default>
+				</Literal>
+				<Literal>
+					<ID>step2title</ID>
+					<ToolTip>步骤2标题</ToolTip>
+					<Default>Step2</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="HTML">
+				<![CDATA[<div id="$id$">
+        <ul class="steps">
+            <li data-step="1" class="active">
+                <span class="step">1</span>
+                <span class="title">$step1title$</span>
+            </li>
+            <li data-step="2">
+                <span class="step">2</span>
+                <span class="title">$step2title$</span>
+            </li>
+        </ul>
+
+        <div class="step-content">
+            <div class="step-pane active" data-step="1">
+                $step1title$
+            </div>
+            <div class="step-pane" data-step="2">
+                $step2title$
+            </div>
+        </div>
+    </div>
+    <div class="wizard-actions">
+        <button class="btn-prev btn">
+            <i class="ace-icon fa fa-arrow-left"></i> 上一步
+        </button>
+        <button class="btn-next btn btn-success" data-last="Finish ">
+            下一步 <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+        </button>
+    </div>]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

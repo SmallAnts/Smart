@@ -355,14 +355,14 @@ namespace Smart.Core.Extensions
         }
 
         #endregion
-        
+
         /// <summary>
         /// JSON 字符串反序列化为对象
         /// </summary>
         /// <typeparam name="T">反序列化的对象类型</typeparam>
         /// <param name="json">JSON字符串</param>
         /// <returns></returns>
-        public static T DeserializeObject<T>(this string json)
+        public static T JsonDeserialize<T>(this string json)
         {
             return JsonConvert.DeserializeObject<T>(json);
         }
@@ -377,5 +377,151 @@ namespace Smart.Core.Extensions
         {
             return Localization.Language.Get(key, args);
         }
+
+        #region 散列加密算法
+
+        /// <summary>
+        /// MD5 加密
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string MD5Encrypt(this string value)
+        {
+            return CryptoUtility.MD5Encrypt(value);
+        }
+
+        /// <summary>
+        /// SHA256 散列算法加密
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string SHA256Encrypt(this string value)
+        {
+            return CryptoUtility.SHA256Encrypt(value);
+        }
+
+        #endregion
+
+        #region 对称加密算法
+
+        /// <summary>
+        /// DES 加密(数据加密标准，速度较快，适用于加密大量数据的场合）
+        /// </summary>
+        /// <param name="encryptString">待加密的明文</param>
+        /// <param name="encryptKey">加密的密钥,必须为8位</param>
+        /// <returns>加密后的密文</returns>
+        public static string DESEncrypt(this string encryptString, string encryptKey)
+        {
+            return CryptoUtility.DESEncrypt(encryptString, encryptKey);
+        }
+
+
+        /// <summary>
+        /// DES 解密(数据加密标准，速度较快，适用于加密大量数据的场合）
+        /// </summary>
+        /// <param name="decryptString">待解密的密文</param>
+        /// <param name="decryptKey">解密的密钥,必须为8位</param>
+        /// <returns>解密后的明文</returns>
+        public static string DESDecrypt(this string decryptString, string decryptKey)
+        {
+            return CryptoUtility.DESDecrypt(decryptString, decryptKey);
+        }
+
+        /// <summary>
+        /// RC2 加密(用变长密钥对大量数据进行加密)
+        /// </summary>
+        /// <param name="encryptString">待加密密文</param>
+        /// <param name="encryptKey">加密密钥</param>
+        /// <returns>returns</returns>
+        public static string RC2Encrypt(this string encryptString, string encryptKey)
+        {
+            return CryptoUtility.RC2Encrypt(encryptString, encryptString);
+        }
+
+        /// <summary>
+        /// RC2 解密(用变长密钥对大量数据进行加密)
+        /// </summary>
+        /// <param name="decryptString">待解密密文</param>
+        /// <param name="decryptKey">解密密钥</param>
+        /// <returns>returns</returns>
+        public static string RC2Decrypt(this string decryptString, string decryptKey)
+        {
+            return CryptoUtility.RC2Decrypt(decryptString, decryptKey);
+        }
+
+        /// <summary>
+        /// 3DES 加密(基于DES，对一块数据用三个不同的密钥进行三次加密，强度更高)
+        /// </summary>
+        /// <param name="encryptString">待加密密文</param>
+        /// <param name="encryptKey1">密钥一</param>
+        /// <param name="encryptKey2">密钥二</param>
+        /// <param name="encryptKey3">密钥三</param>
+        /// <returns>returns</returns>
+        public static string DES3Encrypt(this string encryptString, string encryptKey1, string encryptKey2, string encryptKey3)
+        {
+            return CryptoUtility.DES3Encrypt(encryptString, encryptKey1, encryptKey2, encryptKey3);
+        }
+
+        /// <summary>
+        /// 3DES 解密(基于DES，对一块数据用三个不同的密钥进行三次加密，强度更高)
+        /// </summary>
+        /// <param name="decryptString">待解密密文</param>
+        /// <param name="decryptKey1">密钥一</param>
+        /// <param name="decryptKey2">密钥二</param>
+        /// <param name="decryptKey3">密钥三</param>
+        /// <returns>returns</returns>
+        public static string DES3Decrypt(this string decryptString, string decryptKey1, string decryptKey2, string decryptKey3)
+        {
+            return CryptoUtility.DES3Decrypt(decryptString, decryptKey1, decryptKey2, decryptKey3);
+        }
+
+        /// <summary>
+        /// AES 加密(高级加密标准，是下一代的加密算法标准，速度快，安全级别高，目前 AES 标准的一个实现是 Rijndael 算法)
+        /// </summary>
+        /// <param name="encryptString">待加密密文</param>
+        /// <param name="encryptKey">加密密钥</param>
+        /// <returns></returns>
+        public static string AESEncrypt(this string encryptString, string encryptKey)
+        {
+            return CryptoUtility.AESEncrypt(encryptString, encryptKey);
+        }
+
+        /// <summary>
+        /// AES 解密(高级加密标准，是下一代的加密算法标准，速度快，安全级别高，目前 AES 标准的一个实现是 Rijndael 算法)
+        /// </summary>
+        /// <param name="decryptString">待解密密文</param>
+        /// <param name="decryptKey">解密密钥</param>
+        /// <returns></returns>
+        public static string AESDecrypt(this string decryptString, string decryptKey)
+        {
+            return CryptoUtility.AESDecrypt(decryptString, decryptKey);
+        }
+
+        #endregion
+
+        #region 非对称加密算法
+
+        /// <summary>
+        /// RSA 非对称加密
+        /// </summary>
+        /// <param name="data">要加密的数据</param>
+        /// <param name="key">密钥</param>
+        /// <returns></returns>
+        public static string RSAEncrypt(this string data, string key)
+        {
+            return CryptoUtility.RSAEncrypt(data, key);
+        }
+
+        /// <summary>
+        /// RSA解密
+        /// </summary>
+        /// <param name="data">要解密的数据</param>
+        /// <param name="key">密钥</param>
+        /// <returns></returns>
+        public static string RSADecrypt(this string data, string key)
+        {
+            return CryptoUtility.RSADecrypt(data, key);
+        }
+        #endregion
     }
 }

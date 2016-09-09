@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>btn 按钮</Title>
+      <Author>LiuJunfei</Author>
+      <Description>按钮</Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>ace-btn</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>title</ID>
+          <ToolTip>标题文本</ToolTip>
+          <Default>标题</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>content</ID>
+          <ToolTip>页面内容</ToolTip>
+          <Default>这里是页面内容区</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>ontent</ID>
+          <ToolTip>ontent</ToolTip>
+          <Default>ontent</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="html"><![CDATA[<div class="page-group">
+    <div class="page">
+        <header class="bar bar-nav">
+            <a class="icon icon-me pull-left open-panel"></a>
+            <h1 class="title">$title$</h1>
+        </header>
+        <nav class="bar bar-tab">
+            <a class="tab-item external active" href="#">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">首页</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-star"></span>
+                <span class="tab-label">发现</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-settings"></span>
+                <span class="tab-label">我</span>
+            </a>
+        </nav>
+        <div class="ontent">
+            <div class="content-block">$content$</div>
+        </div>
+    </div>
+    <!-- 其他的单个page内联页（如果有） <div class="page">...</div> -->
+</div>]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

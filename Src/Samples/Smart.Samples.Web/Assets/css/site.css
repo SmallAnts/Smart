@@ -13,4 +13,14 @@ label.error { color: red; font-size: 12px; margin-left: 4px; padding-left: 20px;
 /*base end*/
 .datepicker { z-index: 999999 !important; }
 .tooltip { text-wrap: normal; word-break: keep-all; }
-/*.btn { border: 0px; border-radius: 2px; }*/
+
+.ace-nav > li { border-left: 0; }
+.ace-settings-container { z-index: 9999; }
+.ace-settings-box { z-index: 9999; }
+
+/*jqgrid*/
+.ui-pg-button .ui-icon { font-size: 140% !important; display: inline-block; font: normal normal normal 14px/1 FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.ui-pg-button .ui-icon-seek-first:before { content: "\f100"; }
+.ui-pg-button .ui-icon-seek-prev:before { content: "\f104"; }
+.ui-pg-button .ui-icon-seek-next:before { content: "\f105"; }
+.ui-pg-button .ui-icon-seek-end:before { content: "\f101"; }

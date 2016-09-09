@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+	xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>widget-box 窗口小部件</Title>
+			<Author>LiuJunfei</Author>
+			<Description>窗口小部件</Description>
+			<Shortcut>ace-widget-box</Shortcut>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>content</ID>
+					<ToolTip>窗口内容</ToolTip>
+					<Default>Button</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="HTML">
+				<![CDATA[<div class="widget-box ui-sortable-handle">
+<div class="widget-header">
+	<h5 class="widget-title">Default Widget Box</h5>
+	<div class="widget-toolbar">
+		<div class="widget-menu">
+			<a href="#" data-toggle="dropdown" data-action="settings">
+				<i class="ace-icon fa fa-bars"></i>
+			</a>
+			<ul class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer">
+				<li><a href="#dropdown1" data-toggle="tab">Option#1</a></li>
+				<li><a href="#dropdown2" data-toggle="tab">Option#2</a></li>
+			</ul>
+		</div>
+
+		<a class="orange2" href="#" data-action="fullscreen"><i class="ace-icon fa fa-expand"></i></a>
+		<a href="#" data-action="reload"><i class="ace-icon fa fa-refresh"></i></a>
+		<a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+		<a href="#" data-action="close"><i class="ace-icon fa fa-times"></i></a>
+	</div>
+</div>
+
+<div class="widget-body">
+	  <div class="widget-main">
+      $content$
+	  </div>
+	</div>
+</div>]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

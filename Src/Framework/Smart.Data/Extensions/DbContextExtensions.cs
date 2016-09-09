@@ -1,13 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq.Expressions;
+using System.Linq;
+using System.Dynamic;
+using System.Text.RegularExpressions;
+using System.Text;
+using System.Data.Common;
+using System.Reflection;
+using Smart.Core.Extensions;
+using System.Data;
 
 namespace Smart.Data.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class DbContextExtensions
     {
+        internal static Regex rxColumns = new Regex(@"\A\s*SELECT\s+((?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|.)*?)(?<!,\s+)\bFROM\b", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
+        internal static Regex rxOrderBy = new Regex(@"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
+        internal static Regex rxDistinct = new Regex(@"\ADISTINCT\s", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
+
+        internal static Regex rxSelect = new Regex(@"\A\s*(SELECT|EXECUTE|CALL|WITH)\s",
+            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+        internal static Regex rxParamsPrefix = new Regex(@"(?<!@)@\w+", RegexOptions.Compiled);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static DbProviderFactory GetDbProviderFactory(this DbContext db)
+        {
+            var conn = db.Database.Connection;
+            var pi = conn.GetType().GetProperty("DbProviderFactory", BindingFlags.NonPublic | BindingFlags.Instance);
+            return pi.GetValue(conn, null) as DbProviderFactory;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static string GetDbType(this DbContext db)
+        {
+            string dbtype = db.Database.Connection.GetType().Name;
+            if (dbtype.Contains("MySql")) return "MYSQL";
+            else if (dbtype.Contains("SqlCe")) return "SQLSERVERCE";
+            else if (dbtype.Contains("Npgsql")) return "POSTGRESQL";
+            else if (dbtype.Contains("Oracle")) return "ORACLE";
+            else if (dbtype.Contains("SQLite")) return "SQLITE";
+            else return "SQLSERVER";
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static string GetParameterPrefix(this DbContext db)
+        {
+            var dbType = db.GetDbType();
+            switch (dbType)
+            {
+                case "MYSQL":
+                    return "?";
+                case "ORACLE":
+                    return ":";
+                default:
+                    return "@";
+            }
+        }
+
         /// <summary>
         /// 创建数据库脚本
         /// </summary>
@@ -20,13 +85,88 @@ namespace Smart.Data.Extensions
         /// <summary>
         /// 分离实体
         /// </summary>
+        /// <param name="db"></param>
         /// <param name="entity">实体对象</param>
         public static void Detach(this DbContext db, object entity)
         {
             if (entity == null) throw new ArgumentNullException("entity");
             ((IObjectContextAdapter)db).ObjectContext.Detach(entity);
         }
+        /// <summary>
+        /// 分离实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="entity"></param>
+        public static void Detach<T>(this DbContext db, T entity) where T : class
+        {
+            if (entity == null) throw new ArgumentNullException("entity");
+            ObjectContext oc = ((IObjectContextAdapter)db).ObjectContext;
+            oc.Detach(entity);
+        }
+        /// <summary>
+        /// 获取实体的主键信息
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetEntityKeys<T>(this DbContext db) where T : class
+        {
+            ObjectContext oc = ((IObjectContextAdapter)db).ObjectContext;
+            var keys = oc.CreateObjectSet<T>().EntitySet.ElementType.KeyProperties.Select(x => x.Name);
+            return keys;
+        }
+        private static Expression<Func<T, bool>> GetFindExp<T>(T obj, IEnumerable<string> keys) where T : class
+        {
+            var p = Expression.Parameter(typeof(T), "x");
 
+            var keyexps = keys.Select(x =>
+            {
+                var member = Expression.PropertyOrField(p, x);
+                var objV = typeof(T).GetProperty(x).GetValue(obj, null);
+                var eq = Expression.Equal(member, Expression.Constant(objV));
+                return eq;
+            }).ToList();
+
+            if (keys.Count() == 1)
+            {
+                return Expression.Lambda<Func<T, bool>>(keyexps[0], new[] { p });
+            }
+
+            var and = Expression.AndAlso(keyexps[0], keyexps[1]);
+            for (var i = 2; i < keyexps.Count; i++)
+            {
+                and = Expression.AndAlso(and, keyexps[i]);
+            }
+            return Expression.Lambda<Func<T, bool>>(and, new[] { p });
+        }
+        /// <summary>
+        /// 在Local中查询实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static T FindLocal<T>(this DbContext db, T obj) where T : class
+        {
+            var keys = db.GetEntityKeys<T>();
+            var func = GetFindExp<T>(obj, keys).Compile();
+            return db.Set<T>().Local.FirstOrDefault(func);
+        }
+        /// <summary>
+        /// 分离已经存在实体，根据传入实体的主键信息匹配
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="obj"></param>
+        public static void DetachOther<T>(this DbContext db, T obj) where T : class
+        {
+            var local = db.FindLocal(obj);
+            if (local != null)
+            {
+                db.Detach(local);
+            }
+        }
         /// <summary>
         /// 批量更新实体, 执行 SaveChanges 后提交
         /// <para></para>
@@ -73,11 +213,9 @@ namespace Smart.Data.Extensions
             if (updateProperties != null && ignoreProperties != null)
                 throw new ArgumentException("不能同时指定 更新字段和忽略字段参数");
 
+            db.DetachOther(entity);
+            db.Set<TEntity>().Attach(entity);
             var entry = db.Entry(entity);
-            if (entry.State == EntityState.Detached)
-            {
-                db.Set<TEntity>().Attach(entity);
-            }
             if (updateProperties != null)
             {
                 // 指定更新部分字段
@@ -143,12 +281,300 @@ namespace Smart.Data.Extensions
         /// <param name="entity">要删除的实体</param>
         public static void Remove<TEntity>(this DbContext db, TEntity entity) where TEntity : class
         {
+            db.DetachOther(entity);
             var entry = db.Entry(entity);
-            if (entry.State == EntityState.Detached)
-            {
-                db.Set<TEntity>().Attach(entity);
-            }
+            db.Set<TEntity>().Attach(entity);
             entry.State = EntityState.Deleted;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> Query<T>(this DbContext db, string sql, params object[] parameters)
+        {
+            if (!rxSelect.IsMatch(sql))
+            {
+                sql = string.Format("select t.* from {0} t where {1}", typeof(T).Name, sql);
+            }
+            var ps = db.ProcessParams(sql, parameters);
+            sql = ps.Item1;
+            parameters = ps.Item2.ToArray();
+            return db.Database.SqlQuery<T>(sql, parameters);
+        }
+
+        /// <summary>
+        /// 通过sql查询返回DataTable
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static DataTable QueryDataTable(this DbContext db, string sql, params object[] parameters)
+        {
+            using (var cmd = db.Database.Connection.CreateCommand())
+            {
+                var ps = db.ProcessParams(sql, parameters);
+                cmd.CommandText = ps.Item1;
+                cmd.Parameters.AddRange(ps.Item2.ToArray());
+                if (cmd.Connection.State != ConnectionState.Open)
+                    cmd.Connection.Open();
+
+                using (var dataReader = cmd.ExecuteReader())
+                {
+                    var dt = new DataTable();
+                    dt.Load(dataReader);
+                    return dt;
+                }
+            }
+
+        }
+        /// <summary>
+        ///  通过sql查询返回动态列表
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static IEnumerable<dynamic> QueryDynamic(this DbContext db, string sql, params object[] parameters)
+        {
+            using (var cmd = db.Database.Connection.CreateCommand())
+            {
+                var ps = db.ProcessParams(sql, parameters);
+                cmd.CommandText = ps.Item1;
+                cmd.Parameters.AddRange(ps.Item2.ToArray());
+                if (cmd.Connection.State != ConnectionState.Open)
+                    cmd.Connection.Open();
+
+                //var retObject = new List<dynamic>();
+                using (var dataReader = cmd.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        var dataRow = GetDynamicEntity(dataReader);
+                        yield return dataRow;
+                    }
+                }
+            }
+        }
+
+        private static dynamic GetDynamicEntity(DbDataReader dataReader)
+        {
+            var entity = new ExpandoObject() as IDictionary<string, object>;
+            for (var fieldCount = 0; fieldCount < dataReader.FieldCount; fieldCount++)
+                entity.Add(dataReader.GetName(fieldCount), dataReader[fieldCount]);
+            return entity;
+        }
+
+
+        /// <summary>
+        /// 执行分页查询,返回分页结果
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="pageIndex">当前页码，从1开始</param>
+        /// <param name="pageSize">分页大小</param>
+        /// <param name="sqlText">完整的分页前的查询语句</param>
+        /// <param name="parameters">查询SQL的参数列表</param>
+        /// <returns>分页数据对象</returns>
+        public static Page<T> QueryPage<T>(this DbContext db, int pageIndex, int pageSize, string sqlText, params object[] parameters) where T : class
+        {
+            if (!rxSelect.IsMatch(sqlText))
+            {
+                sqlText = string.Format("select t.* from {0} t where {1}", typeof(T).Name, sqlText);
+            }
+
+            string sqlCount, sqlPage;
+            // 生成分页查询
+            db.BuildPageQueries((pageIndex - 1) * pageSize, pageSize, sqlText, ref parameters, out sqlCount, out sqlPage);
+            // 初始化返回结果
+            var sql = db.ProcessParams(sqlCount, parameters);
+            var result = db.Database.SqlQuery<Page<T>>(sql.Item1, sql.Item2.ToArray()).First();
+            result.CurrentPage = pageIndex;
+            result.PageSize = pageSize;
+            //result.TotalPages = result.TotalItems / pageSize;
+            //if ((result.TotalItems % pageSize) != 0)
+            //    result.TotalPages++;
+            // 执行查询获取数据
+            sql = db.ProcessParams(sqlPage, parameters);
+            result.Items = db.Database.SqlQuery<T>(sql.Item1, sql.Item2.ToArray()).ToList();
+            return result;
+        }
+
+        /// <summary>
+        /// 生成分页查询语句
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="skip"></param>
+        /// <param name="take"></param>
+        /// <param name="sql"></param>
+        /// <param name="args"></param>
+        /// <param name="sqlCount"></param>
+        /// <param name="sqlPage"></param>
+        internal static void BuildPageQueries(this DbContext db, long skip, long take, string sql, ref object[] args, out string sqlCount, out string sqlPage)
+        {
+            var dbType = db.GetDbType();
+            string sqlSelectRemoved, sqlOrderBy;
+            if (!SplitSqlForPaging(sql, out sqlCount, out sqlSelectRemoved, out sqlOrderBy))
+                throw new Exception("无法解析为分页查询的SQL语句");
+            if (dbType == "ORACLE" && sqlSelectRemoved.StartsWith("*"))
+                throw new Exception("执行分页查询时必须为‘*’指定别名。如： select t.* from table t order by t.id");
+
+            // Build the SQL for the actual final result
+            if (dbType == "SQLSERVER" || dbType == "ORACLE")
+            {
+                sqlSelectRemoved = DbContextExtensions.rxOrderBy.Replace(sqlSelectRemoved, "");
+                if (rxDistinct.IsMatch(sqlSelectRemoved))
+                {
+                    sqlSelectRemoved = "peta_inner.* FROM (SELECT " + sqlSelectRemoved + ") peta_inner";
+                }
+
+                sqlPage = string.Format("SELECT * FROM (SELECT ROW_NUMBER() OVER ({0}) _rownum,{1}) _paged WHERE _rownum>@{2} AND _rownum<=@{3}",
+                    sqlOrderBy.IsEmpty() ? ("ORDER BY (SELECT NULL" + (dbType == "ORACLE" ? " FROM DUAL" : "") + ")") : sqlOrderBy, sqlSelectRemoved, args.Length, args.Length + 1);
+                args = args.Concat(new object[] { skip, skip + take }).ToArray();
+            }
+            else if (dbType == "SQLSERVERCE")
+            {
+                sqlPage = string.Format("{0}\nOFFSET @{1} ROWS FETCH NEXT @{2} ROWS ONLY", sql, args.Length, args.Length + 1);
+                args = args.Concat(new object[] { skip, take }).ToArray();
+            }
+            else
+            {
+                sqlPage = string.Format("{0}\nLIMIT @{1} OFFSET @{2}", sql, args.Length, args.Length + 1);
+                args = args.Concat(new object[] { take, skip }).ToArray();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="sqlCount"></param>
+        /// <param name="sqlSelectRemoved"></param>
+        /// <param name="sqlOrderBy"></param>
+        /// <returns></returns>
+        internal static bool SplitSqlForPaging(string sql, out string sqlCount, out string sqlSelectRemoved, out string sqlOrderBy)
+        {
+            sqlSelectRemoved = null;
+            sqlCount = null;
+            sqlOrderBy = null;
+
+            var m = rxColumns.Match(sql);
+            if (!m.Success)
+                return false;
+
+            Group g = m.Groups[1];
+            sqlSelectRemoved = sql.Substring(g.Index);
+
+            if (rxDistinct.IsMatch(sqlSelectRemoved))
+                sqlCount = sql.Substring(0, g.Index) + "COUNT(" + m.Groups[1].ToString().Trim() + ") TotalItems " + sql.Substring(g.Index + g.Length);
+            else
+                sqlCount = sql.Substring(0, g.Index) + "COUNT(*) TotalItems " + sql.Substring(g.Index + g.Length);
+
+            m = rxOrderBy.Match(sqlCount);
+            if (!m.Success)
+            {
+                sqlOrderBy = null;
+            }
+            else
+            {
+                g = m.Groups[0];
+                sqlOrderBy = g.ToString();
+                sqlCount = sqlCount.Substring(0, g.Index) + sqlCount.Substring(g.Index + g.Length);
+            }
+
+            return true;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="sql"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static Tuple<string, List<object>> ProcessParams(this DbContext db, string sql, object[] args)
+        {
+            var prefix = db.GetParameterPrefix();
+            var dbProviderFactory = db.GetDbProviderFactory();
+            var parameters = new List<object>();
+            var sqlText = rxParamsPrefix.Replace(sql, m =>
+            {
+                string paramName = m.Value.Substring(1);
+                object paramValue;
+                int paramIndex;
+
+                if (int.TryParse(paramName, out paramIndex))
+                {
+                    // 验证参数数值和个数是否匹配
+                    if (paramIndex < 0 || paramIndex >= args.Length)
+                        throw new ArgumentOutOfRangeException(string.Format("参数 '@{0}' 不在指定的范围内。", paramIndex));
+                    paramValue = args[paramIndex];
+                }
+                else
+                {
+                    // 验证参数名称是不是和对象属性名称一致
+                    bool found = false;
+                    paramValue = null;
+                    foreach (var arg in args)
+                    {
+                        var argType = arg.GetType();
+                        if (argType.IsValueType || argType == typeof(string))
+                        {
+                            if (paramName == nameof(arg))
+                            {
+                                paramValue = arg;
+                                found = true;
+                                break;
+                            }
+                        }
+                        else {
+                            var pi = argType.GetProperty(paramName);
+                            if (pi != null)
+                            {
+                                paramValue = pi.GetValue(arg, null);
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!found)
+                        throw new ArgumentException(string.Format("无法获取参数{0}的属性值", paramName));
+                }
+
+                // 可迭代类型，但不是 string 和 byte[]
+                if ((paramValue as System.Collections.IEnumerable) != null &&
+                    (paramValue as string) == null &&
+                    (paramValue as byte[]) == null)
+                {
+                    var sb = new StringBuilder();
+                    foreach (var value in paramValue as System.Collections.IEnumerable)
+                    {
+                        sb.Append((sb.Length == 0 ? prefix : "," + prefix));
+                        sb.Append(parameters.Count.ToString());
+                        var param = dbProviderFactory.CreateParameter();
+                        param.ParameterName = paramName;
+                        param.Value = value;
+                        parameters.Add(param);
+                    }
+                    return sb.ToString();
+                }
+                else
+                {
+                    var param = dbProviderFactory.CreateParameter();
+                    param.ParameterName = paramName;
+                    param.Value = paramValue;
+                    parameters.Add(param);
+                    return prefix + (parameters.Count - 1).ToString();
+                }
+
+            });
+
+            var result = new Tuple<string, List<object>>(sqlText, parameters);
+            return result;
         }
     }
 }

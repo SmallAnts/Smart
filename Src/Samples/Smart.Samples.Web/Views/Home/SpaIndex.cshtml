@@ -1,9 +1,11 @@
 ﻿@{
     ViewBag.Title = "SpaIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section head{
-    <link href="~/Assets/css/jqueryui/jquery-ui.custom.min.css" rel="stylesheet" />
-    <link href="~/Assets/css/jqgrid/ui.jqgrid.min.css" rel="stylesheet" />
+    <link href="/Assets/css/jqueryui/jquery-ui.custom.min.css" rel="stylesheet" />
+    <link href="/Assets/css/jqgrid/ui.jqgrid.min.css" rel="stylesheet" />
+    <link href="/Assets/css/components/jquery.gritter.min.css" rel="stylesheet" />
 }
 @Html.Partial("_navbar")
 <div class="main-container" id="main-container">
@@ -13,25 +15,74 @@
     <div id="sidebar">
     </div>
     <div class="main-content">
-        @*@Html.Partial("_settingsBox")*@
         <div class="main-content-inner">
+            <div class="breadcrumbs" id="breadcrumbs">
+                @Html.Partial("_settingsBox")
+                <script type="text/javascript">
+                    try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+                </script>
+                <ul class="breadcrumb" id="breadcrumb">
+                    <li><i class="ace-icon fa fa-home home-icon"></i><a href="#">首页</a></li>
+                    @*  <li> <a href="#">Other Pages</a> </li>
+                        <li class="active">Error 404</li>*@
+                </ul>
+            </div>
+
+            <div class="page-content" id="page-content"></div>
         </div>
     </div>
     <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
         <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
     </a>
 </div>
+
+<div class="modal fade" id="member-list" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="member-list-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade mymodal" id="publicmodal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade mymodal" id="publicmodal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modal-lg-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade mymodal" id="publicmodal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" id="modal-sm-content">
+        </div>
+    </div>
+</div>
 @section scripts{
     <script>
-        $LAB.script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
-                .script("/assets/js/bootstrap/bootstrap.min.js",
-                          "/assets/js/ace/ace-elements.min.js",
-                          "/assets/js/ace/ace.min.js",
-                          "/assets/js/common.js")
-                .wait(function () {
-                    init_navbar();
-                    init_sidebar();
+        $LAB.setOptions({ AlwaysPreserveOrder: true })
+            .script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
+            .script("/assets/js/bootstrap/bootstrap.min.js")
+            .script("/assets/js/ace/ace-elements.min.js")
+            .script("/assets/js/ace/ace.min.js")
+            .script("/assets/js/components/jquery.gritter.js")
+            .script("/assets/js/common.js")
+            .wait(function () {
+                $.gritter.options = $.extend($.gritter.options, {
+                    title: '提醒',
+                    sticky: false,
+                    time: 2000,
+                    speed: 500,
+                    class_name: 'gritter-info'
                 });
+				if (window.swal && swal.setDefaults) {
+					swal.setDefaults({ cancelButtonText: '取消', confirmButtonText: "确定" });
+                }
+                init_navbar();
+                init_sidebar();
+            });
 
         function init_navbar() {
             $("#btn-exit").click(function () {
@@ -48,7 +99,7 @@
 
         function init_sidebar() {
             $("#sidebar").sidebar({
-                url: '/account/sidebar',
+                url: '/sys/sidebar',
                 //shortcuts: [
                 //    { buttonClass: "btn-success", iconClass: "fa-signal" },
                 //    { buttonClass: "btn-info", iconClass: "fa-pencil" },
@@ -57,8 +108,9 @@
                 onComplete: function () {
                     $("#sidebar li a").click(function (ev) {
                         var href = $(this).attr('href');
-                        if (href[0] != "#") href = "#" + href;
-                        if (window.location.hash == href) gotoUrl(href);
+                        if (href == "#") return true;
+                        //if (href[0] != "#") href = "#" + href;
+                        //if (window.location.hash != href) gotoUrl(href);
                     });
                     $(window).on('hashchange', function (e) {
                         var href = getHref(window.location.hash);
@@ -66,10 +118,11 @@
                         return gotoUrl(href);
                     });
                     var href = getHref(window.location.hash);
-                    if (!href) window.location.hash = '#/demo/charts/index';
-                    else $(window).triggerHandler('hashchange');
+                    if (href) $(window).triggerHandler('hashchange');
+                    //else window.location.hash = '#/sys/index';
                 }
             });
         }
     </script>
 }
+

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+	xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>tabs 标签页</Title>
+      <Author>LiuJunfei</Author>
+      <Description>标签页</Description>
+      <Shortcut>ace-tabs</Shortcut>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>id</ID>
+          <ToolTip>ID</ToolTip>
+          <Default>tabs</Default>
+        </Literal>
+        <Literal>
+          <ID>header1</ID>
+          <ToolTip>标题</ToolTip>
+          <Default>标题1</Default>
+        </Literal>
+        <Literal>
+          <ID>header2</ID>
+          <ToolTip>标题</ToolTip>
+          <Default>标题1</Default>
+        </Literal>
+        <Literal>
+          <ID>content1</ID>
+          <ToolTip>内容</ToolTip>
+          <Default>内容1</Default>
+        </Literal>
+        <Literal>
+          <ID>content2</ID>
+          <ToolTip>内容</ToolTip>
+          <Default>内容2</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="HTML">
+        <![CDATA[<div class="tabbable">
+	<ul class="nav nav-tabs" id="$id$">
+		<li class="active">
+			<a aria-expanded="true" href="#$id$_1" data-toggle="tab">
+				<i class="green ace-icon fa fa-home bigger-120"></i>
+				$header1$
+			</a>
+		</li>
+		<li>
+			<a aria-expanded="false" href="#$id$_2" data-toggle="tab">
+				$header2$
+				<span class="badge badge-danger">4</span>
+			</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane fade active in" id="$id$_1">
+			$content1$
+		</div>
+		<div class="tab-pane fade" id="$id$_2">
+			$content2$
+		</div>
+	</div>
+</div>]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

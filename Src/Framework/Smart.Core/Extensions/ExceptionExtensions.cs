@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace Smart.Core.Extensions
 {
+    /// <summary>
+    /// 异常信息类扩展方法
+    /// </summary>
     public static class ExceptionExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rex"></param>
+        /// <returns></returns>
         public static string GetFullErrorText(this ReflectionTypeLoadException rex)
         {
             var msg = string.Empty;

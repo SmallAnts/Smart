@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+	xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>btn-dropdown 下拉按钮</Title>
+			<Author>LiuJunfei</Author>
+			<Description>带下拉菜单的按钮</Description>
+			<Shortcut>ace-btn-dropdown</Shortcut>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>content</ID>
+					<ToolTip>按钮文本</ToolTip>
+					<Default>Button</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="HTML">
+				<![CDATA[<div class="btn-group">
+<button class="btn dropdown-toggle" aria-expanded="false" data-toggle="dropdown">
+	$content$
+	<span class="ace-icon fa fa-caret-down icon-on-right"></span>
+</button>
+<ul class="dropdown-menu dropdown-default">
+	<li><a href="#">Action</a></li>
+	<li> <a href="#">Another action</a> </li>
+	<li> <a href="#">Something else here</a> </li>
+	<li class="divider"></li>
+	<li> <a href="#">Separated link</a> </li>
+</ul></div>]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

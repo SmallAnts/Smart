@@ -47,5 +47,31 @@ namespace Smart.Core.Extensions
             }
             return result;
         }
+
+        /// <summary>
+        /// 设置缓存
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cacheManager"></param>
+        /// <param name="key">缓存键值</param>
+        /// <param name="data">缓存对象</param>
+        public static void Set<T>(this ICache cacheManager, string key, T data) where T : class
+        {
+            cacheManager.Set<T>(key, new CacheInfo<T>(data));
+        }
+
+        /// <summary>
+        /// 设置缓存及缓存超时时间
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cacheManager"></param>
+        /// <param name="key">缓存键值</param>
+        /// <param name="data">缓存对象</param>
+        /// <param name="slidingExpiration">相对超时时间</param>
+        public static void Set<T>(this ICache cacheManager, string key, T data, TimeSpan slidingExpiration) where T : class
+        {
+            cacheManager.Set<T>(key, new CacheInfo<T>(slidingExpiration, data));
+        }
+
     }
 }

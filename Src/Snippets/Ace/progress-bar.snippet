@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+	xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>progress-bar 进度条</Title>
+			<Author>LiuJunfei</Author>
+			<Description>简单而灵活的进度条。</Description>
+			<Shortcut>ace-progress-bar</Shortcut>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>progress</ID>
+					<ToolTip>当前进度百分比</ToolTip>
+					<Default>50</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="HTML">
+				<![CDATA[<div class="progress progress-mini progress-striped active">
+	<div class="progress-bar progress-bar-purple" style="width: $progress$%;"></div>
+</div>]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

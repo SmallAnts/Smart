@@ -1,15 +1,11 @@
-using Smart.Core.Data;
 using Smart.Data.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
+using Smart.Core.Extensions;
 
 namespace Smart.Data.EF
 {
@@ -18,23 +14,14 @@ namespace Smart.Data.EF
     /// </summary>
     public class EFRepository<T> : IEFRepository<T> where T : class
     {
-        static Regex rxSelect = new Regex(@"\A\s*(SELECT|EXECUTE|CALL|WITH)\s",
-            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        static Regex rxParamsPrefix = new Regex(@"(?<!@)@\w+", RegexOptions.Compiled);
-
         public EFRepository(DbContext dbContext)
         {
             this._dbContext = dbContext;
-            var conn = dbContext.Database.Connection;
-            var pi = conn.GetType().GetProperty("DbProviderFactory", BindingFlags.NonPublic | BindingFlags.Instance);
-            _dbProviderFactory = pi.GetValue(conn, null) as DbProviderFactory;
         }
 
         #region 私有成员
 
         protected DbContext _dbContext;
-        protected DbProviderFactory _dbProviderFactory;
         private DbSet<T> _entities;
         protected virtual IDbSet<T> Entities
         {
@@ -73,9 +60,7 @@ namespace Smart.Data.EF
             {
                 if (entity == null)
                     throw new ArgumentNullException("entity");
-
-                this.Entities.Remove(entity);
-
+                this._dbContext.Remove(entity);
                 return this._dbContext.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)
@@ -90,7 +75,7 @@ namespace Smart.Data.EF
             {
                 if (entity == null)
                     throw new ArgumentNullException("entity");
-
+                this._dbContext.Update(entity);
                 return this._dbContext.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)
@@ -98,7 +83,13 @@ namespace Smart.Data.EF
                 throw new Exception(dbEx.GetFullErrorText(), dbEx);
             }
         }
-
+        public int Execute(string sql, params object[] args)
+        {
+            var ps = this._dbContext.ProcessParams(sql, args);
+            sql = ps.Item1;
+            args = ps.Item2.ToArray();
+            return this._dbContext.Database.ExecuteSqlCommand(sql, args);
+        }
         public T GetById(object id)
         {
             return this.Entities.Find(id);
@@ -107,7 +98,7 @@ namespace Smart.Data.EF
         public T Get(string predicate, params object[] args)
         {
             var sql = string.Format("select t.* from {0} t where {1}", typeof(T).Name, predicate);
-            var ps = ProcessParams(sql, args);
+            var ps = this._dbContext.ProcessParams(sql, args);
             sql = ps.Item1;
             args = ps.Item2.ToArray();
             return this._dbContext.Database.SqlQuery<T>(sql, args).FirstOrDefault();
@@ -115,22 +106,20 @@ namespace Smart.Data.EF
 
         public IEnumerable<T> Query(string sql, params object[] args)
         {
-            if (!rxSelect.IsMatch(sql))
-            {
-                sql = string.Format("select t.* from {0} t where {1}", typeof(T).Name, sql);
-            }
-            var ps = ProcessParams(sql, args);
-            sql = ps.Item1;
-            args = ps.Item2.ToArray();
-            return this._dbContext.Database.SqlQuery<T>(sql, args);
+            return this._dbContext.Query<T>(sql, args);
         }
 
-        public int Execute(string sql, params object[] args)
+        /// <summary>
+        /// 执行分页查询,返回分页结果
+        /// </summary>
+        /// <param name="pageIndex">当前页码，从1开始</param>
+        /// <param name="pageSize">分页大小</param>
+        /// <param name="sqlText">完整的分页前的查询语句</param>
+        /// <param name="parameters">查询SQL的参数列表</param>
+        /// <returns>分页数据对象</returns>
+        public virtual Page<T> GetPage(int pageIndex, int pageSize, string sqlText, params object[] parameters)
         {
-            var ps = ProcessParams(sql, args);
-            sql = ps.Item1;
-            args = ps.Item2.ToArray();
-            return this._dbContext.Database.ExecuteSqlCommand(sql, args);
+            return this._dbContext.QueryPage<T>(pageIndex, pageSize, sqlText, parameters);
         }
 
         #endregion
@@ -189,84 +178,6 @@ namespace Smart.Data.EF
 
         #endregion
 
-        Tuple<string, List<object>> ProcessParams(string sql, object[] args)
-        {
-            var parameters = new List<object>();
-            var sqlText = rxParamsPrefix.Replace(sql, m =>
-            {
-                string paramName = m.Value.Substring(1);
-                object paramValue;
-                int paramIndex;
-
-                if (int.TryParse(paramName, out paramIndex))
-                {
-                    // 验证参数数值和个数是否匹配
-                    if (paramIndex < 0 || paramIndex >= args.Length)
-                        throw new ArgumentOutOfRangeException(string.Format("参数 '@{0}' 不在指定的范围内。", paramIndex));
-                    paramValue = args[paramIndex];
-                }
-                else
-                {
-                    // 验证参数名称是不是和对象属性名称一致
-                    bool found = false;
-                    paramValue = null;
-                    foreach (var arg in args)
-                    {
-                        var argType = arg.GetType();
-                        if (argType.IsValueType || argType == typeof(string))
-                        {
-                            if (paramName == nameof(arg))
-                            {
-                                paramValue = arg;
-                                found = true;
-                                break;
-                            }
-                        }
-                        else {
-                            var pi = argType.GetProperty(paramName);
-                            if (pi != null)
-                            {
-                                paramValue = pi.GetValue(arg, null);
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!found)
-                        throw new ArgumentException(string.Format("无法获取参数{0}的属性值", paramName));
-                }
-
-                // 可迭代类型，但不是 string 和 byte[]
-                if ((paramValue as System.Collections.IEnumerable) != null &&
-                    (paramValue as string) == null &&
-                    (paramValue as byte[]) == null)
-                {
-                    var sb = new StringBuilder();
-                    foreach (var value in paramValue as System.Collections.IEnumerable)
-                    {
-                        sb.Append((sb.Length == 0 ? "@" : ",@") + parameters.Count.ToString());
-                        var param = _dbProviderFactory.CreateParameter();
-                        param.ParameterName = paramName;
-                        param.Value = value;
-                        parameters.Add(param);
-                    }
-                    return sb.ToString();
-                }
-                else
-                {
-                    var param = _dbProviderFactory.CreateParameter();
-                    param.ParameterName = paramName;
-                    param.Value = paramValue;
-                    parameters.Add(param);
-                    return "@" + (parameters.Count - 1).ToString();
-                }
-
-            });
-
-            var result = new Tuple<string, List<object>>(sqlText, parameters);
-            return result;
-        }
     }
 
     public class EFRepository<TEntity, TDbCoutext> : EFRepository<TEntity>, IEFRepository<TEntity, TDbCoutext> where TEntity : class

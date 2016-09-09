@@ -161,7 +161,9 @@ namespace Smart.Web.Mvc.UI.JqGrid
         ///     构造函数
         /// </summary>
         /// <param name = "id">Id of grid</param>
-        /// <param name = "asyncLoad">Id of grid</param>
+        /// <param name = "caption"></param>
+        /// <param name = "url"></param>
+        /// <param name = "asyncLoad"></param>
         public Grid(string id, string caption = null, string url = null, bool asyncLoad = false)
         {
             if (id.IsEmpty())
@@ -170,6 +172,7 @@ namespace Smart.Web.Mvc.UI.JqGrid
             }
             _id = id;
             _caption = caption;
+            _url = url;
             _asyncLoad = asyncLoad;
 
             _autoWidth = true;
@@ -267,7 +270,8 @@ namespace Smart.Web.Mvc.UI.JqGrid
         /// <summary>
         /// 启用或者禁用单元格编辑功能
         /// </summary>
-        /// <param name="cellEdit"></param>
+        /// <param name="cellSubmit"></param>
+        /// <param name="cellUrl"></param>
         /// <returns></returns>
         public Grid SetCellEdit(SubmitType cellSubmit = SubmitType.Remote, string cellUrl = null)
         {
@@ -700,7 +704,7 @@ namespace Smart.Web.Mvc.UI.JqGrid
         /// <summary>
         /// 启用或禁用工具栏
         /// </summary>
-        /// <param name = "toolbar"></param>
+        /// <param name = "toolbarPosition"></param>
         public Grid SetToolbar(ToolbarPosition toolbarPosition = ToolbarPosition.Top)
         {
             _toolbar = true;
@@ -1001,6 +1005,10 @@ namespace Smart.Web.Mvc.UI.JqGrid
         }
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string RenderJavascript()
         {
             var script = new StringBuilder();
@@ -1010,7 +1018,16 @@ namespace Smart.Web.Mvc.UI.JqGrid
             else
                 script.Append("jQuery(document).ready(function () {");
 
-            script.Append("jQuery('#" + _id + "').jqGrid({");
+            script.AppendFormat("jQuery('#{0}').jqGrid('GridDestroy')", _id);
+            if (_pager == true)
+            {
+                script.AppendFormat(".after('<div id=\"{0}_pager\"></div>')", _id);
+            }
+            if (_topPager == true)
+            {
+                script.AppendFormat(".after('<div id=\"{0}_toppager\"></div>')", _id);
+            }
+            script.Append(".jqGrid({");
 
             // 确保最多只有一个键
             if (_columns.Count(r => r.IsKey) > 1)
@@ -1326,19 +1343,15 @@ namespace Smart.Web.Mvc.UI.JqGrid
 
             return script.ToString();
         }
-        public string RenderHtmlElements()
-        {
-            var table = new StringBuilder();
-            if (_pager == true)
-            {
-                table.AppendFormat("<div id=\"{0}_pager\"></div>", _pager);
-            }
-            if (_topPager == true)
-            {
-                table.AppendFormat("<div id=\"{0}_toppager\"></div>", _id);
-            }
-            return table.ToString();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //public string RenderHtmlElements()
+        //{
+        //    var table = new StringBuilder();
+        //    return table.ToString();
+        //}
         /// <summary>
         /// 创建 jqGrid 的HTML和SCRIPT
         /// </summary>
@@ -1346,14 +1359,18 @@ namespace Smart.Web.Mvc.UI.JqGrid
         public override string ToString()
         {
             var script = new StringBuilder();
-            script.Append("<script type=\"text/javascript\">");
+            //script.Append("<script type=\"text/javascript\">");
             script.Append(RenderJavascript());
-            script.Append("</script>");
+            //script.Append("</script>");
 
             script.Replace("##gridid##", _id);
 
-            return RenderHtmlElements() + script;
+            return script.ToString();
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string ToHtmlString()
         {
             return ToString();

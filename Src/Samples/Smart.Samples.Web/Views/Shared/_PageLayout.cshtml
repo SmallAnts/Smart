@@ -38,52 +38,6 @@ else {
         <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
     </a>
     @section scripts{
-        <script>
-            $(function () {
-                $("#sidebar").sidebar({
-                    //url: '/account/sidebar',
-                    topMenu: '@ViewBag.TopMenu',
-                    shortcuts: [
-                        { buttonClass: "btn-success", iconClass: "fa-signal" },
-                        { buttonClass: "btn-info", iconClass: "fa-pencil" },
-                        { buttonClass: "btn-warning", iconClass: "fa-users" },
-                        { buttonClass: "btn-danger", iconClass: "fa-cogs" }],
-                    menus: [{ "url": "/Account/Index", "text": "图表", "icon": "fa-tachometer" },
-                            {
-                                "text": "界面布局", "icon": "fa-desktop", "menus": [
-                                  { "url": "/Demo/UI/TopMenu", "text": "顶部导航", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/UI/Typography", "text": "排版", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/UI/Elements", "text": "Elements", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/UI/Buttons", "text": "按钮", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/UI/ContentSilder", "text": "滑动内容", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/UI/TreeView", "text": "树", "icon": "fa-caret-right" }]
-                            },
-                            {
-                                "text": "表格", "icon": "fa-table", "menus": [
-                                       { "url": "/Demo/Tables/JqGrid", "text": "JqGrid", "icon": "fa-caret-right" }]
-                            },
-                            {
-                                "text": "表单", "icon": "fa-pencil-square-o", "menus": [
-                                    { "url": "/Demo/Forms/Elements", "text": "Elements", "icon": "fa-caret-right" },
-                                    { "url": "/Demo/Forms/Validation", "text": "验证", "icon": "fa-caret-right" },
-                                    { "url": "/Demo/Forms/Editor", "text": "富文本编辑", "icon": "fa-caret-right" },
-                                    { "url": "/Demo/Forms/Upload", "text": "上传", "icon": "fa-caret-right" }]
-                            },
-                            { "url": "/Demo/Widgets/Index", "text": "组件", "icon": "fa-list-alt" },
-                            { "url": "/Demo/Calendar/Index", "text": "日程安排", "icon": "fa-calendar" },
-                            { "url": "/Demo/Gallery/Index", "text": "画廊", "icon": "fa-picture-o" },
-                            {
-                                "text": "其它页面", "icon": "fa-tag", "menus": [
-                                  { "url": "/Demo/Pages/FAQ", "text": "常见问题", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/Pages/Inbox", "text": "收件箱", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/Pages/Invoice", "text": "清单", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/Pages/PricingTables", "text": "价目表", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/Pages/Timeline", "text": "时间轴", "icon": "fa-caret-right" },
-                                  { "url": "/Demo/Pages/UserProfile", "text": "个人信息", "icon": "fa-caret-right" }]
-                            }]
-                });
-            });
-        </script>
         @RenderSection("scripts", required: false)
-}
+    }
 </div>

@@ -10,9 +10,9 @@ namespace Smart.Samples.Domain.Context
         static SampleDbContext()
         {
 #if DEBUG
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SampleDbContext>());
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SampleDbContext>());
 #else
-            Database.SetInitializer<SampleDbContext>(null);
+            //Database.SetInitializer<SampleDbContext>(null);
 #endif
         }
 

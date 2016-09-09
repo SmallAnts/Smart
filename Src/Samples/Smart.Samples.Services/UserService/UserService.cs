@@ -2,7 +2,7 @@
 using Smart.Core.Dependency;
 using Smart.Data.EF;
 using System.Transactions;
-
+using System.Linq;
 namespace Smart.Samples.Services
 {
     internal class UserService : ServiceBase, IUserService, IDependency

@@ -18,6 +18,7 @@ namespace Smart.Core.Extensions
         {
             return birthDate.GetAge(DateTime.Now, calcTime, calcSecond);
         }
+
         /// <summary>
         /// 计算年龄 (now-birthDate)
         /// </summary>
@@ -34,6 +35,7 @@ namespace Smart.Core.Extensions
             }
             return GetTimeDiff(birthDate, now, calcTime: calcTime, calcSecond: calcSecond);
         }
+
         /// <summary>
         /// 与当前日期计算日期差（DateTime.Now－theDate）
         /// </summary>
@@ -43,6 +45,7 @@ namespace Smart.Core.Extensions
         {
             return GetTimeDiff(theDate, DateTime.Now, false, false, false, false);
         }
+
         /// <summary>
         /// 与指定日期计算日期差（date－theDate）
         /// </summary>
@@ -53,6 +56,7 @@ namespace Smart.Core.Extensions
         {
             return GetTimeDiff(theDate, date, false, false, false, false);
         }
+
         /// <summary>
         ///  与当前日期计算时间差（DateTime.Now－theDate）
         /// </summary>
@@ -67,6 +71,7 @@ namespace Smart.Core.Extensions
         {
             return GetTimeDiff(theTime, DateTime.Now, calcTime, calcHour, calcMinute, calcSecond);
         }
+
         /// <summary>
         /// 与指定的时间计算时间差（date－theDate）
         /// </summary>
@@ -183,6 +188,7 @@ namespace Smart.Core.Extensions
             if (dt.HasValue) return dt.Value.ToString(format);
             else return string.Empty;
         }
+
         /// <summary>
         /// 将日期转换为 yyyy-MM-dd 格式的字符串
         /// </summary>
@@ -192,6 +198,7 @@ namespace Smart.Core.Extensions
         {
             return dt.ToString("yyyy-MM-dd");
         }
+
         /// <summary>
         /// 将日期转换为 yyyy-MM-dd HH:mm:ss 格式的字符串
         /// </summary>
@@ -201,6 +208,7 @@ namespace Smart.Core.Extensions
         {
             return dt.ToString("yyyy-MM-dd HH:mm:ss");
         }
+
         /// <summary>
         /// 将日期转换为 yyyy-MM-dd 格式的字符串
         /// </summary>
@@ -210,6 +218,7 @@ namespace Smart.Core.Extensions
         {
             return dt.HasValue ? dt.Value.ToString("yyyy-MM-dd") : null;
         }
+
         /// <summary>
         /// 将日期转换为 yyyy-MM-dd  HH:mm:ss格式的字符串
         /// </summary>
