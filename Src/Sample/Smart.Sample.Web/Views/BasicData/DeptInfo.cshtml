@@ -1,0 +1,41 @@
+﻿@model YQ.Cashier.Domain.Entites.SalonDepartment
+@{
+    Layout = "~/Views/Shared/_BasicListPage.cshtml";
+    ViewBag.Title = "Dept info";
+    ViewBag.GetListUrl = "/BasicData/GetDepts";
+    ViewBag.SaveUrl = "/BasicData/SaveDept";
+    ViewBag.DeleteUrl = "/BasicData/DeleteDept";
+}
+@section form{
+    <form class="form-horizontal" id="editform">
+        <div class="form-group">
+            <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">Dept name</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        @Html.HiddenFor(m => m.BeautySalonId)
+        @Html.HiddenFor(m => m.CreateTime)
+        @Html.HiddenFor(m => m.CreateUserId)
+        @Html.HiddenFor(m => m.SalonDepartmentId)
+    </form>
+}
+@section init_scripts{
+    <script>
+        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.SalonDepartment()
+                    .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
+        window.colModel =  [
+                    { name: 'act', label: "Actions", index: 'act', width: 150, align: "center", sortable: false },
+                    { name: 'SalonDepartmentId', label: "Id", width: 80, align: "center" },
+                    { name: 'Name', label: "Name", width: 200 },
+                    {
+                        name: 'CreateTime', label: "Creation time", hidden:true, align: "center", formatter: "date",
+                        formatoptions: { srcformat: "ISO8601Long", newformat: "m/d/Y H:i A" },
+                    },
+                    { name: 'BeautySalonId', hidden: true },
+        ];
+    </script>
+}

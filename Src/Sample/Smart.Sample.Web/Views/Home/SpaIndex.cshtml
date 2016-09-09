@@ -1,0 +1,184 @@
+﻿@{
+    ViewBag.Title = "SpaIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@helper MenuHelper(Menu menu)
+{
+if (menu.Menus != null && menu.Menus.Count > 0)
+{
+        <ul class="submenu">
+            @foreach (var item in menu.Menus)
+            {
+                <li class="">
+                    @if (item.Menus == null || item.Menus.Count == 0)
+                    {
+                        <a href="@item.Url">
+                            <i class="menu-icon fa @item.Icon"></i>
+                            <span class="menu-text"> @item.Text</span>
+                        </a>
+                    }
+                    else {
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa @item.Icon"></i>
+                            <span class="menu-text"> @item.Text</span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                    }
+                    <b class="arrow"></b>
+                    @MenuHelper(item)
+                </li>
+            }
+        </ul>
+}
+}
+@section head{
+    <link href="/Assets/css/jqgrid/ui.jqgrid.min.css" rel="stylesheet" />
+    <link href="/Assets/css/components/jquery.gritter.min.css" rel="stylesheet" />
+    <link href="/Assets/css/forms/datepicker.min.css" rel="stylesheet" />
+}
+@Html.Partial("_navbar")
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try { ace.settings.check('main-container', 'fixed') } catch (e) { }
+    </script>
+    <div id="sidebar" class="sidebar responsive">
+        <script type="text/javascript">
+            try { ace.settings.check('sidebar', 'fixed') } catch (e) { }
+        </script>
+        <ul class="nav nav-list">
+            @foreach (var menu in ViewBag.Menus)
+            {
+                <li class="">
+                    @if (menu.Menus == null || menu.Menus.Count == 0)
+                    {
+                        <a href="@menu.Url">
+                            <i class="menu-icon fa @menu.Icon"></i>
+                            <span class="menu-text"> @menu.Text</span>
+                        </a>
+                    }
+                    else {
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa @menu.Icon"></i>
+                            <span class="menu-text"> @menu.Text</span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                    }
+                    <b class="arrow"></b>
+                    @MenuHelper(menu)
+                </li>
+            }
+        </ul>
+        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+            <i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+        </div>
+        <script type="text/javascript">
+            try { ace.settings.check('sidebar', 'collapsed') } catch (e) { }
+        </script>
+    </div>
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" id="breadcrumbs">
+                @Html.Partial("_settingsBox")
+                <script type="text/javascript">
+                    try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+                </script>
+                <ul class="breadcrumb" id="breadcrumb">
+                    @*<li><i class="ace-icon fa fa-home home-icon"></i><a href="#">首页</a></li>*@
+                    @*  <li> <a href="#">Other Pages</a> </li>
+                        <li class="active">Error 404</li>*@
+                </ul>
+            </div>
+            <div class="page-content" id="page-content">
+            </div>
+        </div>
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
+</div>
+
+<div class="modal fade" id="member-list" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="member-list-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade mymodal" id="publicmodal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade mymodal" id="publicmodal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modal-lg-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade mymodal" id="publicmodal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" id="modal-sm-content">
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $LAB.setOptions({ AlwaysPreserveOrder: true })
+           .script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
+           .script(IS_CHROME ? null : "/assets/js/components/touche.min.js")
+           .script("/assets/js/bootstrap/bootstrap.min.js")
+           .script("/assets/js/ace/ace-elements.min.js")
+           .script("/assets/js/ace/ace.min.js")
+           .script("/assets/js/components/jquery.gritter.js")
+           .script("/assets/js/common.js")
+           .wait(function () {
+               $.gritter.options = $.extend($.gritter.options, {
+                   title: 'Info',
+                   sticky: false,
+                   time: 2000,
+                   speed: 500,
+                   class_name: 'gritter-info'
+               });
+               init_navbar();
+               init_sidebar();
+           });
+
+        function init_navbar() {
+            $("#btn-exit").on("click", function () {
+                var url = $(this).attr("href");
+                swal({
+                    title: "Exit?", text: "Click [OK] button to exit the login!", type: "warning",
+                    showCancelButton: true,
+                }, function (isConfirm) {
+                    if (isConfirm) location.href = url;
+                });
+                return false;
+            });
+        }
+
+        function init_sidebar() {
+            //$("#sidebar").sidebar({
+            //    url: '/home/sidebar',
+            //    //shortcuts: [
+            //    //    { buttonClass: "btn-success", iconClass: "fa-signal" },
+            //    //    { buttonClass: "btn-info", iconClass: "fa-pencil" },
+            //    //    { buttonClass: "btn-warning", iconClass: "fa-users" },
+            //    //    { buttonClass: "btn-danger", iconClass: "fa-cogs" }],
+            //    onComplete: function () {
+            $("#sidebar li a").on("click", function (ev) {
+                var href = $(this).attr('href');
+                if (href == "#") return true;
+                //if (href[0] != "#") href = "#" + href;
+                //if (window.location.hash != href) gotoUrl(href);
+            });
+            $(window).on('hashchange', function (e) {
+                var href = getHref(window.location.hash);
+                if (!href) return false;
+                return gotoUrl(href);
+            });
+            $(window).triggerHandler('hashchange');
+            //    }
+            //});
+        }
+    </script>
+}

@@ -1,0 +1,159 @@
+﻿@model YQ.Cashier.Domain.Entites.BeautySalon
+@{
+    ViewBag.Title = "Salon Info";
+}
+<link href="~/Assets/css/bootstrap/bootstrap-timepicker.min.css" rel="stylesheet" />
+<form class="form-horizontal" id="editform">
+    <div class="form-group">
+        <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Name")</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.Name, new { @class = "width-100", @readonly = true })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+    <div class="form-group">
+        <label for="ShortName" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Short name")</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.ShortName, new { @class = "width-100", @readonly = true })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.ShortName)
+    </div>
+    <div class="form-group">
+        <label for="Code" class="col-xs-12 col-sm-3 control-label no-padding-right">Code</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.Code, new { @class = "width-100", @readonly = true })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.Code)
+    </div>
+    <div class="form-group">
+        <label for="Address" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Business License</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.BusinessLicence, new { @class = "width-100", @readonly = true })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.BusinessLicence)
+    </div>
+    <div class="form-group">
+        <label for="OpeningDate" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Opening Date</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.OpeningDate, new { @class = "width-100 date-picker", @readonly = true })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.OpeningDate)
+    </div>
+    <div class="form-group">
+        <label for="area" class="col-xs-12 col-sm-3 control-label no-padding-right">Area</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.MergeName, new { @class = "width-100", @readonly = true })
+            </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline"></div>
+    </div>
+    <div class="form-group">
+        <label for="Address" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Address</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.Address, new { @class = "width-100", @readonly = true })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.Address)
+    </div>
+    <div class="form-group">
+        <label for="Phone" class="col-xs-12 col-sm-3 control-label no-padding-right">Phone</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.Phone, new { @class = "width-100", type = "tel" })
+                <i class="ace-icon fa fa-phone"></i>
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.Phone)
+    </div>
+    <div class="form-group">
+        <label for="Address" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Email</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.Email, new { @class = "width-100", type = "email" })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.Email)
+    </div>
+    <div class="form-group">
+        <label for="Notice" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Notice</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextAreaFor(m => m.Notice, new { @class = "width-100" })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.Notice)
+    </div>
+    <div class="form-group">
+        <label for="OpenTime" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Open Time</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.BeginTime, new { @class = "width-100", id = "BeginTime" })
+                <i class="ace-icon fa fa-clock-o green"></i>
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.BeginTime)
+    </div>
+    <div class="form-group">
+        <label for="Address" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Closing Time</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.EndTime, new { @class = "width-100", id = "EndTime" })
+                <i class="ace-icon fa fa-clock-o green"></i>
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.EndTime)
+    </div>
+    <div class="form-group">
+        <label for="Interval" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Reservation Interval</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.Interval, new { @class = "width-100", id = "Interval" })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.Interval)
+    </div>
+
+    <div class="form-group">
+        <label for="AheadHour" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Ahead Timespan</label>
+        <div class="col-xs-12 col-sm-5">
+            <span class="block input-icon input-icon-right">
+                @Html.TextBoxFor(m => m.AheadHour, new { @class = "width-100", id = "AheadHour" })
+            </span>
+        </div>
+        @Html.ValidationMessageFor(m => m.AheadHour)
+    </div>
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-3"></label>
+        <div class="col-xs-12 col-sm-5">
+            <button type="button" class="btn btn-primary btn-sm no-border" id="btn_save" data-form="#editform">
+                <i class="fa fa-floppy-o"></i> Save
+            </button>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.BeautySalonId)
+</form>
+
+<script>
+    $LAB.script(js("validate", "datepicker", "timepicker", "spinner")).wait(function () {
+        submitForm("#btn_save", "/BasicData/SetStoreInfo", function (ret) {
+            $.gritter.add({ class_name: 'gritter-info', text: ret.value });
+        });
+        $('#BeginTime').timepicker();
+        $('#EndTime').timepicker();
+        $('#AheadHour').ace_spinner({ value: 0, min: 0, max: 12, step: 0.5, on_sides: true, icon_up: 'ace-icon fa fa-plus', icon_down: 'ace-icon fa fa-minus', btn_up_class: 'btn-purple', btn_down_class: 'btn-purple' });
+        $('#Interval').ace_spinner({ value: 0.5, min: 0.5, max: 1, step: 0.5, on_sides: true, icon_up: 'ace-icon fa fa-plus', icon_down: 'ace-icon fa fa-minus', btn_up_class: 'btn-purple', btn_down_class: 'btn-purple' });
+    });
+</script>
+    

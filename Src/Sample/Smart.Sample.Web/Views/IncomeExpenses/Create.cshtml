@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+<div class="space-2"></div>
+<div class="row">
+    <div class="col-xs-12 page-col-xs">
+        <form class="form-horizontal" id="form0">
+            <div class="well well-sm no-margin-bottom">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 control-label no-padding-right" for="ManualCode">Bill No.</label>
+                            <div class="col-xs-12 col-sm-9 no-padding-right">
+                                <span class="block">
+                                    <input name="ManualCode" class="width-80" id="ManualCode" type="text" value="" data-val="true" data-val-length-max="50" data-val-length="字段 手工单号 必须是最大长度为 50 的字符串。">
+                                </span>
+                            </div>
+                            <div class="help-block col-xs-12 col-sm-9 col-sm-offset-3 inline">
+                                <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="ManualCode"></span></b></mark>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 control-label no-padding-right" for="BillDate">Bill date</label>
+                            <div class="col-xs-12 col-sm-9 no-padding-right">
+                                <span class="block">
+                                    <input name="BillDate" class="form-control width-80 form_datetime" id="BillDate" type="text" value="2016/4/16" data-val-required="单据日期 字段是必需的。" data-val="true" data-val-date="字段 单据日期 必须是日期。">
+                                </span>
+                            </div>
+                            <div class="help-block col-xs-12 col-sm-9 col-sm-offset-3 inline">
+                                <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="BillDate"></span></b></mark>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 control-label no-padding-right" for="IncomeExpensesMode">Payment method</label>
+                            <div class="col-xs-12 col-sm-9 no-padding-right">
+                                <div class="radio">
+                                    <label>
+                                        <input class="ace" name="OpenCardMode" type="radio" value="NewCard" checked="checked">
+                                        <span class="lbl"> @this.T("Income")</span>
+                                    </label>
+                                    <label>
+                                        <input class="ace" name="OpenCardMode" type="radio" value="NotCard">
+                                        <span class="lbl"> @this.T("Expenditure")</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="help-block col-xs-12 col-sm-9 col-sm-offset-3 inline">
+                                <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="IncomeExpensesMode"></span></b></mark>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 control-label no-padding-right" for="CategoryId">Payment type</label>
+                            <div class="col-xs-12 col-sm-9 no-padding-right">
+                                <span class="block">
+                                    <select name="CategoryId" id="CategoryId" data-val-required="收支分类 字段是必需的。" data-val="true" data-val-number="字段 收支分类 必须是一个数字。">
+                                        <option selected="selected" value="0">Select</option>
+                                    </select>
+                                </span>
+                            </div>
+                            <div class="help-block col-xs-12 col-sm-9 col-sm-offset-3 inline">
+                                <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="CategoryId"></span></b></mark>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 control-label no-padding-right" for="Money">Payment amount</label>
+                            <div class="col-xs-12 col-sm-9 no-padding-right">
+                                <span class="block">
+                                    <input name="Money" class="width-80" id="Money" type="text" value="0" data-val-required="收支金额 字段是必需的。" data-val="true" data-val-number="字段 收支金额 必须是一个数字。">
+                                </span>
+                            </div>
+                            <div class="help-block col-xs-12 col-sm-9 col-sm-offset-3 inline">
+                                <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="Money"></span></b></mark>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 control-label no-padding-right" for="Remark">Remark</label>
+                            <div class="col-xs-12 col-sm-9 no-padding-right">
+                                <span class="block">
+                                    <input name="Remark" class="width-80" id="Remark" type="text" value="" data-val="true" data-val-length-max="200" data-val-length="字段 单据备注 必须是最大长度为 200 的字符串。">
+                                </span>
+                            </div>
+                            <div class="help-block col-xs-12 col-sm-9 col-sm-offset-3 inline">
+                                <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="Remark"></span></b></mark>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5 col-xs-12 text-right">
+                        <button class="btn btn-info no-border" type="button">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $LAB.script(js("moment", "datepicker")).wait(function () {
+        //$("#BillDate").datepicker();
+    });
+</script>

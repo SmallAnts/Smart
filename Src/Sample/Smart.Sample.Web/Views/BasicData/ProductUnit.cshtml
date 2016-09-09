@@ -1,0 +1,54 @@
+﻿@model YQ.Cashier.Domain.Entites.ProductUnit
+@{
+    Layout = "~/Views/Shared/_BasicListPage.cshtml";
+    ViewBag.Title = "ProductUnit info";
+    ViewBag.GetListUrl = "/BasicData/GetProductUnits";
+    ViewBag.SaveUrl = "/BasicData/SaveProductUnit";
+    ViewBag.DeleteUrl = "/BasicData/DeleteProductUnit";
+}
+@section form{
+    <form class="form-horizontal" id="editform">
+        <div class="form-group">
+            <label for="ProductUnitId" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Id")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.ProductUnitId, new { type = "number", @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.ProductUnitId)
+        </div>
+        <div class="form-group">
+            <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("ProductUnit name")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div class="form-group">
+            <label for="Remark" class="col-xs-12 col-sm-3 control-label no-padding-right">Remark</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextAreaFor(m => m.Remark, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Remark)
+        </div>
+        @Html.HiddenFor(m => m.ProductUnitId)
+        @Html.HiddenFor(m => m.CreateTime)
+        @Html.HiddenFor(m => m.CreateUserId)
+    </form>
+}
+@section init_scripts{
+    <script>
+        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.ProductUnit()
+                    .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
+        window.colModel = [
+            { name: 'act', label: "Actions", index: 'act', width: 150, align: "center", sortable: false },
+            { name: 'ProductUnitId', label: "Id", width: 80, align: "center", hidden:true },
+            { name: 'Name', label: "Name", width: 200 },
+            { name: 'Remark', label: "Note", width: 200 },
+        ];
+    </script>
+}

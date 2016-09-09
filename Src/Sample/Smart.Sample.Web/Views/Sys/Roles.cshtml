@@ -1,0 +1,126 @@
+﻿@model YQ.Cashier.Domain.Entites.Role
+@{
+    Layout = "~/Views/Shared/_BasicListPage.cshtml";
+    ViewBag.Title = "Role info";
+    ViewBag.GetListUrl = "/sys/GetRoles";
+    ViewBag.SaveUrl = "/sys/SaveRole";
+    ViewBag.DeleteUrl = "/sys/DeleteRole";
+}
+<link href="~/Assets/css/ztree/metroStyle.css" rel="stylesheet" />
+@section form{
+    <form class="form-horizontal" id="editform">
+        <div class="form-group">
+            <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">Name</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div class="form-group">
+            <label for="Note" class="col-xs-12 col-sm-3 control-label no-padding-right">Note</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextAreaFor(m => m.Note, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Note)
+        </div>
+        @Html.HiddenFor(m => m.RoleId)
+    </form>
+}
+<div class="modal fade" id="setmodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-plus"></i> @this.T("Set privilege")</h4>
+            </div>
+            <div class="modal-body">
+                <ul id="treePrivilege" class="ztree"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm no-border" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                <button type="button" class="btn btn-primary btn-sm no-border" id="btn_set" data-form="#editform">
+                    <i class="fa fa-floppy-o"></i> Save
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+@section init_scripts{
+    <script>
+        var setRoleId='';
+        function setPrivilege(id) {
+            setRoleId=id;
+            var data=$grid.jqGrid('getRowData',id);
+            var treeObj = $.fn.zTree.getZTreeObj("treePrivilege");
+            treeObj.checkAllNodes(false);
+            $.post("/sys/GetRolePrivileges",{roleId:id},function(ret){
+                for (var i = 0; i < ret.value.length; i++) {
+                    var nodes = treeObj.getNodesByParam("id",ret.value[i], null);
+                    for (var j = 0; j < nodes.length; j++) {
+                        treeObj.checkNode(nodes[j], true, true);
+                    }
+                }
+            });
+            $("#setmodal").modal("show");
+        }
+
+        window.init=function(){
+            $("#setmodal").modal({ show: false });
+            $("#btn_set").on("click",function(){
+                var treeObj = $.fn.zTree.getZTreeObj("treePrivilege");
+                var nodes = treeObj.getCheckedNodes(true);
+                var cnodes=[];
+                for (var i = 0; i < nodes.length; i++) {
+                    if(!nodes[i].isParent) cnodes.push(nodes[i].id);
+                }
+                $.post("/sys/SetRolePrivileges",{roleId:setRoleId,operations:cnodes},function(ret){
+                    $("#setmodal").modal("hide");
+                });
+            });
+            $LAB.script(js("ztree")).wait(function(){
+                var setting = {
+                    check: {  enable: true   },
+                    data: {  simpleData: { enable: true }  }
+                };
+
+                var zNodes =@Html.Raw(ViewBag.funcNodes);
+                $.fn.zTree.init($("#treePrivilege"), setting, zNodes);
+            })
+        }
+        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.Role()
+            .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
+        window.colModel = [
+            { name: 'act', label: "Actions",  width: 230, align: "center" },
+            { name: 'RoleId', label: "Role id",  width: 80,hidden:true },
+            { name: 'Name', label: "Name",  width: 150 },
+            { name: 'IsSysRole', label: "System role",  width: 100 ,align: "center",formatter:"checkbox" },
+            { name: 'Note', label: "Note",  width: 300 },
+            {
+                name: 'CreateTime', label: "Creation time",  align: "center",
+                formatter: "date", formatoptions:{srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'},
+            }
+        ];
+        window.gridComplete = function () {
+            var ids = $grid.jqGrid('getDataIDs');
+            for (var i = 0; i < ids.length; i++) {
+                var data=$grid.jqGrid('getRowData',ids[i]);
+                if(data.IsSysRole=="true") continue;
+                var cl = ids[i];
+                var cellData ='';
+                cellData+='<button class="btn btn-xs btn-success no-border btn-set" type="button" data-rowid="' + cl + '">Privilege</button>';
+                cellData+='<button class="btn btn-xs btn-primary no-border btn-edit" type="button" data-rowid="' + cl + '"" ><i class="fa fa-pencil"></i> Edit</button>';
+                cellData += '<button class="btn btn-xs btn-danger no-border btn-del" type="button" data-rowid="' + cl + '"><i class="fa fa-close"></i> Delete</button>';
+                //$grid.jqGrid('setRowData', ids[i], { act: cellData });
+                var ind = $(this).jqGrid('getGridRowById', ids[i]);
+                $("td[role='gridcell']:eq(1)",ind).html(cellData);
+            }
+        }
+        $("#grid_list").on("click",".btn-set",function(){
+            setPrivilege($(this).data("rowid"));
+        })
+    </script>
+}

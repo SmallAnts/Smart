@@ -1,0 +1,81 @@
+﻿@model YQ.Cashier.Domain.DTOs.PerformanceTierInfo
+@{
+    ViewBag.Title = "PerformanceTier";
+}
+<div class="row">
+    <div class="col-sm-4">
+        <div class="widget-box widget-color-green2">
+            <div class="widget-header">
+                <h4 class="widget-title lighter smaller">Position</h4>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main padding-8">
+                    <ul class="tree tree-unselectable" id="tree2" role="tree">
+                        @for (int i = 0; i < Model.Positions.Count(); i++)
+                        {
+                            var selected = i == 0 ? "tree-selected" : "";
+                            <li class="tree-item @selected" role="treeitem" id="@Model.Positions[i].PositionId">
+                                <span class="tree-item-name">
+                                    <span class="tree-label">
+                                        <i class="ace-icon fa fa-file-text grey"></i>
+                                        @Model.Positions[i].Name
+                                    </span>
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8 widget-container-col ui-sortable">
+        <div class="widget-box ui-sortable-handle">
+            <div class="widget-header widget-header-flat">
+                <h5 class="widget-title smaller">Tiered Performance Setting</h5>
+                <div class="widget-toolbar no-border">
+                    <ul class="nav nav-tabs" id="myTab">
+                        @for (int i = 0; i < Model.PerformanceTypes.Count(); i++)
+                        {
+                            string str = "#PerformType" + Model.PerformanceTypes[i].PerformTypeId;
+                            if (i == 0)
+                            {
+                                <li class="active">
+                                    <a href="@str" data-toggle="tab">@Model.PerformanceTypes[i].Name</a>
+                                    <input type="hidden" value="@Model.PerformanceTypes[i].PerformTypeId" />
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="@str" data-toggle="tab">@Model.PerformanceTypes[i].Name</a>
+                                    <input type="hidden" value="@Model.PerformanceTypes[i].PerformTypeId" />
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div id="divTierList"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    gettiers($("li.active"));
+    function gettiers(obj) {
+        var pid = $("li.tree-selected").attr('id');
+        var ptid = obj.find("input").val();
+        $.post("/Employee/Position_PerformanceTier", { pid: pid, ptid: ptid }, function (data) {
+            $("#divTierList").html('');
+            $("#divTierList").append(data);
+        })
+    }
+    $(".tree-item").on('click', function () {
+        $("li").removeClass("tree-selected");
+        $(this).addClass("tree-selected");
+        gettiers($("li.active"));
+    })
+
+    $("#myTab li").on('click', function () {
+        gettiers($(this));
+    })
+</script>

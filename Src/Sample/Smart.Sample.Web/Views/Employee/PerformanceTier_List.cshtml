@@ -1,0 +1,192 @@
+﻿@model YQ.Cashier.Domain.DTOs.PositionPerformanceTierInfos
+@{
+    ViewBag.Title = "PerformanceTier_List";
+}
+
+<div class="well">
+    <ul class="list-group no-padding no-margin">
+        <li class="list-group-item1">
+            <span class="fontstrong"></span>
+            @if (Model.PositionPerformanceTierInfo.Count() != 0)
+            {
+                <div class="btn-group pull-right">
+                    <a class="btn btn-sm btn-danger" id="btnDelete">Delete</a>
+                </div>
+            }
+            <div class="btn-group pull-right">
+                <a class="btn btn-sm btn-success" id="btnAddNewTier">Add New Tier</a>
+            </div>
+        </li>
+        @for (int i = 0; i < Model.PositionPerformanceTierInfo.Count(); i++)
+        {
+            var pct = string.Empty;
+            if (Model.PositionPerformanceTierInfo[i].PerormanceTier.Flag == YQ.Cashier.Domain.Entites.PerformTierType.FixedAmount)
+            {
+                pct = "A$ " + (Model.PositionPerformanceTierInfo[i].PerormanceTier.Amount ?? 0).ToString();
+            }
+            if (Model.PositionPerformanceTierInfo[i].PerormanceTier.Flag == YQ.Cashier.Domain.Entites.PerformTierType.Ratio)
+            {
+                pct = (Model.PositionPerformanceTierInfo[i].PerormanceTier.Percentage ?? 0) + " %";
+            }
+            <li class="list-group-item1">
+                <span class="fontstrong">Performance Tier：</span>
+                <span class="label label-danger">@Model.PositionPerformanceTierInfo[i].PerormanceTier.PerformFloor-@Model.PositionPerformanceTierInfo[i].PerormanceTier.PerformCeiling</span>
+                <span class="label label-success"></span>
+
+                <span class="label label-info">@pct</span>
+                <div class="btn-group pull-right">
+                    <a class="btn btn-sm btn-success modify">Modify</a>
+                    <input type="hidden" value="@Model.PositionPerformanceTierInfo[i].PerormanceTier.PerformTierId" />
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+<div class="modal fade" id="divAddTier">
+    <div class="modal-dialog">
+        <div class="modal-content" id="customer-modalcontent">
+            <div class="modal-header">
+                <h4>@this.T("Add New Tier")</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="fmTier">
+                    <div class="form-group no-margin-left no-margin-right">
+                        <label class="fontstrong">
+                            Performance Tier
+                        </label>
+                        @Html.TextBoxFor(m => m.PerformanceTier.PerformFloor, new { @class = "input-small", Name = "PerformFloor", id = "PerformFloor", @readonly = true })
+                        <span class="glyphicon glyphicon-minus dark"></span>
+                        @Html.TextBoxFor(m => m.PerformanceTier.PerformCeiling, new { @class = "input-small", Name = "PerformCeiling", id = "PerformCeiling", @readonly = true })
+                        <div class="help-block col-xs-12 col-sm-12 inline">
+                            <mark>
+                                <b>
+                                    @Html.ValidationMessage("PerformFloor")
+                                    @Html.ValidationMessage("PerformCeiling")
+                                </b>
+                            </mark>
+                        </div>
+                    </div>
+                    <div class="form-group no-margin-left no-margin-right">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <label style="margin:0 0 0 10px;">
+                                    <input checked="checked" name="Flag" type="radio" value=0>  @this.T("Ratio")
+                                </label>
+                                <label style="margin:0 0 0 10px;">
+                                    <input name="Flag" type="radio" value=1>  @this.T("Fixed amount")
+                                </label>
+                            </div>
+                            <div class="input-group-addon hidden" id="divAmount">A$</div>
+                            @Html.TextBoxFor(m => m.InturnValue, new { @class = "form-control", id = "InturnValue" })
+                            <div class="input-group-addon" id="divRatio">%</div>
+                        </div>
+                        <div class="help-block col-xs-12 col-sm-12 inline">
+                            <mark><b>@Html.ValidationMessageFor(m => m.InturnValue)</b></mark>
+                        </div>
+                        @Html.HiddenFor(p => p.PerformanceTier.PerformTierId, new { id = "PerformTierId", Name = "PerformTierId" })
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-sm pull-left" id="btnSave">
+                    <i class="ace-icon fa fa-save"></i> @this.T("Save")
+                </button>
+                <button class="btn btn-danger btn-sm pull-left" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i> @this.T("Cancel")
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    var pid = $("li.tree-selected").attr('id');
+    var ptid = $("li.active").find("input").val();
+    $("#btnAddNewTier").on('click', function () {
+        $("#PerformCeiling").attr("readonly", false).attr("placeholder",@this.T("Infinity"));
+        $("#PerformCeiling").val('');
+        $("#PerformTierId").val('');
+        $.post("/Employee/GetMaxTierCeiling", { pid: pid, ptid: ptid }, function (data) {
+            $("#PerformFloor").val(data.value);
+            $("#divAddTier").modal('show');
+        })
+    })
+    $LAB.script(js("validate")).wait(function () {
+        $("#btnSave").on('click', function () {
+            var va = validateForm("fmTier"); //验证数据
+            if (!va) return;
+            var tier = $("#fmTier").serialize();
+            tier += "&PerformTypeId=" + ptid + "&positionId=" + pid;
+
+            $.post("/Employee/SaveTier", tier, function (data) {
+                if (!data.value) {
+                    swal(data.error);
+                }
+                else {
+                    gettiers($("li.active"));
+                    $("#divAddTier").modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                }
+            })
+        })
+
+        $("input:radio").on("click", function () {
+            if ($(this).val() == 0) {
+                $("#divAmount").addClass("hidden");
+                $("#divRatio").removeClass("hidden");
+            }
+            if ($(this).val() == 1) {
+                $("#divRatio").addClass("hidden");
+                $("#divAmount").removeClass("hidden");
+            }
+        })
+
+        $(".modify").on('click', function () {
+            var tierid = $(this).next("input").val();
+            $("#PerformFloor").attr("readonly", true);
+            $("#PerformCeiling").attr("readonly", true);
+
+            $.post("/Employee/GetPerformTier", { ptid: tierid }, function (data) {
+                if (data) {
+                    $("#PerformFloor").val(data.PerformFloor);
+                    $("#PerformCeiling").val(data.PerformCeiling);
+                    $("input:radio[value=" + data.Flag + "]").attr('checked', true);
+                    $("input:radio[value=" + data.Flag + "]").trigger('click');
+                    if (data.Flag == 0)
+                        $("#InturnValue").val(data.Percentage || "0");
+                    else if (data.Flag == 1)
+                        $("#InturnValue").val(data.Amount || "0");
+                    $("#PerformTierId").val(data.PerformTierId || "");
+                    $("#divAddTier").modal('show');
+                }
+                else {
+
+                }
+            })
+        })
+        $("#btnDelete").on('click', function () {
+            swal({
+                title: "Are you sure?",
+                text: "Delete all the tier",
+                type: "info",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                var pid = $("li.tree-selected").attr('id');
+                var ptid = $("li.active").find("input").val();
+                $.post("/Employee/DeletePerformTier", { pid: pid, ptid: ptid }, function (data) {
+                    if (data.value) {
+                        gettiers($("li.active"));
+                        swal("Delete success");
+                    }
+                    else {
+                        swal("Delete fail!");
+                    }
+                })
+            });
+        })
+    });
+</script>

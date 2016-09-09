@@ -1,0 +1,51 @@
+﻿@model YQ.Cashier.Domain.Entites.SalaryType
+@{
+    Layout = "~/Views/Shared/_BasicListPage.cshtml";
+    ViewBag.Title = "Salary Type";
+    ViewBag.GetListUrl = "/Employee/GetSalaryTypes";
+    ViewBag.SaveUrl = "/Employee/SaveSalaryType";
+    ViewBag.DeleteUrl = "/Employee/DeleteSalaryType";
+}
+
+@section form{
+    <form class="form-horizontal" id="editform">
+        <div class="form-group">
+            <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Type name")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div class="form-group">
+            <label for="JobNumber" class="col-xs-12 col-sm-3 control-label no-padding-right">Note</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.Note, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Note)
+        </div>
+        @Html.HiddenFor(m => m.CreateTime)
+        @Html.HiddenFor(m => m.SalaryTypeId)
+        @Html.HiddenFor(m => m.CreateUserId)
+    </form>
+}
+@section init_scripts{
+    <script>
+        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.SalaryType()
+                    .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
+        window.colModel = [
+            { name: 'act', label: "Actions", index: 'act', width: 160, align: "center", sortable: false },
+            { name: 'Name', label: "Name", width: 120 },
+            { name: 'Note', label: "Note", width: 120 },
+            {
+                name: 'CreateTime', label: "Creation time", align:  "center", formatter: "date",
+                formatoptions: { srcformat: "ISO8601Long", ewformat: "m/d/Y H:i A" },
+            },
+            { name: 'SalaryTypeId',hidden:true },
+            { name: 'CreateUserId',hidden:true },
+        ];
+    </script>
+}

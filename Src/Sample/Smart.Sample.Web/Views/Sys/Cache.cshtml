@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Cache manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <link href="/Assets/css/jqgrid/ui.jqgrid.min.css" rel="stylesheet" />
+}
+<div class="main-container" id="main-container">
+    <table id="grid_list"></table>
+</div>
+@section scripts{
+    <script>
+        $LAB.setOptions({ AlwaysPreserveOrder: true })
+          .script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
+          .script(IS_CHROME ? null : "/assets/js/components/touche.min.js")
+          .script("/assets/js/bootstrap/bootstrap.min.js")
+          .script("/assets/js/ace/ace-elements.min.js")
+          .script("/assets/js/ace/ace.min.js")
+           .script("/assets/js/components/jquery.gritter.js")
+           .script("/assets/js/common.js")
+          .script(js("jqgrid"))
+          .wait(function () {
+              var $grid = initJqGrid("#grid_list", {
+                  url: "/sys/cache",
+                  pager: null,
+                  colModel: [
+                        { name: 'act', label: "Actions", index: 'act', width: 100, align: "center", sortable: false },
+                        //{ name: 'Name', label: "Name", width: 120 },
+                        { name: 'Key', label: "Key", width: 120 },
+                        { name: 'Count', label: "Count", width: 50 },
+                        { name: 'Type', label: "Type", width: 100 },
+                        { name: 'Created', label: "Creation time", align: "center", width: 120 },
+                        { name: 'LastUpdate', label: "Last update", align: "center", width: 120 },
+                        { name: 'Expires', label: "Expires", align: "center", width: 120 },
+                        { name: 'SlidingExpiration', label: "Sliding", align: "center", width: 80 },
+                        { name: 'Dependency', label: "Dependency", align: "center", width: 120 }
+                  ],
+                  gridComplete: function () {
+                      var ids = $grid.jqGrid('getDataIDs');
+                      for (var i = 0; i < ids.length; i++) {
+                          var cl = ids[i];
+                          var cellData = '';
+                          cellData += '<button class="btn btn-xs btn-danger no-border btn-clear" type="button" data-rowid="' + cl + '"><i class="fa fa-close"></i> Clear</button>';
+                          var ind = $(this).jqGrid('getGridRowById', ids[i]);
+                          $("td[role='gridcell']:eq(1)", ind).html(cellData);
+                      }
+                      $(".btn-clear").on("click", function () {
+                          var rowid = $(this).data("rowid");
+                          var rowData = $grid.jqGrid('getRowData', rowid);
+                          $.post("/sys/ClearCache", { key: rowData.Key }, function (ret) {
+                              $grid.trigger("reloadGrid");
+                          });
+                      });
+                  }
+              });
+          });
+    </script>
+}

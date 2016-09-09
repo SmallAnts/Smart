@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+    <button type="button" onclick="preview()">打印预览</button>
+    <button type="button" onclick="print()">直接打印</button>
+    <button type="button" onclick="printA()">直接打印A</button>
+    <script src="lodop/CLodopFuncs.js"></script>
+    <script>
+        var LODOP;
+        function preview() {
+            try {
+                CreateOneFormPage();
+                LODOP.PREVIEW();
+            } catch (e) {
+                alert(e.message)
+            }
+        };
+        function print() {
+            CreateOneFormPage();
+            LODOP.PRINT();
+        };
+        function printA() {
+            CreateOneFormPage();
+            LODOP.PRINTA();
+        };
+        function CreateOneFormPage() {
+            LODOP = getLodop();
+            LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+            LODOP.SET_PRINT_STYLE("FontSize", 18);
+            LODOP.SET_PRINT_STYLE("Bold", 1);
+            LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
+            LODOP.ADD_PRINT_HTM(88, 200, 350, 600, "<div>print test page</div>");
+        };
+    </script>
+</body>
+</html>

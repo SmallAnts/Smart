@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Recharge bill";
+}
+@Html.Partial("_billList")
+<script>
+    $LAB.script(js("jqgrid", "moment", "datepicker")).wait(function () {
+        bills_init({
+            url: "/cashier/GetRechargeBills",
+            colNames: ['No.', 'Seria No.', 'Name', 'Phone', 'CardNo', 'Card type', 'Amount', 'Give', 'Date', 'Status', 'Operator', 'Remark', 'Operation'],
+            colModel: [
+                { name: 'No', },
+                { name: 'SeriaNo', },
+                { name: 'Name', },
+                { name: 'Phone', },
+                { name: 'CardNo', },
+                { name: 'CardType', },
+                { name: 'Amount', },
+                { name: 'Give', },
+                { name: 'Date', },
+                { name: 'Status', },
+                { name: 'Operator', },
+                { name: 'Remark', },
+                { name: 'Operation', }
+            ],
+        });
+    });
+</script>

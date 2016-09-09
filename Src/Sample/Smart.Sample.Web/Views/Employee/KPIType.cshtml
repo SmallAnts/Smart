@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "KPIType";
+}
+<div>
+    <table id="grid-cards"></table>
+    <div id="grid_pager"></div>
+</div>
+<script>
+    $LAB.script(js("jqgrid", "moment", "datepicker")).wait(init);
+    function init() {
+        $('.input-daterange').datepicker({ autoclose: true });
+        $("#btnSearch").on("click",function () {
+            $("#grid-cards").jqGrid("setGridParam", { postData: $("#formBills").serialize() }).trigger("reloadGrid");
+        });
+        $("#grid-cards").jqGrid('GridDestroy').jqGrid({
+            viewrecords: true,
+            mtype: 'post',
+            url: "/member/CardList",
+            height: 400,
+            pager: '#grid_pager',
+            colModel: [
+                { name: 'CardNo', label: "Card No." },
+                { name: 'Name', label: "Name" },
+                { name: 'Phone', label: "Phone" },
+                { name: 'CardType', label: "Card type" },
+                { name: 'Amount', label: "Amount" },
+                { name: 'Give', label: "Give" },
+                { name: 'Total', label: "Total" },
+                { name: 'Charges', label: "Charges" },
+                { name: 'Owed', label: "Owed" },
+                { name: 'Date', label: "Date" },
+                { name: 'ExpireDate', label: "Expire date" },
+                { name: 'Source', label: "Source" }
+            ]
+        });
+        jqgrid_fill("#grid-cards");
+    }
+</script>

@@ -1,0 +1,80 @@
+﻿@model YQ.Cashier.Domain.DTOs.SalonRegisterInfo
+<div id="signup-box" class="signup-box widget-box no-border">
+    <div class="widget-body">
+        <div class="widget-main">
+            <h4 class="header green lighter bigger">
+                <i class="ace-icon fa fa-home blue"></i>  Store registration
+            </h4>
+            <div class="space-6"></div>
+            <form id="formSignup">
+                <fieldset>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.TextBoxFor(m => m.LoginName, new { @class = "form-control", placeholder = "Login name" })
+                            <i class="ace-icon fa fa-user"></i>
+                        </span>
+                        @Html.ValidationMessageFor(m => m.LoginName)
+                    </label>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                            <i class="ace-icon fa fa-lock"></i>
+                        </span>
+                        @Html.ValidationMessageFor(m => m.Password)
+                     </label>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm password" })
+                            <i class="ace-icon fa fa-retweet"></i>
+                        </span>
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    </label>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.TextBoxFor(m => m.StoreName, new { @class = "form-control", placeholder = "Store name" })
+                            <i class="ace-icon fa fa-home"></i>
+                        </span>
+                        @Html.ValidationMessageFor(m => m.StoreName)
+                    </label>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.TextBoxFor(m => m.Head, new { @class = "form-control", placeholder = "Head" })
+                            <i class="ace-icon fa fa-male"></i>
+                        </span>
+                        @Html.ValidationMessageFor(m => m.Head)
+                    </label>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.TextBoxFor(m => m.StoreTel, new { @class = "form-control", placeholder = "Phone number" })
+                            <i class="ace-icon fa fa-phone"></i>
+                        </span>
+                        @Html.ValidationMessageFor(m => m.StoreTel)
+                    </label>
+                    <label class="block">
+                        <input type="checkbox" class="ace" name="Accept" id="Accept" />
+                        <span class="lbl">
+                            I have read and accepted the terms of the user
+                        </span>
+                    </label>
+                    <div class="space-6"></div>
+                    <div class="clearfix">
+                        <button type="reset" class="width-30 pull-left btn btn-sm">
+                            <i class="ace-icon fa fa-refresh"></i>
+                            <span class="bigger-110">Reset</span>
+                        </button>
+                        <button class="width-65 pull-right btn btn-sm btn-success" id="btnRegister" type="button" data-form="#formSignup" data-loading-text="Registering...">
+                            <span class="bigger-110">Sign up</span>
+                            <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="toolbar center">
+            <a href="#" data-target="#login-box" class="back-to-login-link">
+                <i class="ace-icon fa fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </div><!-- /.widget-body -->
+</div><!-- /.signup-box -->

@@ -1,0 +1,105 @@
+﻿@model YQ.Cashier.Domain.Entites.Service
+@{
+    Layout = "~/Views/Shared/_BasicListPage.cshtml";
+    ViewBag.Title = "Job info";
+    ViewBag.GetListUrl = "/BasicData/GetServices";
+    ViewBag.SaveUrl = "/BasicData/SaveService";
+    ViewBag.DeleteUrl = "/BasicData/DeleteService";
+}
+@section form{
+    <form class="form-horizontal" id="editform">
+        <div class="form-group">
+            <label for="ServiceTypeId" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Service type")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    <select class="width-100" name="ServiceTypeId" id="ServiceTypeId">
+                        @foreach (dynamic item in ViewBag.ServiceTypes)
+                        {
+                            <option value="@item.ServiceTypeId">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.ServiceTypeId)
+        </div>
+        <div class="form-group">
+            <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Service name")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div class="form-group">
+            <label for="ShortCode" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Short code")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.ShortCode, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.ShortCode)
+        </div>
+        <div class="form-group">
+            <label for="StandardPrice" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Standard price")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.StandardPrice, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.StandardPrice)
+        </div>
+        <div class="form-group">
+            <label for="StandardDuration" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Standard duration")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.StandardDuration, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.StandardDuration)
+        </div>
+        <div class="form-group">
+            <label for="inputWarning" class="col-xs-12 col-sm-3 control-label no-padding-right">Note</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextAreaFor(m => m.Note, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Note)
+        </div>
+        <div class="form-group">
+            <label for="lblOriginPriceFlag" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("OriginPrice flag")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                        <input type="checkbox" class="ace" name="OriginPriceFlag">
+                        <span class="lbl" id="lblOriginPriceFlag"></span>
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.OriginPriceFlag)
+        </div>
+        @Html.HiddenFor(m => m.ServiceId)
+        @Html.HiddenFor(m => m.CreateTime)
+        @Html.HiddenFor(m => m.CreateUserId)
+    </form>
+}
+@section init_scripts{
+    <script>
+        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.Service()
+                    .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
+        window.colModel = [
+            { name: 'act', label: "Actions", index: 'act', width: 150, align: "center", sortable: false },
+            { name: 'ServiceId', label: "Id", width: 80, align: "center", hidden:true },
+            { name: 'ServiceTypeId', label: "Service type", width: 80, align: "center" },
+            { name: 'Name', label: "Name", width: 200 },
+            { name: 'ShortCode', label: "Shortcode", width: 100 },
+            { name: 'StandardPrice', label: "Standard price", width: 100 },
+            { name: 'StandardDuration', label: "Standard duration", width: 100 },
+            { name: 'OriginPriceFlag', label: "Origin price", width: 100 },
+            { name: 'Note', label: "Note", width: 200 },
+            {
+                name: 'CreateTime', label: "Creation time", hidden:true, align: "center", formatter: "date",
+                formatoptions: { srcformat: "ISO8601Long", newformat: "m/d/Y H:i A" },
+            },
+        ];
+    </script>
+}

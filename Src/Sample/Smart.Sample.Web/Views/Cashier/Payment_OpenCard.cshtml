@@ -1,0 +1,699 @@
+﻿@model YQ.Cashier.Domain.DTOs.OpenCardInfo
+@{
+    ViewBag.Title = "Open Card";
+}
+@*<div class="modal fade" id="opencardmodal">*@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content" id="opencard-modalcontent">
+        <div class="modal-header">
+            <ul class="steps">
+                <li data-step="1" class="active">
+                    <span class="step">1</span>
+                    <span class="title">Member information</span>
+                </li>
+                <li data-step="2">
+                    <span class="step">2</span>
+                    <span class="title">Select employees</span>
+                </li>
+                <li data-step="3">
+                    <span class="step">3</span>
+                    <span class="title">Settlement method</span>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-body step-content" id="modalSteps">
+            <div class="step-pane active" data-step="1">
+                <form class="form-horizontal" id="openCardForm0">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 no-padding-right">
+                            <div class="form-group">
+                                <label class="col-xs-4 col-sm-4 control-label no-padding-right myrequired-" for="OpenCardMode">
+                                    @this.T("Open card mode")
+                                </label>
+                                <div class="col-xs-8 col-sm-8 no-padding-right " id="opencardmode">
+                                    <div class="radio">
+                                        <label>
+                                            <input class="ace" name="OpenCardMode" type="radio" value="NewCard" checked="checked">
+                                            <span class="lbl"> @this.T("New card")</span>
+                                        </label>
+                                        <label>
+                                            <input class="ace" name="OpenCardMode" type="radio" value="NotCard">
+                                            <span class="lbl"> @this.T("Not card")</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 no-padding-right">
+                            <div class="form-group">
+                                <label class="col-xs-4 col-sm-4 control-label no-padding-right myrequired" for="Name">@this.T("Name")</label>
+                                <div class="col-xs-8 col-sm-8 no-padding-right">
+                                    <span class="block">
+                                        @Html.HiddenFor(m => m.Customer.CustomerId)
+                                        @Html.TextBoxFor(m => m.Customer.Name, new { @class = "col-xs-6 col-sm-6" })
+                                        @*<button type="button" id="selectmember" class="btn btn-success btn-sm col-xs-4 col-sm-4 margin-l-05em">@this.T("Old Customer")</button>
+                                            <button type="button" id="deletemember" class="btn btn-danger btn-sm col-xs-4 col-sm-4 " style="display: none">@this.T("Clear")</button>*@
+                                    </span>
+                                </div>
+                                <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                    <mark><b>@Html.ValidationMessageFor(model => model.Customer.Name)</b></mark>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-4 col-sm-4 control-label no-padding-right myrequired-" for="PinYinShortCode">
+                                    @this.T("Short code")
+                                </label>
+                                <div class="col-xs-8 col-sm-8 no-padding-right">
+                                    @Html.TextBoxFor(m => m.Customer.ShortName, new { @class = "width-80" })
+                                </div>
+                                <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                    <mark>@Html.ValidationMessageFor(model => model.Customer.ShortName)</mark>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 no-padding-right">
+                            <div class="form-group">
+                                <label class="col-xs-3 col-sm-4 control-label no-padding-right myrequired-" for="Phone">@this.T("Phone")</label>
+                                <div class="col-xs-9 col-sm-8 no-padding-right">
+                                    @Html.TextBoxFor(m => m.Customer.Phone, new { @class = "width-80", maxLength = 20 })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Customer.Phone)
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 col-sm-4 control-label no-padding-right myrequired-" for="Birthday">@this.T("Birthday")</label>
+                                <div class="col-xs-9 col-sm-8 no-padding-right">
+                                    @Html.TextBoxFor(m => m.Customer.Birthday, new { @class = "width-80", id = "dtBirthday" })
+                                    @*< input name = "Birthday_Text" class="width-80" id="Birthday" type="text" value="">*@
+                                </div>
+                                <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                    <mark>@Html.ValidationMessageFor(model => model.Customer.Birthday)</mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 no-padding-right">
+                            <div class="form-group">
+                                <label class="col-xs-3 col-sm-4 control-label no-padding-right myrequired-">@this.T("Sex")</label>
+                                <div class="radio col-xs-9 col-sm-8 no-padding-right">
+                                    <label>
+                                        <input class="ace" name="Sex" id="Sex" type="radio" checked="checked" value="Woman">
+                                        <span class="lbl"> @this.T("Female")</span>
+                                    </label>
+                                    <label>
+                                        <input class="ace" name="Sex" id="Sex" type="radio" value="Man">
+                                        <span class="lbl"> @this.T("Male")</span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-4 control-label no-padding-right myrequired">@this.T("Channel type")</label>
+                                <div class="col-xs-12 col-sm-8 no-padding-right">
+                                    @Html.DropDownListFor(m => m.Customer.ChannelId, new SelectList(Model.Channels, "ChannelId", "Name"))
+                                </div>
+                                <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                    <mark><b>@Html.ValidationMessageFor(model => model.Customer.ChannelId)</b></mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="moreinfo">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 no-padding-right">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right myrequired-" for="CardCode">@this.T("Card number")</label>
+                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                        @Html.TextBoxFor(m => m.VipCard.CardNo, new { @class = "width-80", maxLength = 20 })
+                                    </div>
+                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                        <mark><b>@Html.ValidationMessageFor(model => model.VipCard.CardNo)</b></mark>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 no-padding-right">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right myrequired">@this.T("Card type")</label>
+                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                        @Html.DropDownListFor(m => m.VipCard.CardTypeId, new SelectList(Model.CardTypes, "CardTypeId", "TypeName"), "Please select...", new { @id = "ddlCardType" })
+                                    </div>
+                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                        <mark><b>@Html.ValidationMessageFor(model => model.VipCard.CardTypeId)</b></mark>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 no-padding-right">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right myrequired-">@this.T("Password")</label>
+                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                        @Html.PasswordFor(m => m.VipCard.CardPassword, new { @class = "width-80", maxLength = 50 })
+                                    </div>
+                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                        <mark><b>@Html.ValidationMessageFor(model => model.VipCard.CardPassword)</b></mark>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 no-padding-right">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right myrequired-">
+                                        @this.T("Paid in amount")
+                                    </label>
+                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                        @Html.TextBoxFor(m => m.VipCard.CardBalance, new { @class = "width-80", id = "ChargeAmount" })
+                                    </div>
+                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                        <mark><b>@Html.ValidationMessageFor(model => model.VipCard.CardBalance)</b></mark>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 no-padding-right">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right myrequired-" for="ConfirmPassword">@this.T("Confirm Password")</label>
+                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                        @Html.PasswordFor(m => m.VipCard.ConfirmPassword, new { @class = "width-80", maxLength = 50 })
+                                    </div>
+                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                        <mark><b>@Html.ValidationMessageFor(model => model.VipCard.ConfirmPassword)</b></mark>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 no-padding-right">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right myrequired-" id="DonateMoneyLabal" for="DonateMoney">
+                                        @this.T("Donate money")
+                                    </label>
+                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                        @Html.TextBoxFor(m => m.VipCard.PresentBalance, new { @class = "width-80", id = "PresentAmount" })
+                                    </div>
+                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                        <mark><b>@Html.ValidationMessageFor(model => model.VipCard.PresentBalance)</b></mark>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            @*<div class="col-xs-12 col-sm-6 no-padding-right">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-4 control-label no-padding-right myrequired-" for="CardRemark">@this.T("Remark")</label>
+                                        <div class="col-xs-12 col-sm-8 no-padding-right">
+                                            <input name="CardRemark" class="width-80" id="CardRemark" type="text" value="" data-val="true" data-val-length-max="100" data-val-length="字段 卡备注 必须是最大长度为 100 的字符串。">
+                                        </div>
+                                        <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                            <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="CardRemark"></span></b></mark>
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <div class="col-xs-12 col-sm-6 no-padding-right">
+                                <div class="form-group">
+                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right" for="Remark">@this.T("Remark")</label>
+                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                        <span class="block">
+                                            @Html.TextBoxFor(m => m.VipCard.Note, new { @class = "width-80" })
+                                        </span>
+                                    </div>
+                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                        <mark>@Html.ValidationMessageFor(m => m.VipCard.Note)</mark>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <a href="#cardinfo_more" data-toggle="collapse">@this.T("More")</a>
+                                </div>
+                            </div>
+                            <div class="panel-collapse collapse" id="cardinfo_more">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                                            <div class="form-group">
+                                                <label class="col-xs-12 col-sm-4 control-label no-padding-right" for="OpenCardDate">@this.T("Open card date")</label>
+                                                <div class="col-xs-12 col-sm-8 no-padding-right">
+                                                    <span class="block">
+                                                        @Html.TextBoxFor(m => m.VipCard.OpenDateTime, new { @class = "width-80", id = "OpenDateTime" })
+                                                    </span>
+                                                </div>
+                                                <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                                    <mark><b>@Html.ValidationMessageFor(m => m.VipCard.OpenDateTime)</b></mark>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                                            <div class="form-group">
+                                                <label class="col-xs-12 col-sm-4 control-label no-padding-right" for="ExpiryDate">@this.T("Expiry date")</label>
+                                                <div class="col-xs-12 col-sm-8 no-padding-right">
+                                                    <span class="block">
+                                                        @Html.TextBoxFor(m => m.VipCard.ExpiryDateTime, "", new { @class = "width-80", @readonly = true })
+                                                    </span>
+                                                </div>
+                                                <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                                    <mark><b>@Html.ValidationMessageFor(m => m.VipCard.ExpiryDateTime)</b></mark>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<div class="row">
+                                            <div class="col-xs-12 col-sm-6 no-padding-right">
+                                                <div class="form-group">
+                                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right" for="Admission">@this.T("Admission")</label>
+                                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                                        <span class="block">
+                                                            <input name="Admission" class="width-80" id="Admission" type="text" value="" data-val="true" data-val-number="字段 入会费 必须是一个数字。" data-val-range-min="0.0" data-val-range-max="100000000.0" data-val-range="入会费不能小于0">
+                                                        </span>
+                                                    </div>
+                                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                                        <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="Admission"></span></b></mark>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-6 no-padding-right">
+                                                <div class="form-group">
+                                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right" for="DebtMoney">@this.T("Debt money")</label>
+                                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                                        <span class="block">
+                                                            <input name="DebtMoney" class="width-80" id="DebtMoney" type="text" value="" data-val="true" data-val-number="字段 挂账金额 必须是一个数字。" data-val-range-min="0.0" data-val-range-max="100000000.0" data-val-range="挂账金额不能小于0">
+                                                        </span>
+                                                    </div>
+                                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                                        <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="DebtMoney"></span></b></mark>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>*@
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                                            <div class="form-group">
+                                                <label class="col-xs-12 col-sm-4 control-label no-padding-right" for="IDCardNumber">@this.T("ID card number")</label>
+                                                <div class="col-xs-12 col-sm-8 no-padding-right">
+                                                    <span class="block">
+                                                        @Html.TextBoxFor(m => m.Customer.IdNumber, new { @class = "width-80" })
+                                                    </span>
+                                                </div>
+                                                <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                                    <mark>@Html.ValidationMessageFor(m => m.Customer.IdNumber)</mark>
+                                                </div>
+                                            </div>
+                                        </div><div class="col-xs-12 col-sm-6 no-padding-right">
+                                            <div class="form-group">
+                                                <label class="col-xs-12 col-sm-4 control-label no-padding-right" for="BillDate">@this.T("Bill date")</label>
+                                                <div class="col-xs-12 col-sm-8 no-padding-right">
+                                                    <span class="block">
+                                                        @Html.TextBoxFor(m => m.Order.OrderDate, new { @class = "width-80", id = "dtBillDate" })
+                                                    </span>
+                                                </div>
+                                                <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                                    <mark>@Html.ValidationMessageFor(m => m.Order.OrderDate)</mark>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="col-xs-12 col-sm-6 no-padding-right">
+                                                <div class="form-group">
+                                                    <label class="col-xs-12 col-sm-4 control-label no-padding-right" for="ManualCode">@this.T("Manual code")</label>
+                                                    <div class="col-xs-12 col-sm-8 no-padding-right">
+                                                        <span class="block">
+                                                            <input name="ManualCode" class="width-80" id="ManualCode" type="text" value="" data-val="true" data-val-length-max="50" data-val-length="字段 流水单号 必须是最大长度为 50 的字符串。">
+                                                        </span>
+                                                    </div>
+                                                    <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                                        <mark><b><span class="field-validation-valid text-danger" data-valmsg-replace="true" data-valmsg-for="ManualCode"></span></b></mark>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                                            <div class="form-group">
+                                                <label class="col-xs-12 col-sm-4 control-label no-padding-right myrequired-" for="IntroducerName">@this.T("Introducer")</label>
+                                                <div class="col-xs-12 col-sm-8 no-padding-right">
+                                                    @Html.TextBoxFor(m => m.IntroducerName, new { @class = "width-45" })
+                                                    @Html.HiddenFor(m => m.IntroducerId)
+                                                </div>
+                                                <div class="help-block col-xs-12 col-sm-8 col-sm-offset-4 inline">
+                                                    <mark>@Html.ValidationMessageFor(m => m.IntroducerName)</mark>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="step-pane" data-step="2">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><span class="fa fa-user"></span>办卡员工列表</h3>
+                    </div>
+                    <form id="openCardForm1">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="SelectedEmployees"></table>
+                        </div>
+                    </form>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><span class="fa fa-users"></span>Employee List</h3>
+                        </div>
+                        <div id="EmployeeList_wrapper" class="dataTables_wrapper no-footer container-fluid">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div id="EmployeeList_filter" class="dataTables_filter">
+                                        <label>Search:<input type="search" class="" placeholder="" aria-controls="EmployeeList" id="inputSearch"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-hover dataTable no-footer" id="EmployeeList" role="grid"></table>
+                            <div id="pager2"></div>
+                        </div>
+                        <button type="button" class="btn btn-success" id="btnTest"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="step-pane" data-step="3">
+                <form id="openCardForm2">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                            <div class="form-group has-success">
+                                <label class="col-xs-12 col-sm-3 control-label no-padding-right">充值金额</label>
+                                <div class="col-xs-12 col-sm-9 no-padding-right">
+                                    <span class="block">
+                                        <input class="width-80" type="text" readonly="true" id="RealChargeAmount">
+                                    </span>
+                                </div>
+                                <div class="help-block col-xs-12 col-sm-9 col-sm-offset-3 inline">
+                                    <mark><b></b></mark>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                            <div class="form-group has-error">
+                                <label class="col-xs-12 col-sm-3 control-label no-padding-right">应收金额</label>
+                                <div class="col-xs-12 col-sm-9 no-padding-right">
+                                    <span class="block">
+                                        @Html.TextBoxFor(p => p.Order.Amount, new { @class = "width-80", @readonly = true })
+                                    </span>
+                                </div>
+                                <div class="help-block col-xs-12 col-sm-9 col-sm-offset-3 inline">
+                                    <mark><b></b></mark>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr hr-dotted"></div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 control-label no-padding-right">Cash</label>
+                                <div class="col-xs-12 col-sm-9 no-padding-right">
+                                    <span class="block">
+                                        <input class="width-80" type="text" id="FactMoney" min="0" step="0.01" pattern="[0-9]" />
+                                        找零:
+                                        <span class="badge badge-danger" id="changeMoneyText">0.00</span>
+                                        <input name="payments[0].ChangeMoney" id="payments_0__ChangeMoney" type="hidden" value="0" />
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="payments[0].PaymentTermId" id="payments_0__PaymentTermId" type="hidden" value="117393">
+                            <input name="payments[0].PaymentType" id="payments_0__PaymentType" type="hidden" value="Cash">
+                            <input name="payments[0].MemberAccountId" id="payments_0__MemberAccountId" type="hidden" value="">
+                            <input name="payments[0].IsAdmission" id="payments_0__IsAdmission" type="hidden" value="False">
+                            <input name="payments[0].IsWeiPay" id="payments_0__IsWeiPay" type="hidden" value="False">
+                        </div>
+                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 control-label no-padding-right">挂账</label>
+                                <div class="col-xs-12 col-sm-9 no-padding-right">
+                                    <span class="block">
+                                        <input name="payments[1].FactMoney" class="width-80 PaymentMoney" id="payments_1__FactMoney" onblur="PaymentNull(this)" type="number" min="0" step="0.01" pattern="[0-9]" value="0">
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="payments[1].PaymentTermId" id="payments_1__PaymentTermId" type="hidden" value="117396">
+                            <input name="payments[1].PaymentType" id="payments_1__PaymentType" type="hidden" value="Debt">
+                            <input name="payments[1].MemberAccountId" id="payments_1__MemberAccountId" type="hidden" value="">
+                            <input name="payments[1].IsAdmission" id="payments_1__IsAdmission" type="hidden" value="False">
+                            <input name="payments[1].IsWeiPay" id="payments_1__IsWeiPay" type="hidden" value="False">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 control-label no-padding-right">银行卡</label>
+                                <div class="col-xs-12 col-sm-9 no-padding-right">
+                                    <span class="block">
+                                        <input name="payments[2].FactMoney" class="width-80 PaymentMoney" id="payments_2__FactMoney" onblur="PaymentNull(this)" type="number" min="0" step="0.01" pattern="[0-9]" value="0">
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="payments[2].PaymentTermId" id="payments_2__PaymentTermId" type="hidden" value="117398">
+                            <input name="payments[2].PaymentType" id="payments_2__PaymentType" type="hidden" value="BankCard">
+                            <input name="payments[2].MemberAccountId" id="payments_2__MemberAccountId" type="hidden" value="">
+                            <input name="payments[2].IsAdmission" id="payments_2__IsAdmission" type="hidden" value="False">
+                            <input name="payments[2].IsWeiPay" id="payments_2__IsWeiPay" type="hidden" value="False">
+                        </div>
+                        <div class="col-xs-12 col-sm-6 no-padding-right">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 control-label no-padding-right">免单</label>
+                                <div class="col-xs-12 col-sm-9 no-padding-right">
+                                    <span class="block">
+                                        <input name="payments[3].FactMoney" class="width-80 PaymentMoney" id="payments_3__FactMoney" onblur="PaymentNull(this)" type="number" min="0" step="0.01" pattern="[0-9]" value="0">
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="payments[3].PaymentTermId" id="payments_3__PaymentTermId" type="hidden" value="117399">
+                            <input name="payments[3].PaymentType" id="payments_3__PaymentType" type="hidden" value="Free">
+                            <input name="payments[3].MemberAccountId" id="payments_3__MemberAccountId" type="hidden" value="">
+                            <input name="payments[3].IsAdmission" id="payments_3__IsAdmission" type="hidden" value="False">
+                            <input name="payments[3].IsWeiPay" id="payments_3__IsWeiPay" type="hidden" value="False">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer wizard-actions">
+        <button class="btn btn-sm btn-prev">
+            <i class="ace-icon fa fa-arrow-left"></i> Prev
+        </button>
+        <button class="btn btn-success btn-sm btn-next" data-last="Finish">
+            Next<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+        </button>
+        <button class="btn btn-danger btn-sm pull-left" data-dismiss="modal">
+            <i class="ace-icon fa fa-times"></i> Cancel
+        </button>
+    </div>
+    @Html.Hidden("UsableTime")
+</div>
+
+@*<div class="modal fade mymodal" id="customersmodal" tabindex="1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="customers-modalcontent">
+                @Html.Partial("customers")
+            </div>
+        </div>
+    </div>*@
+<script type="text/javascript">
+    $LAB.script(js("wizard", "datepicker", "validate", "jqgrid")).wait(function () {
+        $("#dtBirthday").datepicker({ autoclose: true });
+        var today = getNowDate();
+        $("#dtBillDate").datepicker({ autoclose: true }).val(today);
+        $("#OpenDateTime").datepicker({ autoclose: true, format: "mm/dd/yyyy" }).on('changeDate', function (ev) {   //计算结束日期
+            var endDate = new Date(ev.date);
+            var days = $("#UsableTime").val() || 0;
+            endDate.setDate(endDate.getDate() + parseInt(days, 10));
+            endDateString = ('0' + (endDate.getMonth() + 1)).slice(-2) + '/'
+                            + ('0' + endDate.getDate()).slice(-2) + '/'
+                            + endDate.getFullYear();
+            $("#ExpiryDate").val(endDateString);
+        });
+        //$("#selectmember").on("click", function () { $("#selectmember").modal("show"); })
+        $("#opencardmode").on("click", function () {
+            var OpenCardMode_val = $("input[name=OpenCardMode]:checked").val();
+            switch (OpenCardMode_val) {
+                case "NewCard":
+                    $("#moreinfo").show();
+                    $("#selectmember").show();
+                    //$("#FastMoneyLabel").html("实收余额");
+                    //$("#DonateMoneyLabal").html("赠送金额");
+                    break;
+                case "OldCard":
+                    $("#moreinfo").show();
+                    $("#selectmember").show();
+                    //$("#FastMoneyLabel").html("老卡余额");
+                    //$("#DonateMoneyLabal").html("老卡赠送");
+                    break;
+                case "NotCard":
+                    $("#moreinfo").hide();
+                    $("#selectmember").hide();
+                    $("#deletemember").click();
+                    break;
+            }
+        });
+
+        $('#opencard-modalcontent').ace_wizard({
+            //options
+        }).on('actionclicked.fu.wizard', function (e, info) {
+            alert(JSON.stringify(info));
+            if (info.step == 1) {
+                var OpenCardMode_val = $("input[name=OpenCardMode]:checked").val();
+                switch (OpenCardMode_val) {
+                    case "NotCard":
+                        e.preventDefault(); //禁止跳转下一步
+                        var va = validateForm("openCardForm0"); //验证数据
+                        var customer = $("#openCardForm0").serialize();
+                        if (va) {
+                            $.post("/member/saveCustomer", customer, function (ret) {
+                                if (!ret.error) {
+                                    $("#FullName").text(ret.value.Name || "");
+                                    $("#PhoneNumber").text(ret.value.Phone || "");
+                                    $("#ChannelType").text(($("#ChannelId option:selected").text() || ""));
+                                    $("#opencardmodal").modal('hide');
+                                }
+                                else {
+                                    swal(ret.error);
+                                }
+                            })
+                        }
+                        break;
+                    case "NewCard":
+                        var va = validateForm("openCardForm0"); //验证数据
+                        if (!va) {
+                            e.preventDefault(); //禁止跳转下一步
+                        }
+                        break;
+                }
+            }
+            else if (info.step == 2 && info.direction == 'next') {
+                var charge = parseInt($("#ChargeAmount").val() || 0, 10);
+                var present = parseInt($("#PresentAmount").val() || 0, 10);
+                var total = charge + present;
+                $("#RealChargeAmount").val(total);
+                $("#Order_Amount").val(charge);
+                $("#FactMoney").val(charge);
+            }
+            if (info.step == 3) {
+
+            }
+        }).on('finished.fu.wizard', function (e) {
+            //swal("Thank you! Your information was successfully saved!");
+        }).on('stepclick.fu.wizard', function (e) {
+            //e.preventDefault();//阻止点击和选择步骤
+        });
+        $("#ddlCardType").change(function () {
+            var cardtypeid = $(this).val();
+            $.post("/Cashier/GetCardTypeById", { cardtypeid: cardtypeid }, function (ret) {
+                $("#ChargeAmount").val(ret.OpenAmount || "");
+                $("#PresentAmount").val(ret.PresentAmount || "");
+                $("#UsableTime").val(ret.UsableTime || 0);
+                if ($("#OpenDateTime").val()) { //计算结束日期
+                    var endDate = new Date($("#OpenDateTime").val());
+                    var days = ret.UsableTime || 0;
+                    endDate.setDate(endDate.getDate() + parseInt(days, 10));
+                    endDateString = ('0' + (endDate.getMonth() + 1)).slice(-2) + '/'
+                                    + ('0' + endDate.getDate()).slice(-2) + '/'
+                                    + endDate.getFullYear();
+                    $("#ExpiryDate").val(endDateString);
+                }
+            })
+        })
+
+        $(window).on("resize", function () {
+            var newWidth = $("#EmployeeList").closest(".ui-jqgrid").parent().width();
+            $("#EmployeeList").jqGrid("setGridWidth", newWidth, true);
+        });
+
+        $("#EmployeeList").jqGrid(
+                {
+                    url: "/Cashier/GetEmployeeInfos?search=" + $("#inputSearch").text(),
+                    datatype: "json",
+                    colNames: ['JobNumber', 'Name', 'PositionName', 'DepartmentName', 'EmployeeId'],
+                    colModel: [
+                                 { name: 'Employee.JobNumber', label: 'JobNumber', index: 'JobNumber' },
+                                 { name: 'Employee.Name', label: 'Name', formatter: function (cellvalue, options, rowObject) { return "<a>" + cellvalue + "</a>" } },
+                                 { name: 'PositionName', label: 'Position Name' },
+                                 { name: 'DepartmentName', label: 'Department' },
+                                 { name: 'Employee.EmployeeId', hidden: true },
+                    ],
+                    rowNum: 10,
+                    rowList: [10, 20, 30],
+                    pager: '#pager2',
+                    gridview: true,
+                    rownumbers: true,
+                    sortname: 'Employee.JobNumber',
+                    mtype: "post",
+                    viewrecords: true,
+                    sortorder: "desc",
+                    autowidth: true,
+                    shrinkToFit: false,
+                    height: 'auto'
+                });
+
+        $("#EmployeeList").delegate("a", "click", function (e) {
+            var tr = $(e.target).closest('tr');
+            var selRowId = tr[0].id;
+            var rowData = $("#EmployeeList").jqGrid("getRowData", selRowId);
+            var name = $(rowData["Employee.Name"]).text();
+            var data = { Name: name || "", Position: { Name: rowData.PositionName || "" }, Porformance: 0, EmployeeId: rowData["Employee.EmployeeId"] };
+            $("#SelectedEmployees").jqGrid('addRowData', 'myrowid', data, 'last');  //添加行
+        });
+
+        $("#SelectedEmployees").jqGrid({
+            datatype: "local",
+            colNames: ['Name', 'Position', 'Performance', 'EmployeeId', ''],
+            colModel: [
+                         { name: 'Name', label: 'Name' },
+                         { name: 'Position.Name', label: 'Position Name' },
+                         {
+                             name: 'Performance', label: "Performance", formatter: function (cellvalue, options, rowObject) {
+                                 return "<label class=\"label label-lg label-primary arrowed-right\">Percentage</label>"
+                                 + "<input name=\"PerformanceRate\" class=\"input-mini no-padding percentage\" type=\"number\" min=\"0\" max=\"100\" step=\"1\" pattern=\"[0-9]\" value=\"100\">"
+                                 + "<label class=\"label label-lg label-primary arrowed-right\">Performance</label>"
+                                 + "<input class=\"input-mini no-padding\" type=\"number\" min=\"0\" step=\"0.01\" pattern=\"[0-9]\" value=" + $("#ChargeAmount").val() + ">"
+                             }
+                         },
+                         { name: "EmployeeId", hidden: true },
+                         {
+                             name: "", formatter(cellvalue, options, rowobject) {
+                                 return "<div class=\"text-right\">"
+                                     + "<button type=\"button\" class=\"btn btn-danger btn-xs delete\">"
+                                     + "<span class=\"fa fa-remove\"></span>Delete</button></div>"
+                             }
+                         }
+            ],
+            gridview: true,
+            gridComplete: function () {
+                var total = $("#ChargeAmount").val();
+
+                $(".percentage").off("change keyup paste mouseup");
+                $(".percentage").on("change keyup paste mouseup", function () {
+                    var rate = $(this).val();
+                    $(this).nextAll("input").first().val(total * rate / 100);
+                })
+                $(".delete").off('click');
+                $(".delete").on('click', function (e) {
+                    var tr = $(e.target).closest('tr');
+                    var selRowId = tr[0].id;
+                    $("#SelectedEmployees").jqGrid('delRowData', selRowId);
+                })
+
+            }
+        })
+
+
+        $("#btnTest").click(function () {
+            var list = $("#SelectedEmployees").jqGrid('getRowData');
+            alert(JSON.stringify(list));
+        })
+    });
+</script>

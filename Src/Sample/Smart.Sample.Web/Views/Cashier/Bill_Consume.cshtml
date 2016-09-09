@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Consume bill";
+}
+@Html.Partial("_billList")
+<script>
+    $LAB.script(js("jqgrid", "moment", "datepicker")).wait(function () {
+        bills_init({
+            url: "/cashier/GetConsumeBills",
+            colModel: [
+                { name: 'No', label: "No." },
+                { name: 'ManualNo', label: "ManualNo" },
+                { name: 'Name', label: "Name" },
+                { name: 'CardNo', label: "CardNo" },
+                { name: 'Number', label: "Number" },
+                { name: 'Amount', label: "Amount" },
+                { name: 'Item', label: "Item" },
+                { name: 'Staff', label: "Staff" },
+                { name: 'Date', label: "Date" },
+                { name: 'Status', label: "Status" },
+                { name: 'Operator', label: "Operator" },
+                { name: 'Remark', label: "Remark" },
+                { name: 'Operation', label: "Operation" }
+            ],
+        });
+        var $bills = $("#consumebills");
+        var $parent = $bills.parents(".modal-content");
+        if ($parent.size() > 0) {
+            var width = $("#consumebills").parents(".modal-content").width();
+            $("#grid-bills").setGridWidth(width - 30);
+        }
+    });
+</script>

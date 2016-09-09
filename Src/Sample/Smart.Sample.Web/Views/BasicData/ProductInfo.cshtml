@@ -1,0 +1,168 @@
+﻿@model YQ.Cashier.Domain.Entites.Product
+@{
+    Layout = "~/Views/Shared/_BasicListPage.cshtml";
+    ViewBag.Title = "Product info";
+    ViewBag.GetListUrl = "/BasicData/GetProducts";
+    ViewBag.SaveUrl = "/BasicData/SaveProduct";
+    ViewBag.DeleteUrl = "/BasicData/DeleteProduct";
+}
+@section form{
+    <form class="form-horizontal" id="editform">
+        <div class="form-group">
+            <label for="ProductTypeId" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Product type")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    <select class="width-100" name="ProductTypeId" id="ProductTypeId">
+                        @foreach (dynamic item in ViewBag.ProductTypes)
+                        {
+                            <option value="@item.ProductTypeId">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.ProductTypeId)
+        </div>
+        <div class="form-group">
+            <label for="ProductBrandId" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Product brand")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    <select class="width-100" name="ProductTypeId" id="ProductBrandId">
+                        @foreach (dynamic item in ViewBag.ProductBrands)
+                        {
+                            <option value="@item.ProductBrandId">@item.Name</option>
+                        }
+                    </select>
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.ProductBrandId)
+        </div>
+        <div class="form-group">
+            <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Product name")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div class="form-group">
+            <label for="ShortCode" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Short code")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.ShortCode, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.ShortCode)
+        </div>
+        <div class="form-group">
+            <label for="BarCode" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Bar code")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.BarCode, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.BarCode)
+        </div>
+        <div class="form-group">
+            <label for="BuyPrice" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Buy price")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.BuyPrice, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.BuyPrice)
+        </div>
+        <div class="form-group">
+            <label for="SellPrice" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Sell price")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.SellPrice, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.SellPrice)
+        </div>
+        <div class="form-group">
+            <label for="ProductUnitId" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Unit")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    <select  class="width-100" name="ProductTypeId" id="ProductUnitId"></select>
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.ProductUnitId)
+        </div>
+        <div class="form-group">
+            <label for="Specification" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Specification")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.Specification, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Specification)
+        </div>
+        <div class="form-group">
+            <label for="OriginPriceFlag" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Origin price flag")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.OriginPriceFlag, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.OriginPriceFlag)
+        </div>
+        <div class="form-group">
+            <label for="BuyGST" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Buy GST")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.BuyGST, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.BuyGST)
+        </div>
+        <div class="form-group">
+            <label for="SellGST" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Sell GST")</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.SellGST, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.SellGST)
+        </div>
+        <div class="form-group">
+            <label for="Note" class="col-xs-12 col-sm-3 control-label no-padding-right">Note</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextAreaFor(m => m.Note, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Note)
+        </div>
+        @Html.HiddenFor(m => m.ProductId)
+        @Html.HiddenFor(m => m.CreateTime)
+        @Html.HiddenFor(m => m.CreateUserId)
+    </form>
+}
+@section init_scripts{
+    <script>
+        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.Product()
+                    .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
+        window.colModel = [
+            { name: 'act', label: "Actions", index: 'act', width: 150, align: "center", sortable: false },
+            { name: 'ProductId', label: "Id", width: 80, align: "center", hidden:true },
+            { name: 'ProductTypeId', label: "Service type", width: 80, align: "center" },
+            { name: 'Name', label: "Name", width: 200 },
+            { name: 'ShortCode', label: "Shortcode", width: 100 },
+            { name: 'BarCode', label: "Bar code", width: 100 },
+            { name: 'BuyPrice', label: "Buy price", width: 100 },
+            { name: 'SellPrice', label: "Sell price", width: 100 },
+            { name: 'ProductUnitId', label: "Unit", width: 100 },
+            { name: 'Specification', label: "Specification", width: 100 },
+            { name: 'BuyGST', label: "Buy GST", width: 100 },
+            { name: 'SellGST', label: "Sell GST", width: 100 },
+            { name: 'OriginPriceFlag', label: "Origin price", width: 100 },
+            { name: 'Note', label: "Note", width: 200 },
+            {
+                name: 'CreateTime', label: "Creation time", hidden:true, align: "center", formatter: "date",
+                formatoptions: { srcformat: "ISO8601Long", newformat: "m/d/Y H:i A" },
+            },
+        ];
+    </script>
+}

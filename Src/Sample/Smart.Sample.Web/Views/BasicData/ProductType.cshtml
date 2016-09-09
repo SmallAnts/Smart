@@ -1,0 +1,60 @@
+﻿@model YQ.Cashier.Domain.Entites.ProductType
+@{
+    Layout = "~/Views/Shared/_BasicListPage.cshtml";
+    ViewBag.Title = "Card type";
+    ViewBag.GetListUrl = "/BasicData/GetProductTypes";
+    ViewBag.SaveUrl = "/BasicData/SaveProductType";
+    ViewBag.DeleteUrl = "/BasicData/DeleteProductType";
+}
+
+@section form{
+    <form class="form-horizontal" id="editform">
+        <div class="form-group">
+            <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">Name</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div class="form-group">
+            <label for="ShortCode" class="col-xs-12 col-sm-3 control-label no-padding-right">Short code</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.ShortCode, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.ShortCode)
+        </div>
+        <div class="form-group">
+            <label for="Note" class="col-xs-12 col-sm-3 control-label no-padding-right">Note</label>
+            <div class="col-xs-12 col-sm-5">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextAreaFor(m => m.Note, new { @class = "width-100" })
+                </span>
+            </div>
+            @Html.ValidationMessageFor(m => m.Note)
+        </div>
+        @Html.HiddenFor(m => m.ProductTypeId)
+        @Html.HiddenFor(m => m.CreateTime)
+        @Html.HiddenFor(m => m.CreateUserId)
+    </form>
+}
+@section init_scripts{
+    <script>
+        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.ProductType()
+                    .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
+        window.colModel = [
+                    { name: 'act', label: "Actions", index: 'act', width: 150, align: "center", sortable: false },
+                    { name: 'ProductTypeId', label: "Id" },
+                    { name: 'Name', label: "Name" },
+                    { name: 'ShortCode', label: "Short code" },
+                    { name: 'Note', label: "Note" },
+                    {
+                        name: 'CreateTime', label: "Creation time",  hidden:true, align: "center", formatter: "date",
+                        formatoptions: { srcformat: "ISO8601Long", newformat: "m/d/Y H:i A" },
+                    },
+        ];
+    </script>
+}

@@ -1,0 +1,74 @@
+﻿<div class="row">
+    <div class="col-xs-12 page-col-xs">
+        <div class="space-2"></div>
+        <form class="form-horizontal" id="form0">
+            <div class="well well-sm no-margin">
+                @RenderSection("header")
+            </div>
+            <div class="space-2"></div>
+            <div class="well well-sm no-margin">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+                        <button class="btn btn-success no-border" type="button" data-toggle="modal" data-target="#addmodal">
+                            <span class="fa fa-plus"></span> Add product
+                        </button>
+                        <table id="product_list"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="space-2"></div>
+            <div class="well well-sm">
+                @RenderSection("footer")
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal fade" id="addmodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-plus"></i> Select product</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="padding-right:30px;padding-bottom:8px;">
+                    @Html.Partial("_nav-search")
+                </div>
+                <table id="grid_list"></table>
+                <div id="grid_list_pager"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm no-border" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                <button type="button" class="btn btn-primary btn-sm no-border" id="btn_add" data-form="#addform">
+                    <i class="fa fa-plus"></i> Add
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+@RenderSection("scripts")
+<script>
+    $('#addmodal').on('shown.bs.modal', function () {
+        var rowIds = $grid_product.jqGrid('getDataIDs');
+        $grid.jqGrid("setGridParam", { postData: { excludes: rowIds }, page: 1 }).trigger("reloadGrid");;
+    });
+
+    $("#btn_add").on("click", function () {
+        var ids = $grid.jqGrid('getGridParam', 'selarrrow');
+        for (var i = 0; i < ids.length; i++) {
+            var rowId = ids[i];
+            var rowData = $grid.jqGrid('getRowData', rowId);
+            $grid_product.addRowData(rowData.Id, rowData, "last");
+        }
+        $("#addmodal").modal("hide");
+        $grid.jqGrid("clearGridData");
+    });
+    $("#btn_save").on("click", function () {
+        var postData = $("#form0").serializeJson();
+        postData.Products = $grid_product.jqGrid("getRowData");
+        alert(JSON.stringify(postData));
+        $.post("@ViewBag.SaveUrl", postData, function (ret) {
+            alert(JSON.stringify(ret))
+        });
+    });
+</script>

@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_PageLayout.cshtml";
+}
+@section scripts{
+    <script>
+        $LAB.script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
+            .script("/assets/js/bootstrap/bootstrap.min.js",
+                      "/assets/js/ace/ace-elements.min.js",
+                      "/assets/js/ace/ace.min.js",
+                      "/assets/js/common.js")
+            .wait(function () {
+                $("#sidebar").sidebar({
+                    url: '/account/sidebar',
+                });
+            });
+    </script>
+}

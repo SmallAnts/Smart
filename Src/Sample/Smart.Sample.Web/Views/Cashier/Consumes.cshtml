@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Consume Bill";
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><i class="fa fa-list"></i> Consume Bill</h4>
+</div>
+<div class="modal-body">
+    <form class="form-inline" id="form0">
+        <select name="billType" id="billType">
+            <option selected="selected" value="BillDate">bill date</option>
+            <option value="AddDate">operate date</option>
+        </select>
+        <div class="input-daterange input-group">
+            <input type="text" class="input-sm form-control" name="start" />
+            <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
+            <input type="text" class="input-sm form-control" name="end" />
+        </div>
+        <button class="btn btn-success btn-sm" type="submit">
+            <span class="glyphicon glyphicon-search"></span>@this.T("Search")
+        </button>
+    </form>
+    <table id="grid-table"></table>
+    <div id="grid_pager"></div>
+</div>
+<script>
+    $LAB.script(js("jqgrid", "moment", "daterangepicker")).wait(init);
+    function init() {
+        try {
+            $("#grid-table").jqGrid('GridDestroy').jqGrid({
+                viewrecords: true,
+                url: "ConsumeGrid",
+                height: 300,
+                autowidth: true,
+                //width: $("#modal-consume-content").width(),
+                colNames: ['Id', 'Date', 'Salon', 'CardNo', 'Number', 'Amount', 'Item', 'Staff', 'Remark'],
+                colModel: [
+                    { name: 'Id', },
+                    { name: 'Date', },
+                    { name: 'Salon', },
+                    { name: 'CardNo', },
+                    { name: 'Number', },
+                    { name: 'Amount', },
+                    { name: 'Item', },
+                    { name: 'Staff', },
+                    { name: 'Remark', }
+                ],
+            });
+            $("#grid-table").setGridWidth(850);
+        } catch (e) {
+            alert(e.message)
+        }
+    }
+</script>

@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Undo bill";
+}
+@Html.Partial("_billList")
+<script>
+    $LAB.script(js("jqgrid", "moment", "datepicker")).wait(function () {
+        bills_init({
+            url: "/cashier/GetUndoBills", colNames: ['No.', 'Serial no.', 'Saleno', 'Amount', 'Date', 'Remark', 'Operation'],
+            colModel: [
+                { name: 'No', },
+                { name: 'SerialNo', },
+                { name: 'Saleno', },
+                { name: 'Amount', },
+                { name: 'Date', },
+                { name: 'Remark', },
+                { name: 'Operation', }
+            ],
+        });
+    });
+</script>

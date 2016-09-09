@@ -1,0 +1,105 @@
+﻿@model YQ.Cashier.Domain.Entites.Customer
+@{
+    Layout = "~/Views/Shared/_BasicListPage.cshtml";
+    ViewBag.Title = "Customers";
+    ViewBag.GetListUrl = "/Member/GetCustomers";
+    // ViewBag.SaveUrl = "/Member/SaveCustomer";
+    ViewBag.DeleteUrl = "/Member/DeleteCustomer";
+    ViewBag.ShowAddButton = false;
+}
+@section tools {
+    @*<button class="btn btn-default btn-sm no-border" type="button" id="btnExportExcel"><span class="fa fa-file-excel-o"></span> Excel</button>*@
+}
+@section init_scripts {
+    <script>
+        var formatOptions={
+            sex:{value:"1:Male;2:Female;9:None"},
+        };
+        window.init=function(){
+            $LAB.script(js("datepicker")).wait(function(){
+                $("#Birthday").datepicker();
+            })
+        };
+        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.Customer()
+                    .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
+        window.colModel = [
+            { name: 'act', label: "Actions", index: 'act', width: 100, align: "center", sortable: false },
+            { name: 'Name', label: "Name", width: 120 },
+            { name: 'Sex', label: "Sex",  formatter: "select", editoptions:formatOptions.sex},
+            { name: 'Phone', label: "Phone", width: 120 },
+            { name: 'Birthday', label: "Birthday", align:  "center", formatter: "date",
+                formatoptions: { srcformat: "ISO8601Long", ewformat: "m/d/Y H:i A" }},
+            { name: 'ChannelId', label: "Channel", width: 120 },
+            {
+                name: 'CreateTime', label: "Creation time", align:  "center", formatter: "date",
+                formatoptions: { srcformat: "ISO8601Long", ewformat: "m/d/Y H:i A" },
+            },
+            { name: 'CustomerId', hidden:true },
+            { name: 'ShortName',hidden:true },
+            { name: 'FirstName',hidden:true },
+            { name: 'LastName',hidden:true },
+        ];
+        $("#btnExportExcel").on("click",function(){
+        
+        });
+    </script>
+}
+
+@section form{
+    @*<form class="form-horizontal" id="editform">
+            <div class="form-group">
+                <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Customer name")</label>
+                <div class="col-xs-12 col-sm-5">
+                    <span class="block input-icon input-icon-right">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "width-100" })
+                    </span>
+                </div>
+                @Html.ValidationMessageFor(m => m.Name)
+            </div>
+            <div class="form-group">
+                <label for="Name" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Employee name")</label>
+                <div class="col-xs-12 col-sm-5">
+                    <span class="block input-icon input-icon-right">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "width-100" })
+                    </span>
+                </div>
+                @Html.ValidationMessageFor(m => m.Name)
+            </div>
+            <div class="form-group">
+                <label for="Sex" class="col-xs-12 col-sm-3 control-label no-padding-right">Sex</label>
+                <div class="col-xs-12 col-sm-5">
+                    <span class="block input-icon input-icon-right">
+                        <select id="Sex" name="Sex">
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                        </select>
+                    </span>
+                </div>
+                @Html.ValidationMessageFor(m => m.Sex)
+            </div>
+            <div class="form-group">
+                <label for="Phone" class="col-xs-12 col-sm-3 control-label no-padding-right">Phone</label>
+                <div class="col-xs-12 col-sm-5">
+                    <span class="block input-icon input-icon-right">
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "width-100" })
+                    </span>
+                </div>
+                @Html.ValidationMessageFor(m => m.Phone)
+            </div>
+            <div class="form-group">
+                <label for="Birthday" class="col-xs-12 col-sm-3 control-label no-padding-right">Birthday</label>
+                <div class="col-xs-12 col-sm-5">
+                    <span class="block input-icon input-icon-right">
+                        @Html.TextBoxFor(m => m.Birthday, new { @class = "width-100" })
+                    </span>
+                </div>
+                @Html.ValidationMessageFor(m => m.Birthday)
+            </div>
+
+            @Html.HiddenFor(m => m.CustomerId)
+            @Html.HiddenFor(m => m.CreateTime)
+            @Html.HiddenFor(m => m.FirstName)
+            @Html.HiddenFor(m => m.LastName)
+            @Html.HiddenFor(m => m.CreateUserId)
+        </form>*@
+}

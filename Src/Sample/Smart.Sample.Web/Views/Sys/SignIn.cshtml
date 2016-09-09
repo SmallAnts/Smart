@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Login";
+    ViewBag.BodyClass = "login-layout blur-login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <link href="/Assets/css/components/jquery.gritter.min.css" rel="stylesheet" />
+}
+<div class="main-container">
+    <div class="main-content">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div class="login-container">
+                    <div class="center h1">
+                        <h1>
+                            <i class="ace-icon fa fa-leaf green"></i><!-- logo-->
+                            <span class="red">Cashier</span>
+                            <span class="white" id="id-text2"></span>
+                        </h1>
+                        <h4 class="light-blue" id="id-company-text">&copy; KeyImage</h4>
+                    </div>
+                    <div class="space-6"></div>
+                    <div class="position-relative">
+                        @Html.Partial("_Login")
+                        @Html.Partial("_Forgot")
+                        @Html.Partial("_Register")
+                    </div><!-- /.position-relative -->
+                </div>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.main-content -->
+</div>
+@section scripts{
+
+    <script>
+        $LAB.script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
+        .script("/assets/js/bootstrap/bootstrap.min.js",
+                  "/assets/js/components/jquery.gritter.js",
+                  "/assets/js/common.js",
+                  js("validate")).wait(function () {
+                      $(document).on('click', '.toolbar a[data-target]', function (e) {
+                          e.preventDefault();
+                          var target = $(this).data('target');
+                          $('.widget-box.visible').removeClass('visible'); //hide others
+                          $(target).addClass('visible'); //show target
+                      });
+                      $(".input-part input").on("focus", function () {
+                          $(this).parents(".input-part").addClass("input-active");
+                      }).on("blur", function () {
+                          $(this).parents(".input-part").removeClass("input-active");
+                      });
+                      submitForm("#btnLogin", "/sys/signin", function (ret) {
+                          location.href = "/home/spaindex";
+                      });
+                      submitForm({
+                          button: "#btnRegister", url: "/sys/signup",
+                          begin: function (data) {
+                              if ($("#Accept").prop("checked") == false) {
+                                  $.gritter.add({ class_name: 'gritter-error', text: '@this.T("Sorry,you must accept the terms of the user before sign up.")' });
+                                  return false;
+                              }
+                          },
+                          end: function (ret) {
+                              location.href = "/home/spaindex";
+                          }
+                      });
+                      submitForm("#btnRetrieve", "/sys/RetrievePassword", function (ret) {
+                          location.href = "/home/signin";
+                      });
+                  });
+    </script>
+}
