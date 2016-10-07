@@ -19,7 +19,7 @@ var js = function (name) {
         "flot-resize": "/assets/js/chart/flot/jquery.flot.resize.min.js",
         "fullcalendar": "/assets/js/fullcalendar/fullcalendar.min.js",
         "gritter": "/assets/js/components/jquery.gritter.min.js",
-        "jqgrid": ["/assets/js/grid/jqgrid/grid.locale-cn.js", "/assets/js/grid/jqgrid/jquery.jqgrid.min.js", "/assets/js/grid/jqgrid/jquery.jqgrid.ext.js"],
+        "jqgrid": ["/assets/js/jqgrid/grid.locale-cn.js", "/assets/js/jqgrid/jquery.jqgrid.min.js", "/assets/js/jqgrid/jquery.jqgrid.ext.js"],
         "jquerycui": "/assets/js/jqueryui/jquery-ui.custom.min.js",
         "knob": "/assets/js/forms/jquery.knob.min.js",
         "inputlimiter": "/assets/js/forms/jquery.inputlimiter.1.3.1.min.js",

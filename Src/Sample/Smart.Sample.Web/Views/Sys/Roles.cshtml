@@ -1,4 +1,4 @@
-﻿@model YQ.Cashier.Domain.Entites.Role
+﻿@model Smart.Sample.Core.Entites.Role
 @{
     Layout = "~/Views/Shared/_BasicListPage.cshtml";
     ViewBag.Title = "Role info";
@@ -91,7 +91,7 @@
                 $.fn.zTree.init($("#treePrivilege"), setting, zNodes);
             })
         }
-        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.Role()
+        window.emptyData=@Html.Raw(new Smart.Sample.Core.Entites.Role()
             .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
         window.colModel = [
             { name: 'act', label: "Actions",  width: 230, align: "center" },
@@ -108,7 +108,7 @@
             var ids = $grid.jqGrid('getDataIDs');
             for (var i = 0; i < ids.length; i++) {
                 var data=$grid.jqGrid('getRowData',ids[i]);
-                if(data.IsSysRole=="true") continue;
+                if(data.IsSysRole == "Yes") continue;
                 var cl = ids[i];
                 var cellData ='';
                 cellData+='<button class="btn btn-xs btn-success no-border btn-set" type="button" data-rowid="' + cl + '">Privilege</button>';

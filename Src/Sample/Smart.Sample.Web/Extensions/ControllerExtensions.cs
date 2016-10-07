@@ -6,9 +6,9 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using YQ.Cashier.Domain.Entites;
+using Smart.Sample.Core.Entites;
 
-namespace YQ.Cashier.Web
+namespace Smart.Sample.Web
 {
     public static class ControllerExtensions
     {

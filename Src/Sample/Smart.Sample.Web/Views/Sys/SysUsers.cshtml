@@ -1,4 +1,4 @@
-﻿@model YQ.Cashier.Domain.Entites.SysUser
+﻿@model Smart.Sample.Core.Entites.SysUser
 @{
     Layout = "~/Views/Shared/_BasicListPage.cshtml";
     ViewBag.Title = "User info";
@@ -40,19 +40,6 @@
                 </span>
             </div>
             @Html.ValidationMessageFor(m => m.UserName)
-        </div>
-        <div class="form-group">
-            <label for="EmployeeId" class="col-xs-12 col-sm-3 control-label no-padding-right">@this.T("Employee")</label>
-            <div class="col-xs-12 col-sm-5">
-                <span class="block input-icon input-icon-right">
-                    <select class="width-100" id="EmployeeId" name="EmployeeId">
-                        @foreach (var item in ViewBag.Employees)
-                        {
-                            <option value="@item.EmployeeId">@item.Name</option>
-                        }
-                    </select>
-                </span>
-            </div>
         </div>
         <div class="form-group">
             <label for="Roles" class="col-xs-12 col-sm-3 control-label no-padding-right">Roles</label>
@@ -119,7 +106,7 @@
 </div><!-- /.modal -->
 @section init_scripts{
     <script>
-        window.emptyData=@Html.Raw(new YQ.Cashier.Domain.Entites.SysUser()
+        window.emptyData=@Html.Raw(new Smart.Sample.Core.Entites.SysUser()
             .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
 
         window.seaching = function (data) {

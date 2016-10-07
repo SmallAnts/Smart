@@ -1,30 +1,30 @@
 ﻿using Smart.Web.Mvc;
 using Smart.Core.Extensions;
-using YQ.Cashier.Domain.Entites;
+using Smart.Sample.Core.Entites;
 using System.IO;
 
-namespace YQ.Cashier.Web.Controllers
+namespace Smart.Sample.Web.Controllers
 {
     public abstract class ControllerBase : BaseController
     {
         private SysUser _operator;
+        /// <summary>
+        /// 当前登录用户信息
+        /// </summary>
         protected SysUser Operator
         {
             get
             {
                 if (_operator == null)
                 {
-                    var userinfo = this.User as UserInfo<Domain.Entites.SysUser>;
+                    var userinfo = this.User as UserInfo<SysUser>;
                     if (userinfo == null)
                     {
-                        userinfo = FormsAuth.GetUser<Domain.Entites.SysUser>(this.Request);
-#if DEBUG
-                        userinfo.UserData.BeautySalonId = 1;
-#endif 
+                        userinfo = FormsAuth.GetUser<SysUser>(this.Request);
                     }
                     _operator = userinfo == null ? null : userinfo.UserData;
                 }
-                return _operator ?? new Domain.Entites.SysUser() { SysUserId = 1, BeautySalonId = 1 };
+                return _operator ?? new SysUser() { SysUserId = 1, BeautySalonId = 1 };
             }
         }
 

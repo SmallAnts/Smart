@@ -16,7 +16,7 @@
 		
 		// stateless variables used across all $LAB instances
 		root_page = /^[^?#]*\//.exec(location.href)[0],
-		root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
+		root_Core = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
 		append_to = document.head || document.getElementsByTagName("head"),
 		
 		// inferences... ick, but still necessary
@@ -34,7 +34,7 @@
 		real_preloading = explicit_preloading || (test_script_elem.readyState && test_script_elem.readyState == "uninitialized"), // will a script preload with `src` set before DOM append?
 		script_ordered_async = !real_preloading && test_script_elem.async === true, // http://wiki.whatwg.org/wiki/Dynamic_Script_Execution_Order
 		
-		// XHR preloading (same-domain) and cache-preloading (remote-domain) are the fallbacks (for some browsers)
+		// XHR preloading (same-Core) and cache-preloading (remote-Core) are the fallbacks (for some browsers)
 		xhr_or_cache_preloading = !real_preloading && !script_ordered_async && !opera_or_gecko
 	;
 
@@ -61,13 +61,13 @@
 		if (/^\/\/\/?/.test(src)) {
 			src = location.protocol + src;
 		}
-		// is `src` page-relative? (not an absolute URL, and not a domain-relative path, beginning with /)
+		// is `src` page-relative? (not an absolute URL, and not a Core-relative path, beginning with /)
 		else if (!absolute_regex.test(src) && src.charAt(0) != "/") {
 			// prepend `base_path`, if any
 			src = (base_path || "") + src;
 		}
 		// make sure to return `src` as absolute
-		return absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src);
+		return absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_Core : root_page) + src);
 	}
 
 	// merge `source` into `target`
@@ -148,8 +148,8 @@
 					script.src = src;
 					// NOTE: no append to DOM yet, appending will happen when ready to execute
 				}
-				// same-domain and XHR allowed? use XHR preloading
-				else if (preload_this_script && src.indexOf(root_domain) == 0 && chain_opts[_UseLocalXHR]) {
+				// same-Core and XHR allowed? use XHR preloading
+				else if (preload_this_script && src.indexOf(root_Core) == 0 && chain_opts[_UseLocalXHR]) {
 					xhr = new XMLHttpRequest(); // note: IE never uses XHR (it supports true preloading), so no more need for ActiveXObject fallback for IE <= 7
 					/*!START_DEBUG*/if (chain_opts[_Debug]) log_msg("start script preload (xhr): "+src);/*!END_DEBUG*/
 					xhr.onreadystatechange = function() {

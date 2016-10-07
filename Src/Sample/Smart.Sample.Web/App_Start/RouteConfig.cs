@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace YQ.Cashier.Web
+namespace Smart.Sample.Web
 {
     public class RouteConfig
     {

@@ -2085,7 +2085,7 @@ namespace Smart.Core
                 case 4701: return "资源共享名 类型 用途 注释";
                 case 4702: return "(UNC)";
                 case 4703: return "...";
-                case 4704: return "Domain";
+                case 4704: return "Core";
                 case 4706: return "其它可用的网络:";
                 case 4710: return "Disk";
                 case 4711: return "Print";

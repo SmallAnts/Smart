@@ -4,9 +4,9 @@ using System.Linq;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(YQ.Cashier.Web.Startup))]
+[assembly: OwinStartup(typeof(Smart.Sample.Web.Startup))]
 
-namespace YQ.Cashier.Web
+namespace Smart.Sample.Web
 {
     public partial class Startup
     {

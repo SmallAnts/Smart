@@ -2,7 +2,7 @@
 using Smart.Core.Configuration;
 using Smart.Core.Dependency;
 
-namespace YQ.Cashier.Web
+namespace Smart.Sample.Web
 {
     class DependencyRegistrar : IDependencyRegistrar
     {

@@ -435,7 +435,7 @@ namespace Smart.Core.Extensions
         /// <returns>returns</returns>
         public static string RC2Encrypt(this string encryptString, string encryptKey)
         {
-            return CryptoUtility.RC2Encrypt(encryptString, encryptString);
+            return CryptoUtility.RC2Encrypt(encryptString, encryptKey);
         }
 
         /// <summary>

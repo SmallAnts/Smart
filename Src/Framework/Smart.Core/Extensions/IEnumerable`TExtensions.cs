@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Smart.Core.Extensions
 {
@@ -23,6 +22,17 @@ namespace Smart.Core.Extensions
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// 将一种类型的数组转换为另一种类型的数组。
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static TOutput[] As<TInput, TOutput>(this TInput[] array)
+        {
+            var result = Array.ConvertAll<TInput, TOutput>(array, t => t.As<TOutput>());
+            return result;
         }
 
         /// <summary>

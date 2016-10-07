@@ -1,0 +1,50 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <link href="/Assets/css/jqgrid/ui.jqgrid.min.css" rel="stylesheet" />
+    <link href="/Assets/css/components/jquery.gritter.min.css" rel="stylesheet" />
+    <link href="/Assets/css/forms/datepicker.min.css" rel="stylesheet" />
+    <style>
+        .page-content { padding: 0; }
+    </style>
+    @RenderSection("head", required: false)
+
+}
+
+@if (IsSectionDefined("breadcrumb"))
+{
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script>try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }</script>
+        @RenderSection("breadcrumb", required: false)
+    </div>
+}
+<div class="main-container" id="main-container">
+    <div class="page-content">
+        @RenderBody()
+    </div>
+</div>
+@section scripts{
+    <script>
+        $LAB.setOptions({ AlwaysPreserveOrder: true })
+           .script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
+           .script(IS_CHROME ? null : "/assets/js/components/touche.min.js")
+           .script("/assets/js/bootstrap/bootstrap.min.js")
+           .script("/assets/js/ace/ace-elements.min.js")
+           .script("/assets/js/ace/ace.min.js")
+           .script("/assets/js/components/jquery.gritter.js")
+           .script("/assets/js/common.js")
+           .wait(function () {
+               $.gritter.options = $.extend($.gritter.options, {
+                   title: 'Info',
+                   sticky: false,
+                   time: 2000,
+                   speed: 500,
+                   class_name: 'gritter-info'
+               });
+           });
+    </script>
+    @RenderSection("scripts", required: false)
+}
+
+

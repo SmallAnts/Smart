@@ -2,10 +2,10 @@
 using Smart.Web.Mvc;
 using System.Web;
 using System.Web.Mvc;
-using YQ.Cashier.Services;
+using Smart.Sample.Services;
 using Smart.Core.Extensions;
 
-namespace YQ.Cashier.Web
+namespace Smart.Sample.Web
 {
     public class FilterConfig
     {
@@ -52,9 +52,9 @@ namespace YQ.Cashier.Web
             if (result == false) return false;
             if (!OperationCode.IsEmpty())
             {
-                var privilegeService = SmartContext.Current.Resolve<IPrivilegeService>();
-                var user = FormsAuth.GetUser<Domain.Entites.SysUser>(httpContext.Request);
-                var operation = privilegeService.GetUserPrivileges(user.UserData.SysUserId).Find(p => p.OperationId == OperationCode);
+                var userService = SmartContext.Current.Resolve<Core.IServices.IUserService>();
+                var user = FormsAuth.GetUser<Core.Entites.SysUser>(httpContext.Request);
+                var operation = userService.GetUserPrivileges(user.UserData.SysUserId).Find(p => p.SysActionId == OperationCode);
                 if (operation == null)
                 {
                     failureReason = AuthorizationFailureReason.NoOperatingRights;
@@ -65,7 +65,7 @@ namespace YQ.Cashier.Web
         }
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
-            var user = FormsAuth.GetUser<Domain.Entites.SysUser>(filterContext.HttpContext.Request);
+            var user = FormsAuth.GetUser<Core.Entites.SysUser>(filterContext.HttpContext.Request);
             if (user != null && user.Identity != null)
             {
                 filterContext.HttpContext.User = user;
@@ -78,14 +78,9 @@ namespace YQ.Cashier.Web
             switch (failureReason)
             {
                 case AuthorizationFailureReason.NoOperatingRights:
-                    //if (filterContext.ActionDescriptor.IsDefined(typeof(HttpPostAttribute), true))
-                    //{
                     var jsonResult = new JsonResult();
                     jsonResult.Data = new { error = "Sorry, you do not have permission to perform this operation.".T() };
                     filterContext.Result = jsonResult;
-                    //}
-                    //else {
-                    //}
                     break;
                 default:
                     filterContext.Result = new RedirectResult("/sys/signin");

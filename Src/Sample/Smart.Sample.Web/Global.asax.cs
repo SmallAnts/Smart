@@ -14,10 +14,8 @@ using System.Data.Entity.Core.Mapping;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Collections.Generic;
-using FluentValidation.Mvc;
-using FluentValidation.Attributes;
 
-namespace YQ.Cashier.Web
+namespace Smart.Sample.Web
 {
     public class MvcApplication : HttpApplication
     {

@@ -399,7 +399,7 @@ ace.cookie = {
 	 * The 'expires' arg can be either a JS Date() object set to the expiration date (back-compat)
 	 * or the number of seconds until expiration
 	 */
-	set : function(name, value, expires, path, domain, secure) {
+	set : function(name, value, expires, path, Core, secure) {
 		var d = new Date();
 
 		if ( typeof(expires) == 'object' && expires.toGMTString ) {
@@ -414,7 +414,7 @@ ace.cookie = {
 		document.cookie = name + "=" + encodeURIComponent(value) +
 			((expires) ? "; expires=" + expires : "") +
 			((path) ? "; path=" + path : "") +
-			((domain) ? "; domain=" + domain : "") +
+			((Core) ? "; Core=" + Core : "") +
 			((secure) ? "; secure" : "");
 	},
 

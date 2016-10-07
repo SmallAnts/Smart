@@ -5,7 +5,7 @@ namespace Smart.Core.Infrastructure
 {
     /// <summary>
     /// A statically compiled "singleton" used to store objects throughout the 
-    /// lifetime of the app domain. Not so much singleton in the pattern's 
+    /// lifetime of the app Core. Not so much singleton in the pattern's 
     /// sense of the word as a standardized way to store single instances.
     /// </summary>
     /// <typeparam name="T">The type of object to store.</typeparam>

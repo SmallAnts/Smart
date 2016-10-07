@@ -60,11 +60,15 @@
     <Compile Include="EF\EFDbContext.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\T4\EntitesGenerator.ttinclude">
+      <Link>T4\EntitesGenerator.ttinclude</Link>
+    </None>
+    <None Include="..\..\T4\ModelsGenerator.ttinclude">
+      <Link>T4\ModelsGenerator.ttinclude</Link>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="T4\GeneratorHelper.ttinclude" />
-    <Content Include="T4\ModelsGenerator.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Smart.Core\Smart.Core.csproj">
@@ -76,9 +80,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

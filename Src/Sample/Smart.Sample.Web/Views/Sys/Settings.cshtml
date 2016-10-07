@@ -1,225 +1,42 @@
-﻿@model YQ.Cashier.Domain.Entites.SysParam
+﻿@model Smart.Sample.Core.Entites.SysParam
 @{
     ViewBag.Title = "Settings";
 }
 <style>
     .tab-pane .row { margin-left: 50px; }
 </style>
-<div class="row">
-    <form class="form-horizontal">
-        <div class="tabbable">
-            <ul class="nav nav-tabs" id="tabs">
-                <li class="active">
-                    <a aria-expanded="true" href="#tabs_1" data-toggle="tab">
-                        <i class="green ace-icon fa fa-shopping-cart bigger-120"></i>
-                        Cash register settings
-                    </a>
-                </li>
-                <li>
-                    <a aria-expanded="false" href="#tabs_2" data-toggle="tab">
-                        <i class="green ace-icon fa fa-print bigger-120"></i>
-                        Print settings
-                    </a>
-                </li>
-                <li>
-                    <a aria-expanded="false" href="#tabs_3" data-toggle="tab">
-                        <i class="green ace-icon fa fa-university bigger-120"></i>
-                        Stock settings
-                    </a>
-                </li>
-                <li>
-                    <a aria-expanded="false" href="#tabs_4" data-toggle="tab">
-                        <i class="green ace-icon fa fa-bell bigger-120"></i>
-                        Reminder settings
-                    </a>
-                </li>
-                <li>
-                    <a aria-expanded="false" href="#tabs_5" data-toggle="tab">
-                        <i class="green ace-icon fa fa-home bigger-120"></i>
-                        Store setting
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane fade active in" id="tabs_1">
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="IsConsumeCheckPwd">
-                            <span class="lbl"> @this.T("Membership card consumer need to verify the password") @*会员卡消费需要验证密码*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="IsAutoCash">
-                            <span class="lbl"> @this.T("Automatically use the cash settlement customer card is insufficient") @*顾客卡金不足时自动使用现金结算*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="IsAutoDonate">
-                            <span class="lbl"> @this.T("The paid card is insufficient automatically use the gift card settlement")@*实收卡金不足时自动使用赠送卡金结算*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="IsRound">
-                            <span class="lbl"> @this.T("Accounts receivable at the time of four homes five")@*结算时应收金额四舍五入*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="IsMemberPriceDisCount">
-                            <span class="lbl"> @this.T("Discount on the basis of membership price")@*允许在会员价基础上打折*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="IsShowProduct">
-                            <span class="lbl"> @this.T("The default display product list")@*前台收银默认显示产品列表*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="TimeNotEnough">
-                            <span class="lbl"> @this.T("Member more than once")@*会员余次不足*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="number" class="ace" name="MemberBalance">
-                            <span class="lbl"> @this.T("Insufficient member balance")@*会员余额不足__元提醒*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="RechargeSMS">
-                            <span class="lbl"> @this.T("Recharge is SMS alerts")@*充值是否短信提醒*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="CousumeSMS">
-                            <span class="lbl"> @this.T("Whether the consumer SMS alerts")@*消费是否短信提醒*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="FillCardSMS">
-                            <span class="lbl"> @this.T("Supplementary card is SMS alerts")@*补卡是否短信提醒*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="number" class="ace" name="MemberBalance">
-                            <span class="lbl"> @this.T("GST rate setting")@*GST 税率值设置提*@</span>
-                        </label>
-                    </div>
+<form class="form-horizontal">
+    <div class="tabbable">
+        <ul class="nav nav-tabs" id="tabs">
+            <li class="active">
+                <a aria-expanded="true" href="#tabs_1" data-toggle="tab">
+                    <i class="green ace-icon fa fa-shopping-cart bigger-120"></i>
+                    系统参数
+                </a>
+            </li>
+            <li>
+                <a aria-expanded="false" href="#tabs_2" data-toggle="tab">
+                    <i class="green ace-icon fa fa-print bigger-120"></i>
+                    打印参数
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade active in" id="tabs_1">
+                <div class="row">
+                    <label class="inline">
+                        <input type="checkbox" class="ace" name="set1">
+                        <span class="lbl"> 设置1</span>
+                    </label>
                 </div>
-                <div class="tab-pane fade" id="tabs_2">
-                    <div class="row">
-                        <label class="inline">
-                            <select class="ace" name="ConsumePrintMode">
-                                <option value="0">Not print</option>
-                                <option value="1">Prompt print</option>
-                                <option value="2">Direct print</option>
-                            </select> Consume print mode @*消费小票的打印方式, 0:不打印，1:打印前提示，2:直接打印*@
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <select class="ace" name="RechargePrintMode">
-                                <option value="0">Not print</option>
-                                <option value="1">Prompt print</option>
-                                <option value="2">Direct print</option>
-                            </select> Recharge print mode @* 充值小票的打印方式, 0:不打印，1:打印前提示，2:直接打印*@
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="number" class="ace" name="ConsumePrintNumber">          The number of printed copies of the consumption of a small ticket @* 消费小票的打印份数*@
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="number" class="ace" name="RechargePrintNumber"> The number of printed copies of the prepaid tickets @* 充值小票的打印份数*@
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <select class="ace" name="ConsumeBalance">
-                                <option value="0">Paid in amount</option>
-                                <option value="1">Amount paid + Gift</option>
-                            </select> balance display in a small consumption ticket @*消费小票中的余额显示方式, 0 实收卡金，实收赠送总和*@
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="text" class="ace" name="Footer" style="width:200px"> Small ticket footer content @* 充小票页脚的内容*@
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="IsShowEmployee">
-                            <span class="lbl"> @this.T("Consumption of small ticket display service staff") @*消费小票中显示服务员工*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="text" class="ace" name="StoreTel"> Store phone set @* 门店电话设置*@
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="IsShowSotreTel">
-                            <span class="lbl"> @this.T("Display store phone") @*是否显示门店电话*@</span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            <select class="ace" name="PrintIndex"></select> Cash register printer @*收银小票打印机*@
-                        </label>
-                    </div>
-
+                <div class="row">
+                    <label class="inline">
+                        <input type="checkbox" class="ace" name="set2">
+                        <span class="lbl"> 设置2</span>
+                    </label>
                 </div>
-                <div class="tab-pane fade" id="tabs_3">
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="IsZeroOut">
-                            <span class="lbl"> @this.T("Allow zero inventory")@*允许零库存出库*@ </span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="tabs_4">
-                    <div class="row">
-                        <label class="inline">
-                            @this.T("Customer's birthday")@*顾客生日提前*@&nbsp;
-                            <input type="number" name="CustomerBirthday">
-                            @this.T("days in advance to remind")@*天提醒*@
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            @this.T("Customers not to store ")@*顾客未到店消费*@
-                            <input type="number" name="NotConsumeDay">
-                            @this.T("days to remind the consumer")@*天提醒*@
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label class="inline">
-                            @this.T("Membership card expires")@*会员卡到期提前*@ <input type="number" name="CardExpiryDate">
-                            @this.T("days to remind the consumer")@*天提醒*@
-                        </label>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="tabs_5">
-                    <div class="row">
-                        <label class="inline">
-                            <input type="checkbox" class="ace" name="">
-                            <span class="lbl"> @this.T("Whether the store expenses included in the income statistics of the day")@*门店开支是否计入当天收入统计*@</span>
-                        </label>
-                    </div>
-                </div>
+            </div>
+            <div class="tab-pane fade" id="tabs_2">
             </div>
         </div>
         <div class="space-2"></div>
@@ -228,8 +45,8 @@
                 <button class="btn btn-success" type="button" id="btn_save"><i class="fa fa-check"></i>  @this.T("Save") </button>
             </div>
         </div>
-    </form>
-</div>
+    </div>
+</form>
 <script>
     loadData(@Html.Raw(this.Model.ToJson()));
     $("#btn_save").on("click", function () {

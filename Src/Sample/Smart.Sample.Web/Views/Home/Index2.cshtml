@@ -1,0 +1,156 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Smart Sample";
+    ViewBag.BodyClass = "skin-1";
+}
+@helper MenuHelper(Menu menu)
+{
+if (menu.Menus != null && menu.Menus.Count > 0)
+{
+        <ul class="submenu">
+            @foreach (var item in menu.Menus)
+            {
+                <li class="">
+                    @if (item.Menus == null || item.Menus.Count == 0)
+                    {
+                        <a href="#" url="@item.Url" title="@item.Text" @item.HtmlAttributes.ToString()>
+                            <i class="menu-icon fa @item.Icon"></i>
+                            <span class="menu-text"> @item.Text</span>
+                        </a>
+                    }
+                    else {
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa @item.Icon"></i>
+                            <span class="menu-text"> @item.Text</span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                    }
+                    <b class="arrow"></b>
+                    @MenuHelper(item)
+                </li>
+            }
+        </ul>
+}
+}
+@section head{
+    <link href="/Assets/css/jqgrid/ui.jqgrid.min.css" rel="stylesheet" />
+    <link href="/Assets/css/components/jquery.gritter.min.css" rel="stylesheet" />
+    <link href="/Assets/css/forms/datepicker.min.css" rel="stylesheet" />
+    <style>
+        /*.nav-tabs > li > a { border-color: transparent !important; }*/
+    </style>
+}
+@Html.Partial("_navbar")
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try { ace.settings.check('main-container', 'fixed') } catch (e) { }
+    </script>
+    <div id="sidebar" class="sidebar responsive">
+        <script type="text/javascript">
+            try { ace.settings.check('sidebar', 'fixed') } catch (e) { }
+        </script>
+        <ul class="nav nav-list">
+            @foreach (var menu in ViewBag.Menus)
+            {
+            <li class="">
+                @if (menu.Menus == null || menu.Menus.Count == 0)
+                    {
+                <a href="#" url="@menu.Url" title="@menu.Text" @menu.HtmlAttributes.ToString()>
+                    <i class="menu-icon fa @menu.Icon"></i>
+                    <span class="menu-text"> @menu.Text</span>
+                </a>
+                    }
+                    else {
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa @menu.Icon"></i>
+                    <span class="menu-text"> @menu.Text</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                    }
+                <b class="arrow"></b>
+                @MenuHelper(menu)
+            </li>
+            }
+        </ul>
+        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+            <i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+        </div>
+        <script type="text/javascript">
+            try { ace.settings.check('sidebar', 'collapsed') } catch (e) { }
+        </script>
+    </div>
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div id="page-content">
+                <div class="nav" id="tabs">
+                    <ul class="nav nav-tabs" role="tablist"></ul>
+                    <div class="tab-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
+</div>
+
+<div class="modal fade" id="member-list" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="member-list-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade mymodal" id="publicmodal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade mymodal" id="publicmodal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modal-lg-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade mymodal" id="publicmodal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" id="modal-sm-content">
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $LAB.setOptions({ AlwaysPreserveOrder: true })
+           .script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
+           .script(IS_CHROME ? null : "/assets/js/components/touche.min.js")
+           .script("/assets/js/bootstrap/bootstrap.min.js")
+           .script("/assets/js/bootstrap/bootstrap-tab.js")
+           .script("/assets/js/ace/ace-elements.min.js")
+           .script("/assets/js/ace/ace.min.js")
+           .script("/assets/js/components/jquery.gritter.js")
+           .script("/assets/js/common.js")
+           .wait(function () {
+               $.gritter.options = $.extend($.gritter.options, {
+                   title: 'Info',
+                   sticky: false,
+                   time: 2000,
+                   speed: 500,
+                   class_name: 'gritter-info'
+               });
+               init_navbar();
+               $('#tabs').addtabs({ monitor: '#sidebar' });
+           });
+
+        function init_navbar() {
+            $("#btn-exit").on("click", function () {
+                var url = $(this).attr("href");
+                swal({
+                    title: "Exit?", text: "Click [OK] button to exit the login!", type: "warning",
+                    showCancelButton: true,
+                }, function (isConfirm) {
+                    if (isConfirm) location.href = url;
+                });
+            });
+        }
+    </script>
+}

@@ -32,14 +32,14 @@ namespace Smart.Core.Localization
         public static string GetByLang(string lang, string key, params object[] args)
         {
             var cache = SmartContext.Current.Resolve<Caching.ICache>("smart.httpCache");
+            var filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Lang", lang + ".json");
+            if (!File.Exists(filename))
+            {
+                return key.Contains("ξ") ? key.Split('ξ')[1] : key;
+                //throw new SmartException("未找到语言文件 " + filename);
+            }
             var resources = cache.Get<dynamic>(lang, () =>
             {
-                var filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Lang", lang + ".json");
-                if (!File.Exists(filename))
-                {
-                    return key.Contains("ξ") ? key.Split('ξ')[1] : key;
-                    //throw new SmartException("未找到语言文件 " + filename);
-                }
                 using (var sr = new StreamReader(filename))
                 {
                     try

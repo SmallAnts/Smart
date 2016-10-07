@@ -31,6 +31,7 @@ label.error { color: red; font-size: 12px; margin-left: 4px; padding-left: 20px;
 .tooltip { text-wrap: normal; word-break: keep-all; }
 .close { -webkit-transition: all 0.3s ease; -o-transition: all 0.3s ease; -moz-transition: all 0.3s ease; transition: all 0.3s ease; }
     .close:hover { color: red; -webkit-transform: rotate(90deg); -o-transform: rotate(90deg); -moz-transform: rotate(90deg); transform: rotate(90deg); }
+.close-tab { margin-left: 2px; }
 /*base end*/
 .datepicker { z-index: 999999 !important; }
 /*ace-nav*/

@@ -2,7 +2,7 @@
 using FluentValidation.Attributes;
 using Smart.Core.Extensions;
 
-namespace YQ.Cashier.Web.Models
+namespace Smart.Sample.Web.Models
 {
     [Validator(typeof(SignInModelValidator))]
     public class SignInModel
@@ -16,8 +16,8 @@ namespace YQ.Cashier.Web.Models
     {
         public SignInModelValidator()
         {
-            RuleFor(u => u.LoginName).NotEmpty().WithMessage("Login name can not be empty!".T());
-            RuleFor(u => u.Password).NotEmpty().WithMessage("Login password can not be empty!".T());
+            //RuleFor(u => u.LoginName).NotEmpty().WithMessage("Login name can not be empty!".T());
+            //RuleFor(u => u.Password).NotEmpty().WithMessage("Login password can not be empty!".T());
         }
     }
 }
