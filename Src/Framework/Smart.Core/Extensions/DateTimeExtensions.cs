@@ -73,6 +73,16 @@ namespace Smart.Core.Extensions
         }
 
         /// <summary>
+        /// 将日期转换为 javascript 时间戳
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static long ToJsTicks(this DateTime time)
+        {
+            return (time - new DateTime(1970, 1, 1, 0, 0, 0, 0)).Ticks / 10000;
+        }
+
+        /// <summary>
         /// 与指定的时间计算时间差（date－theDate）
         /// </summary>
         /// <param name="theTime">被计算日期</param>
