@@ -67,7 +67,7 @@ namespace Smart.Sample.Web
 #if DEBUG
                 return new UploadResult { Error = ex.Message };
 #else
-                return new UploadResult { Error =  LangHelper.Get(l => l.unknownException) };
+                return new UploadResult { Error =  "发生未知的异常！" };
 #endif
 
             }
