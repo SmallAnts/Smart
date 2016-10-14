@@ -14,15 +14,24 @@ namespace Smart.Data.EF
     /// </summary>
     public class EFRepository<T> : IEFRepository<T> where T : class
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbContext"></param>
         public EFRepository(DbContext dbContext)
         {
             this._dbContext = dbContext;
         }
 
         #region 私有成员
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected DbContext _dbContext;
         private DbSet<T> _entities;
+        /// <summary>
+        /// 
+        /// </summary>
         protected virtual IDbSet<T> Entities
         {
             get
@@ -36,7 +45,11 @@ namespace Smart.Data.EF
         #endregion
 
         #region  IRepository<T> 接口成员
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public int Insert(T entity)
         {
             try
@@ -44,6 +57,7 @@ namespace Smart.Data.EF
                 if (entity == null)
                     throw new ArgumentNullException("entity");
 
+                _dbContext.DetachOther(entity);
                 this.Entities.Add(entity);
 
                 return this._dbContext.SaveChanges();
