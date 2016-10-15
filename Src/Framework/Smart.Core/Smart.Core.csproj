@@ -63,6 +63,7 @@
     <Compile Include="Computer\NetWorkMonitor.cs" />
     <Compile Include="Data\IRepository`T.cs" />
     <Compile Include="Dependency\IDependency.cs" />
+    <Compile Include="DynamicLinq.cs" />
     <Compile Include="Extensions\CacheExtensions.cs" />
     <Compile Include="Caching\HttpCache.cs" />
     <Compile Include="Caching\ICache.cs" />
