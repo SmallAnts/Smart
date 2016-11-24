@@ -94,7 +94,7 @@
         window.emptyData=@Html.Raw(new Smart.Sample.Core.Entites.Role()
             .ToJson(nullValue: Newtonsoft.Json.NullValueHandling.Include));
         window.colModel = [
-            { name: 'act', label: "Actions",  width: 230, align: "center" },
+            { name: 'act', label: "Actions",  width: 250, align: "center" },
             { name: 'RoleId', label: "Role id",  width: 80,hidden:true },
             { name: 'Name', label: "Name",  width: 150 },
             { name: 'IsSysRole', label: "System role",  width: 100 ,align: "center",formatter:"checkbox" },
@@ -104,20 +104,12 @@
                 formatter: "date", formatoptions:{srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'},
             }
         ];
-        window.gridComplete = function () {
-            var ids = $grid.jqGrid('getDataIDs');
-            for (var i = 0; i < ids.length; i++) {
-                var data=$grid.jqGrid('getRowData',ids[i]);
-                if(data.IsSysRole == "Yes") continue;
-                var cl = ids[i];
-                var cellData ='';
-                cellData+='<button class="btn btn-xs btn-success no-border btn-set" type="button" data-rowid="' + cl + '">Privilege</button>';
-                cellData+='<button class="btn btn-xs btn-primary no-border btn-edit" type="button" data-rowid="' + cl + '"" ><i class="fa fa-pencil"></i> Edit</button>';
-                cellData += '<button class="btn btn-xs btn-danger no-border btn-del" type="button" data-rowid="' + cl + '"><i class="fa fa-close"></i> Delete</button>';
-                //$grid.jqGrid('setRowData', ids[i], { act: cellData });
-                var ind = $(this).jqGrid('getGridRowById', ids[i]);
-                $("td[role='gridcell']:eq(1)",ind).html(cellData);
-            }
+        window.gridComplete =function (render, ds){
+            var privilegebtn={ css: "btn-success btn-set", icon: "fa-list", text: "Privilege" };
+            ds.buttons.push(privilegebtn);
+            render(function (renderButtons,args) {
+                return renderButtons(args.rowId,ds)
+            });
         }
         $("#grid_list").on("click",".btn-set",function(){
             setPrivilege($(this).data("rowid"));

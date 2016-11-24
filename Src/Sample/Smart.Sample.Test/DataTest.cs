@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using Smart.Sample.Core.Context;
 using Smart.Sample.Core.Entites;
+using System.Linq.Dynamic;
 
 namespace Smart.Sample.Test
 {
@@ -16,6 +17,7 @@ namespace Smart.Sample.Test
         public DataTest() : base()
         {
             userService = new Services.Sys.UserService();
+
         }
 
         // 初始化数据库
@@ -23,6 +25,7 @@ namespace Smart.Sample.Test
         public void DatabaseInit()
         {
             var db = new SampleDbContext();
+            db.Role.Where("");
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SampleDbContext>());
             if (db.Database.Exists())
             {
@@ -44,7 +47,7 @@ namespace Smart.Sample.Test
                 IsAdmin = true
             }, 1);
         }
-
+        [TestMethod]
         public void Init_SysFuncs()
         {
             var funcs = new List<SysFunc>();
@@ -55,6 +58,10 @@ namespace Smart.Sample.Test
             funcs.Add(new SysFunc { SysFuncId = "010100", Name = "角色维护", ParentId = "010000", Url = "/sys/roles" });
             funcs.Add(new SysFunc { SysFuncId = "010200", Name = "用户维护", ParentId = "010000", Url = "/sys/sysusers" });
             funcs.Add(new SysFunc { SysFuncId = "010300", Name = "参数设置", ParentId = "010000", Url = "/sys/settings" });
+
+            funcs.Add(new SysFunc { SysFuncId = "020000", Name = "示例", ParentId = "", Icon = "fa-cogs" });
+            funcs.Add(new SysFunc { SysFuncId = "020100", Name = "树控件", ParentId = "020000", Url = "/demo/ztree" });
+            funcs.Add(new SysFunc { SysFuncId = "020200", Name = "下拉控件", ParentId = "020000", Url = "/demo/combo" });
 
             var actions = new List<SysAction>();
             var roleActions = new List<RoleSysAction>();
@@ -71,7 +78,7 @@ namespace Smart.Sample.Test
                     });
                 }
             }
-
+            userService.ClearSysFunctions();
             userService.AddSysfuncs(funcs);
             userService.AddSysActions(actions);
             var oids = userService.db.SysAction.Select(p => p.SysActionId).ToArray();

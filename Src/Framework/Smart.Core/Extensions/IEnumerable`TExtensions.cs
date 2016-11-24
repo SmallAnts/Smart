@@ -61,5 +61,12 @@ namespace Smart.Core.Extensions
                     yield return (T)Activator.CreateInstance(drType);
             }
         }
+
+        public static void ExportExcel<T>(this List<T> list, string fileName, string sheetName, Model.Header header = null)
+        {
+            Utilites.ExportUtility.ExportExcel(list, fileName, sheetName, header);
+        }
     }
+
+
 }

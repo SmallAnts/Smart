@@ -356,6 +356,8 @@ namespace Smart.Core.Extensions
 
         #endregion
 
+        #region JSON序列化 基于 Newtonsoft.Json
+
         /// <summary>
         /// JSON 字符串反序列化为对象
         /// </summary>
@@ -377,6 +379,7 @@ namespace Smart.Core.Extensions
         {
             return Localization.Language.Get(key, args);
         }
+        #endregion
 
         #region 散列加密算法
 

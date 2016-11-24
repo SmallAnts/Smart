@@ -20,14 +20,14 @@ namespace Smart.Tests
         [TestMethod]
         public void Test()
         {
-            IRepository<User, IDbContext> repo = new Repository<User, MyDbContext>(new MyDbContext());
+            IRepository<SysUser, IDbContext> repo = new Repository<SysUser, MyDbContext>(new MyDbContext());
         }
 
     }
 
-    public class User
+    public class SysUser
     {
-        public string Id { get; set; }
+        public int SysUserId { get; set; }
     }
     public class DbContext
     {

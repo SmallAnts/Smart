@@ -8,7 +8,6 @@ using Smart.Core.Extensions;
 
 namespace Smart.Sample.Web.Controllers
 {
-
     [FormAuthorize]
     public class HomeController : ControllerBase
     {

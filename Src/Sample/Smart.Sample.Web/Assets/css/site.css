@@ -48,6 +48,10 @@ label.error { color: red; font-size: 12px; margin-left: 4px; padding-left: 20px;
 .ui-pg-button .ui-icon-seek-end:before { content: "\f101"; }
 .ui-th-column input[type=checkbox], input[type=radio] { margin: 0 0 0 4px; }
 
+.master .nav-tabs > li > a { border-color: #fff; background-color: #fff; }
+.master .nav-tabs > li.active > a { border: #fff; border-bottom: 3px solid #4c8fbd; box-shadow: none; }
+.nav-tabs .close-tab { cursor: pointer; }
+
 .margin-l-05em { margin-left: 0.5em; }
 
 .list-group-item1 { overflow: hidden; position: relative; display: block; padding: 10px 15px; margin-bottom: -1px; background-color: #fff; border: 1px solid #ddd; }

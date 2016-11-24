@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Settings";
 }
+
 <style>
     .tab-pane .row { margin-left: 50px; }
 </style>
@@ -48,6 +49,11 @@
     </div>
 </form>
 <script>
+    $LAB.script(js("datepicker", "select2")).wait(function () {
+
+
+    })
+
     loadData(@Html.Raw(this.Model.ToJson()));
     $("#btn_save").on("click", function () {
         var postData = $("form").serialize().replace(/=0/g, "=true");

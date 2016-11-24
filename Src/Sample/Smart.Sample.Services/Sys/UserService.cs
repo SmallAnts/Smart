@@ -159,7 +159,7 @@ namespace Smart.Sample.Services.Sys
         // 从缓存获取用户功能信息
         public List<SysFunc> GetUserFuncs(int userId)
         {
-            var userFuncs = cache.Get(CacheKeys.UserFuncs, () =>
+            var userFuncs = cache.Get(CacheKeys.UserFuncs + userId, () =>
             {
                 // 获取所有功能
                 var allFuncs = this.GetSysFuncs();
@@ -202,8 +202,8 @@ namespace Smart.Sample.Services.Sys
         {
             this.db.Remove(new Role { RoleId = roleId });
             // 清除缓存
-            cache.Remove(CacheKeys.UserPrivileges);
-            cache.Remove(CacheKeys.UserFuncs);
+            cache.RemoveAll(key => key.StartsWith(CacheKeys.UserPrivileges));
+            cache.RemoveAll(key => key.StartsWith(CacheKeys.UserFuncs));
             return this.db.SaveChanges();
         }
         public int UpdateRole(Role role)
@@ -259,8 +259,8 @@ namespace Smart.Sample.Services.Sys
                 ts.Commit();
             }
             // 清除缓存
-            cache.Remove(CacheKeys.UserPrivileges);
-            cache.Remove(CacheKeys.UserFuncs);
+            cache.Remove(CacheKeys.UserPrivileges + userId);
+            cache.Remove(CacheKeys.UserFuncs + userId);
             return ret;
         }
 
@@ -313,8 +313,8 @@ namespace Smart.Sample.Services.Sys
                 });
             }
             // 清除缓存
-            cache.Remove(CacheKeys.UserFuncs);
-            cache.Remove(CacheKeys.UserPrivileges);
+            cache.Remove(CacheKeys.UserFuncs + userId);
+            cache.Remove(CacheKeys.UserPrivileges + userId);
         }
         // 加密
         internal static string EncryptPassword(string password)
@@ -332,6 +332,11 @@ namespace Smart.Sample.Services.Sys
         {
             this.db.SysAction.AddRange(actions);
             this.db.SaveChanges();
+        }
+        internal void ClearSysFunctions()
+        {
+            this.db.Database.ExecuteSqlCommand("delete SysFunc");
+            this.db.Database.ExecuteSqlCommand("delete SysAction");
         }
     }
 }

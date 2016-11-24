@@ -1,12 +1,9 @@
-﻿@{
-    Layout = "~/Views/Shared/_MpaPageLayout.cshtml";
-}
-<div class="container-fluid" id="toolbar">
-    <div class="pull-left">
+﻿<div class="container-fluid" id="toolbar">
+    <div class="pull-left form-inline">
         @if (ViewBag.ShowAddButton != false)
         {
             <button class="btn btn-primary btn-sm no-border" id="btn_add">
-                <i class="fa fa-plus"></i> @this.T("Add")
+                <i class="fa fa-plus"></i> @(ViewBag.AddButtonText ?? this.T("Add"))
             </button>
         }
         @if (IsSectionDefined("tools"))
@@ -14,8 +11,10 @@
             @RenderSection("tools", required: false)
         }
     </div>
-
-    @Html.Partial("_nav-search")
+    @if (ViewBag.ShowSearch != false)
+    {
+        @Html.Partial("_nav-search")
+    }
     <div class="pull-right">
         @if (IsSectionDefined("righttools"))
         {
@@ -23,9 +22,17 @@
         }
     </div>
 </div>
-<div>
-    <table id="grid_list"></table>
-    <div id="grid_list_pager"></div>
+<div class="row">
+    @if (IsSectionDefined("left_nav"))
+    {
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 @ViewBag.LeftNavCss">
+            @RenderSection("left_nav", required: false)
+        </div>
+    }
+    <div class="jqgrid @(IsSectionDefined("left_nav")?"col-xs-8 col-sm-8 col-md-8 col-lg-9":string.Empty)">
+        <table id="grid_list"></table>
+        <div id="grid_list_pager"></div>
+    </div>
 </div>
 <div class="modal fade" id="editmodal">
     <div class="modal-dialog">
@@ -46,123 +53,188 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-@RenderBody()
-@section scripts{
-    <script>
-        window.gridComplete = null;
-        window.init = null;
-        window.onEdit = null;
-        window.onAdd = null;
-        window.onSaved = null;
-        window.seaching = "";
+<script type="text/template" id="actionButtonTmpl">
+    <button class="btn btn-xs no-border ${css}" type="button" data-rowid="${rowid}"><i class="fa ${icon}"></i> ${text}</button>
+</script>
+@*<script type="text/template" id="actionMenuItemTmpl">
+        <li class="${css}" data-rowid="${rowid}"><a href="#"><i class="fa ${icon}"></i> ${text}</a></li>
     </script>
-    @RenderSection("init_scripts", required: true)
-    <script>
-        var action = "";
-        var selectedId = 0;
-        var $grid, $modal;
-        function _edit(id) {
-            selectedId = id;
-            $grid.jqGrid('setSelection', id).jqGrid("editSelectedRow", function (rowData) {
-                if (window.onEdit) {
-                    var ret = window.onEdit(rowData);
-                    if (ret) rowData = ret;
+    <script type="text/" id="actionMenuTmpl">
+        <div class="btn-group">
+            <button aria-expanded="false" data-toggle="dropdown" class="btn btn-info btn-white dropdown-toggle">
+                <span class="ace-icon fa fa-caret-down icon-only"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-info dropdown-menu-right">
+                ${"menus"}
+            </ul>
+        </div>
+    </script>*@
+@RenderBody()
+<script>
+    window.gridOptions = null;
+    window.gridComplete = null;
+    window.init = null;
+    window.load = null;
+    window.onEdit = null;
+    window.onAdd = null;
+    window.onSaved = null;
+    window.onEditShow = null;
+    window.seaching = "";
+</script>
+@RenderSection("init_scripts", required: true)
+<script>
+    var action = "";
+    var selectedId = 0;
+    var $grid, $modal;
+    function _renderHtml(data, tmpl) {
+        var html = "";
+        tmpl = $.trim(tmpl);
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            if (item) {
+                var _tmpl = tmpl;
+                for (var p in item) {
+                    _tmpl = _tmpl.replace("${" + p + "}", item[p])
+                }
+                html += _tmpl;
+            }
+        }
+        return html;
+    }
+    function renderActionButton(rowId, data) {
+        var html = "";
+        if (data.buttons) {
+            html += _renderHtml(data.buttons, $("#actionButtonTmpl").html());
+        }
+        if (data.menus) {
+            var menus = _renderHtml(data.menus, $("#actionMenuItemTmpl").html());
+            html += $.trim($("#actionMenuTmpl").html().replace('${"menus"}', menus));
+        }
+        html = html.replace(/\$\{rowid\}/g, rowId);
+        return html;
+    }
+    function _edit(id) {
+        selectedId = id;
+        $grid.jqGrid('setSelection', id).jqGrid("editSelectedRow", function (rowData) {
+            if (window.onEdit) {
+                var ret = window.onEdit(rowData);
+                if (ret) rowData = ret;
+                else if (ret === false) return;
+            }
+            action = "edit";
+            clearValidationError();
+            loadData(rowData);
+            $("#lbl_title").html('<i class="fa fa-pencil"></i> @this.T("Edit")');
+            $modal.modal("show");
+            if (window.onEditShow) {
+                window.onEditShow(rowData);
+            }
+        });
+    }
+    function _delete(id) {
+        $("#grid_list").jqGrid('setSelection', id).jqGrid("delSelectedRow", function (rowData, selectedId, callback) {
+            action = "delete";
+            $.post("@ViewBag.DeleteUrl", rowData, function (ret) {
+                callback(ret);
+            });
+        });
+    }
+    $LAB.script(js("jqgrid", "validate"))
+        .wait(function () {
+            if (window.init) init();
+            var _gridopts = {
+                url: "@ViewBag.GetListUrl",
+                colModel: window.colModel || [],
+                gridComplete: function () {
+                    var hasSave = '@(ViewBag.SaveUrl != null)' == 'True';
+                    var ids = $("#grid_list").jqGrid('getDataIDs');
+                    var data = { buttons: [] };
+                    if (hasSave) data.buttons.push({ css: "btn-primary btn-edit", icon: "fa-pencil", text: "Edit" });
+                    data.buttons.push({ css: "btn-danger btn-del", icon: " fa-close", text: "Delete" });
+                    // 生成操作按钮方法，在回调方法中返回一行的按钮
+                    function renderButton(render) {
+                        for (var i = 0; i < ids.length; i++) {
+                            var ind = $("#grid_list").jqGrid('getGridRowById', ids[i]);
+                            // 调用回调，并传递默认的按钮生成方法和数据
+                            var buttons = render(renderActionButton, { rowId: ids[i], rowIndex: ind, hasSave: hasSave, data: data });
+                            $("td[aria-describedby='grid_list_act']", ind).html(buttons);
+                        }
+                    }
+                    if (window.gridComplete) {
+                        window.gridComplete.call(this, renderButton, data);
+                    } else {
+                        renderButton(function (r, e) {
+                            return renderActionButton(e.rowId, e.data);
+                        });
+                    }
+                }
+            };
+            if (window.gridOptions) {
+                _gridopts = $.extend(_gridopts, window.gridOptions);
+            }
+            if (_gridopts.colModel) { // 禁止列排序 列上指定 sortable:true 的不会被禁止
+                for (var i = 0; i < _gridopts.colModel.length; i++) {
+                    var col = window.colModel[i];
+                    if (col.sortable !== true) {
+                        col.sortable = false;
+                    }
+                }
+            }
+            $grid = initJqGrid("#grid_list", _gridopts);
+
+            $modal = $("#editmodal").modal({ show: false });
+            $("#nav-search-input").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    var postData = { search: $("#nav-search-input").val() };
+                    if (window.seaching) {
+                        var ret = window.seaching(postData);
+                        if (ret) postData = ret;
+                    }
+                    $grid.jqGrid("setGridParam", { postData: postData, page: 1 })
+                        .trigger("reloadGrid");
+                    return false;
+                }
+            });
+
+            $("#btn_add").on("click", function () {
+                action = "add";
+                var data = window.emptyData || {}
+                if (window.onAdd) {
+                    var ret = window.onAdd(data);
+                    if (ret) data = ret;
                     else if (ret === false) return;
                 }
-                action = "edit";
-                clearValidationError();
-                loadData(rowData);
-                $("#lbl_title").html('<i class="fa fa-pencil"></i> @this.T("Edit")');
+                loadData(data);
+                $("#lbl_title").html('<i class="fa fa-plus"></i> @this.T("Add")');
                 $modal.modal("show");
             });
-        }
-        function _delete(id) {
-            $("#grid_list").jqGrid('setSelection', id).jqGrid("delSelectedRow", function (rowData, selectedId, callback) {
-                action = "delete";
-                $.post("@ViewBag.DeleteUrl", rowData, function (ret) {
-                    callback(ret);
-                });
+            $("#grid_list").on("click", ".btn-edit", function () {
+                _edit($(this).data("rowid"));
             });
-        }
-        $LAB.script(js("jqgrid", "validate"))
-            .wait(function () {
-                if (window.init) init();
-                $(window).on('resize.jqGrid', function () {
-                    $grid.jqGrid('setGridWidth', $(".page-content").width());
-                });
-
-                if (window.colModel) { // 禁止列排序 列上指定 sortable:true 的不会被禁止
-                    for (var i = 0; i < window.colModel.length; i++) {
-                        var col = window.colModel[i];
-                        if (col.sortable !== true) {
-                            col.sortable = false;
-                        }
-                    }
+            $("#grid_list").on("click", ".btn-del", function () {
+                _delete($(this).data("rowid"));
+            });
+            submitForm("#btn_save", "@ViewBag.SaveUrl", function (ret) {
+                $modal.modal("hide");
+                if (window.onSaved) { // 保存后前台绑定数据的拦截方法 返回 false 为拦截
+                    var data = window.onSaved(action, ret.value);
+                    if (data === false) return;
+                    else if (data != undefined) ret.value = data;
                 }
-                $grid = initJqGrid("#grid_list", {
-                    url: "@ViewBag.GetListUrl",
-                    //pager: null,
-                    colModel: window.colModel || [],
-                    gridComplete: window.gridComplete || function () {
-                        var ids = $grid.jqGrid('getDataIDs');
-                        for (var i = 0; i < ids.length; i++) {
-                            var cl = ids[i];
-                            var cellData = '';
-                            var hasSave = '@(ViewBag.SaveUrl != null)' == 'True';
-                            cellData += hasSave ? '<button class="btn btn-xs btn-primary no-border btn-edit" type="button" data-rowid="' + cl + '"><i class="fa fa-pencil"></i> Edit</button>' : '';
-                            cellData += '<button class="btn btn-xs btn-danger no-border btn-del" type="button" data-rowid="' + cl + '"><i class="fa fa-close"></i> Delete</button>';
-                            //$grid.jqGrid('setRowData', ids[i], { act: cellData });
-                            var ind = $(this).jqGrid('getGridRowById', ids[i]);
-                            $("td[role='gridcell']:eq(1)", ind).html(cellData);
-                        }
-                    }
-                });
-
-                $modal = $("#editmodal").modal({ show: false });
-                $("#nav-search-input").keydown(function (e) {
-                    if (e.keyCode == 13) {
-                        var postData = { search: $("#nav-search-input").val() };
-                        if (window.seaching) {
-                            var ret = window.seaching(postData);
-                            if (ret) postData = ret;
-                        }
-                        $grid.jqGrid("setGridParam", { postData: postData, page: 1 })
-                            .trigger("reloadGrid");
-                        return false;
-                    }
-                });
-
-                $("#btn_add").on("click", function () {
-                    action = "add";
-                    var data = window.emptyData || {}
-                    if (window.onAdd) {
-                        var ret = window.onAdd(data);
-                        if (ret) data = ret;
-                        else if (ret === false) return;
-                    }
-                    loadData(data);
-                    $("#lbl_title").html('<i class="fa fa-plus"></i> @this.T("Add")');
-                    $modal.modal("show");
-                });
-                $("#grid_list").on("click", ".btn-edit", function () {
-                    _edit($(this).data("rowid"));
-                });
-                $("#grid_list").on("click", ".btn-del", function () {
-                    _delete($(this).data("rowid"));
-                });
-                submitForm("#btn_save", "@ViewBag.SaveUrl", function (ret) {
-                    $modal.modal("hide");
-                    if (window.onSaved) { // 保存后前台绑定数据的拦截方法 返回 false 为拦截
-                        var data = window.onSaved(action, ret.value);
-                        if (data === false) return;
-                        else if (data != undefined) ret.value = data;
-                    }
-                    if (action == "add") {
-                        $grid.jqGrid("addRow", ret, '');
-                    } else if (action == "edit") {
-                        $grid.jqGrid("setRowData", selectedId, ret.value);
-                    }
-                });
+                if (action == "add") {
+                    console.log(JSON.stringify(ret));
+                    $grid.jqGrid("addRow", ret, '');
+                } else if (action == "edit") {
+                    $grid.jqGrid("setRowData", selectedId, ret.value);
+                }
             });
-    </script>
-}
+            $(window).on('resize.jqGrid', function () {
+                var parent_width = $("#grid_list").closest('.jqgrid').width();
+                $grid.jqGrid('setGridWidth', parent_width);
+            });
+            $(function () {
+                if (window.load) window.load();
+                $.validator.unobtrusive.parse(document);
+            });
+        });
+</script>

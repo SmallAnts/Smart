@@ -14,30 +14,31 @@ var js = function (name) {
         "dropzone": "/assets/js/forms/dropzone.min.js",
         "easypiechart": "/assets/js/chart/jquery.easypiechart.min.js",
         "hotkeys": "/assets/js/components/jquery.hotkeys.min.js",
-        "flot": "/assets/js/chart/flot/jquery.flot.min.js",
+        "flot": "/assets/js/chart/flot/jquery.flot.min.js",//图表插件
         "flot-pie": "/assets/js/chart/flot/jquery.flot.pie.min.js",
         "flot-resize": "/assets/js/chart/flot/jquery.flot.resize.min.js",
-        "fullcalendar": "/assets/js/fullcalendar/fullcalendar.min.js",
-        "gritter": "/assets/js/components/jquery.gritter.min.js",
+        "fullcalendar": "/assets/js/fullcalendar/fullcalendar.min.js",//日程插件
+        "gritter": "/assets/js/components/jquery.gritter.min.js",// 提示插件
         "jqgrid": ["/assets/js/jqgrid/grid.locale-cn.js", "/assets/js/jqgrid/jquery.jqgrid.min.js", "/assets/js/jqgrid/jquery.jqgrid.ext.js"],
         "jquerycui": "/assets/js/jqueryui/jquery-ui.custom.min.js",
         "knob": "/assets/js/forms/jquery.knob.min.js",
         "inputlimiter": "/assets/js/forms/jquery.inputlimiter.1.3.1.min.js",
         "maskedinput": "/assets/js/forms/jquery.maskedinput.min.js",
         "mobile": "/assets/js/mobile/jquery.mobile.custom.min.js",
-        "moment": "/assets/js/forms/date-time/moment.min.js",
-        "prettify": "/assets/js/tools/prettify.min.js",
-        "select2": "/assets/js/forms/select2.min.js",
-        "sparkline": "/assets/js/chart/jquery.sparkline.min.js",
-        "spin": "/assets/js/components/spin.js",
+        "moment": "/assets/js/forms/date-time/moment.min.js",//时间处理组件
+        "multiselect": "/assets/js/forms/bootstrap-multiselect.min.js",//下拉多选
+        "prettify": "/assets/js/tools/prettify.min.js",//代码高亮
+        "select2": "/assets/js/forms/select2.min.js",//下拉列表
+        "sparkline": "/assets/js/chart/jquery.sparkline.min.js",//线状图
+        "spin": "/assets/js/components/spin.js",//loading
         "spinner": "/assets/js/forms/fuelux/fuelux.spinner.min.js",
-        "tag": "/assets/js/bootstrap/bootstrap-tag.min.js",
-        "timepicker": "/assets/js/forms/date-time/bootstrap-timepicker.min.js",
-        "tree": "/assets/js/forms/fuelux/fuelux.tree.min.js",
+        "tag": "/assets/js/bootstrap/bootstrap-tag.min.js",// 标签
+        "timepicker": "/assets/js/forms/date-time/bootstrap-timepicker.min.js",//时间选择
+        "tree": "/assets/js/forms/fuelux/fuelux.tree.min.js",// 树
         "validate": ["/assets/js/validate/jquery.validate.min.js", "/assets/js/validate/additional-methods.min.js", "/assets/js/validate/jquery.validate.unobtrusive.min.js"],
         //"validate-unob": "/assets/js/validate/jquery.validate.unobtrusive.min.js",
-        "wizard": "/assets/js/forms/fuelux/fuelux.wizard.min.js",
-        "wysiwyg": "/assets/js/editor/bootstrap-wysiwyg.min.js",
+        "wizard": "/assets/js/forms/fuelux/fuelux.wizard.min.js",//向导插件
+        "wysiwyg": "/assets/js/editor/bootstrap-wysiwyg.min.js",//编辑器
         "ztree": "/assets/js/ztree/jquery.ztree.all.min.js",
     };
     var files = [];

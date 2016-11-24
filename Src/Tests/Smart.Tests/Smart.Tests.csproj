@@ -115,7 +115,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CoreExtensionsTests\StringExtensionsTest.cs" />
-    <Compile Include="DatabaseTest.cs" />
+    <Compile Include="DbContextExtensionsTest.cs" />
     <Compile Include="HttpCacheTest.cs" />
     <Compile Include="FluentValidationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,6 +123,7 @@
     <Compile Include="TestBase.cs" />
     <Compile Include="TypeFinderTest.cs" />
     <Compile Include="UI.AceTest.cs" />
+    <Compile Include="UtilityTests\ExportTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -144,6 +145,7 @@
       <Name>Smart.Web.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

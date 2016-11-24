@@ -52,7 +52,8 @@ namespace Smart.Data.Extensions
             else if (dbtype.Contains("Npgsql")) return "POSTGRESQL";
             else if (dbtype.Contains("Oracle")) return "ORACLE";
             else if (dbtype.Contains("SQLite")) return "SQLITE";
-            else return "SQLSERVER";
+            else if (dbtype.Contains("Sql")) return "SQLSERVER";
+            else return dbtype.Replace("Connection", "");
         }
         /// <summary>
         /// 
@@ -278,7 +279,7 @@ namespace Smart.Data.Extensions
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="db"></param>
-        /// <param name="entity">要删除的实体</param>
+        /// <param name="entity">要删除的实体，实体中只需要主键字段信息</param>
         public static void Remove<TEntity>(this DbContext db, TEntity entity) where TEntity : class
         {
             db.DetachOther(entity);
@@ -288,12 +289,33 @@ namespace Smart.Data.Extensions
         }
 
         /// <summary>
-        /// 
+        /// 移除实体, 执行 SaveChanges 后提交
+        /// <para></para>
+        /// <para>示例：</para>
+        /// <para>dbContext.Remoe(entites);</para>
+        /// <para>dbContext.SaveChanges();</para>
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="db"></param>
+        /// <param name="entites">要删除的实体列表，实体中只需要主键字段信息</param>
+        public static void Remove<TEntity>(this DbContext db, IEnumerable<TEntity> entites) where TEntity : class
+        {
+            foreach (var entity in entites)
+            {
+                db.DetachOther(entity);
+                var entry = db.Entry(entity);
+                db.Set<TEntity>().Attach(entity);
+                entry.State = EntityState.Deleted;
+            }
+        }
+
+        /// <summary>
+        /// 批量移除实体，执行 SaveChanges 后提交
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="sql">要执行的Sql语句,如:select * from userinfo where id=@0</param>
+        /// <param name="parameters">参数</param>
         /// <returns></returns>
         public static IEnumerable<T> Query<T>(this DbContext db, string sql, params object[] parameters)
         {
@@ -311,18 +333,20 @@ namespace Smart.Data.Extensions
         /// 通过sql查询返回DataTable
         /// </summary>
         /// <param name="db"></param>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="sql">要执行的Sql语句,如:select * from userinfo where id=@0</param>
+        /// <param name="parameters">参数</param>  
         /// <returns></returns>
         public static DataTable QueryDataTable(this DbContext db, string sql, params object[] parameters)
         {
-            using (var cmd = db.Database.Connection.CreateCommand())
+            using (var cmd = db.CreateCommand())
             {
                 var ps = db.ProcessParams(sql, parameters);
                 cmd.CommandText = ps.Item1;
                 cmd.Parameters.AddRange(ps.Item2.ToArray());
                 if (cmd.Connection.State != ConnectionState.Open)
+                {
                     cmd.Connection.Open();
+                }
 
                 using (var dataReader = cmd.ExecuteReader())
                 {
@@ -333,22 +357,25 @@ namespace Smart.Data.Extensions
             }
 
         }
+
         /// <summary>
         ///  通过sql查询返回动态列表
         /// </summary>
         /// <param name="db"></param>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="sql">要执行的Sql语句,如:select * from userinfo where id=@0</param>
+        /// <param name="parameters">参数</param>  
         /// <returns></returns>
         public static IEnumerable<dynamic> QueryDynamic(this DbContext db, string sql, params object[] parameters)
         {
-            using (var cmd = db.Database.Connection.CreateCommand())
+            using (var cmd = db.CreateCommand())
             {
                 var ps = db.ProcessParams(sql, parameters);
                 cmd.CommandText = ps.Item1;
                 cmd.Parameters.AddRange(ps.Item2.ToArray());
                 if (cmd.Connection.State != ConnectionState.Open)
+                {
                     cmd.Connection.Open();
+                }
 
                 //var retObject = new List<dynamic>();
                 using (var dataReader = cmd.ExecuteReader())
@@ -370,6 +397,93 @@ namespace Smart.Data.Extensions
             return entity;
         }
 
+        /// <summary>
+        /// 执行SQL语句，并返回影响行数。
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="sql">要执行的Sql语句,如:update userinfo set name=@0 where id=@1</param>
+        /// <param name="parameters">参数</param>
+        /// <returns></returns>
+        public static int ExecuteSql(this DbContext db, string sql, params object[] parameters)
+        {
+            using (var cmd = db.CreateCommand())
+            {
+                var ps = db.ProcessParams(sql, parameters);
+                cmd.CommandText = ps.Item1;
+                cmd.Parameters.AddRange(ps.Item2.ToArray());
+                if (cmd.Connection.State != ConnectionState.Open)
+                {
+                    cmd.Connection.Open();
+                }
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// 执行SQL语句，并返第一行第一列的值
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="sql">要执行的Sql语句,如:select count(1) from sysuser</param>
+        /// <param name="parameters">参数</param>
+        /// <returns></returns>
+        public static object ExecuteScalar(this DbContext db, string sql, params object[] parameters)
+        {
+            using (var cmd = db.CreateCommand())
+            {
+                var ps = db.ProcessParams(sql, parameters);
+                cmd.CommandText = ps.Item1;
+                cmd.Parameters.AddRange(ps.Item2.ToArray());
+                if (cmd.Connection.State != ConnectionState.Open)
+                {
+                    cmd.Connection.Open();
+                }
+                return cmd.ExecuteScalar();
+            }
+        }
+
+        /// <summary>
+        /// 执行存储过程。
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="procName">存储过程名称</param>
+        /// <param name="paramObject">输入参数对象，一般使用一个匿名类型</param>
+        /// <param name="setOutParam">输出参数名称</param>
+        /// <returns>如果有输出参数，则返回输出参数的值，否则返回影响影响行数</returns>
+        public static object ExecuteProc(this DbContext db, string procName, object paramObject, Action<DbParameter> setOutParam)
+        {
+            using (var cmd = db.CreateCommand())
+            {
+                cmd.CommandText = procName;
+                cmd.CommandType = CommandType.StoredProcedure;
+                #region 参数处理
+
+                var inParams = db.CreateParameters(paramObject);
+                cmd.Parameters.AddRange(inParams.ToArray());
+                var outparam = cmd.CreateParameter();
+                if (setOutParam != null)
+                {
+                    outparam.Direction = ParameterDirection.Output;
+                    setOutParam(outparam);
+                    outparam.ParameterName = db.GetParameterPrefix() + outparam.ParameterName;
+                    cmd.Parameters.Add(outparam);
+                }
+                #endregion
+                if (cmd.Connection.State != ConnectionState.Open)
+                {
+                    cmd.Connection.Open();
+                }
+
+                var result = cmd.ExecuteNonQuery();
+                if (setOutParam == null)
+                {
+                    return result;
+                }
+                else
+                {
+                    return outparam.Value;
+                }
+            }
+        }
 
         /// <summary>
         /// 执行分页查询,返回分页结果
@@ -402,6 +516,45 @@ namespace Smart.Data.Extensions
             sql = db.ProcessParams(sqlPage, parameters);
             result.Items = db.Database.SqlQuery<T>(sql.Item1, sql.Item2.ToArray()).ToList();
             return result;
+        }
+
+        /// <summary>
+        /// 创建DbCommand实例
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        internal static DbCommand CreateCommand(this DbContext db)
+        {
+            var cmd = db.Database.Connection.CreateCommand();
+            #region 如果是ODP.NET提供程序，则设置为按名称绑定参数
+            if (db.GetDbType() == "ORACLE")
+            {
+                var pi = cmd.GetType().GetProperty("BindByName");
+                if (pi != null) pi.SetValue(cmd, true, null);
+            }
+            #endregion
+            return cmd;
+        }
+
+        /// <summary>
+        /// 根据对象创建参数列表
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        internal static List<DbParameter> CreateParameters(this DbContext db, object parameters)
+        {
+            var dbProviderFactory = db.GetDbProviderFactory();
+            var pis = parameters.GetType().GetProperties();
+            List<DbParameter> paramList = new List<DbParameter>();
+            foreach (var item in pis)
+            {
+                var param = dbProviderFactory.CreateParameter();
+                param.ParameterName = db.GetParameterPrefix() + item.Name;
+                param.Value = item.GetValue(parameters, null);
+                paramList.Add(param);
+            }
+            return paramList;
         }
 
         /// <summary>
@@ -449,12 +602,12 @@ namespace Smart.Data.Extensions
         }
 
         /// <summary>
-        /// 
+        /// 将SQL转成分页查询SQL
         /// </summary>
         /// <param name="sql"></param>
-        /// <param name="sqlCount"></param>
+        /// <param name="sqlCount">总记录数统计SQL</param>
         /// <param name="sqlSelectRemoved"></param>
-        /// <param name="sqlOrderBy"></param>
+        /// <param name="sqlOrderBy">排序条件</param>
         /// <returns></returns>
         internal static bool SplitSqlForPaging(string sql, out string sqlCount, out string sqlSelectRemoved, out string sqlOrderBy)
         {
@@ -488,14 +641,15 @@ namespace Smart.Data.Extensions
 
             return true;
         }
+
         /// <summary>
-        /// 
+        /// 参数处理
         /// </summary>
         /// <param name="db"></param>
         /// <param name="sql"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static Tuple<string, List<object>> ProcessParams(this DbContext db, string sql, object[] args)
+        internal static Tuple<string, List<object>> ProcessParams(this DbContext db, string sql, object[] args)
         {
             var prefix = db.GetParameterPrefix();
             var dbProviderFactory = db.GetDbProviderFactory();
@@ -508,14 +662,17 @@ namespace Smart.Data.Extensions
 
                 if (int.TryParse(paramName, out paramIndex))
                 {
-                    // 验证参数数值和个数是否匹配
+                    #region 验证参数数值和个数是否匹配
+
                     if (paramIndex < 0 || paramIndex >= args.Length)
                         throw new ArgumentOutOfRangeException(string.Format("参数 '@{0}' 不在指定的范围内。", paramIndex));
                     paramValue = args[paramIndex];
+                    #endregion
                 }
                 else
                 {
-                    // 验证参数名称是不是和对象属性名称一致
+                    #region 验证参数名称是不是和对象属性名称一致
+
                     bool found = false;
                     paramValue = null;
                     foreach (var arg in args)
@@ -530,7 +687,8 @@ namespace Smart.Data.Extensions
                                 break;
                             }
                         }
-                        else {
+                        else
+                        {
                             var pi = argType.GetProperty(paramName);
                             if (pi != null)
                             {
@@ -543,12 +701,15 @@ namespace Smart.Data.Extensions
 
                     if (!found)
                         throw new ArgumentException(string.Format("无法获取参数{0}的属性值", paramName));
+                    #endregion
                 }
 
+                #region 创建参数
+
                 // 可迭代类型，但不是 string 和 byte[]
-                if ((paramValue as System.Collections.IEnumerable) != null &&
-                    (paramValue as string) == null &&
-                    (paramValue as byte[]) == null)
+                if ((paramValue as System.Collections.IEnumerable) != null
+                     && (paramValue as string) == null
+                     && (paramValue as byte[]) == null)
                 {
                     var sb = new StringBuilder();
                     foreach (var value in paramValue as System.Collections.IEnumerable)
@@ -570,11 +731,13 @@ namespace Smart.Data.Extensions
                     parameters.Add(param);
                     return prefix + (parameters.Count - 1).ToString();
                 }
+                #endregion
 
             });
 
             var result = new Tuple<string, List<object>>(sqlText, parameters);
             return result;
         }
+
     }
 }

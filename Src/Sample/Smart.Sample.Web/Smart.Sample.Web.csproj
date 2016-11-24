@@ -100,17 +100,6 @@
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Smart.Core">
-      <HintPath>..\..\packages\Smart.Core.1.0.0.7\lib\net45\Smart.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Smart.Data, Version=1.0.0.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Smart.Data.1.0.0.8\lib\net45\Smart.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Smart.Web.Mvc, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Smart.Mvc5.1.0.0.6\lib\net45\Smart.Web.Mvc.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -200,6 +189,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\DemoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SysController.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
@@ -227,6 +217,7 @@
     <Content Include="Assets\css\bootstrap\bootstrap-datetimepicker.min.css" />
     <Content Include="Assets\css\bootstrap\bootstrap-duallistbox.min.css" />
     <Content Include="Assets\css\bootstrap\bootstrap-editable.min.css" />
+    <Content Include="Assets\css\bootstrap\bootstrap-multiselect.css" />
     <Content Include="Assets\css\bootstrap\bootstrap-multiselect.min.css" />
     <Content Include="Assets\css\bootstrap\bootstrap-timepicker.min.css" />
     <Content Include="Assets\css\bootstrap\bootstrap.css" />
@@ -288,6 +279,7 @@
     <Content Include="Assets\js\bootstrap\bootstrap-editable.js" />
     <Content Include="Assets\js\bootstrap\bootstrap-editable.min.js" />
     <Content Include="Assets\js\bootstrap\bootstrap-markdown.min.js" />
+    <Content Include="Assets\js\bootstrap\bootstrap-multiselect.js" />
     <Content Include="Assets\js\bootstrap\bootstrap-tab.js" />
     <Content Include="Assets\js\bootstrap\bootstrap-tag.js" />
     <Content Include="Assets\js\bootstrap\bootstrap-tag.min.js" />
@@ -329,10 +321,8 @@
     <Content Include="Assets\js\dialog\sweetalert.min.js" />
     <Content Include="Assets\js\editor\bootstrap-wysiwyg.js" />
     <Content Include="Assets\js\editor\bootstrap-wysiwyg.min.js" />
-    <Content Include="Assets\js\forms\bootstrap-colorpicker.js" />
-    <Content Include="Assets\js\forms\bootstrap-colorpicker.min.js" />
-    <Content Include="Assets\js\forms\bootstrap-multiselect.js" />
-    <Content Include="Assets\js\forms\bootstrap-multiselect.min.js" />
+    <Content Include="Assets\js\bootstrap\bootstrap-colorpicker.js" />
+    <Content Include="Assets\js\bootstrap\bootstrap-colorpicker.min.js" />
     <Content Include="Assets\js\forms\chosen.jquery.js" />
     <Content Include="Assets\js\forms\chosen.jquery.min.js" />
     <Content Include="Assets\js\forms\croppic.min.js" />
@@ -411,6 +401,7 @@
     <Content Include="Assets\js\validate\jquery.validate.unobtrusive.min.js" />
     <Content Include="Assets\js\validate\messages_zh.min.js" />
     <Content Include="Assets\js\ztree\jquery-1.4.4.min.js" />
+    <Content Include="Assets\js\ztree\jquery.comboBox.js" />
     <Content Include="Assets\js\ztree\jquery.ztree.all.js" />
     <Content Include="Assets\js\ztree\jquery.ztree.all.min.js" />
     <Content Include="Assets\js\ztree\jquery.ztree.core.js" />
@@ -532,6 +523,8 @@
     <Content Include="Lang\zh-CN.json" />
     <Content Include="Views\Home\Index2.cshtml" />
     <Content Include="Views\Shared\_MpaPageLayout.cshtml" />
+    <Content Include="Views\Demo\zTree.cshtml" />
+    <Content Include="Views\Demo\Combo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -540,6 +533,18 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Smart.Core\Smart.Core.csproj">
+      <Project>{0400237a-7a93-4bed-b788-bd54d7e132c0}</Project>
+      <Name>Smart.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Smart.Data\Smart.Data.csproj">
+      <Project>{49d991c7-be7d-4aae-98cd-c6f7e7d69cfc}</Project>
+      <Name>Smart.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Smart.Web.Mvc\Smart.Web.Mvc.csproj">
+      <Project>{35d5d20f-7ae9-4d02-9c0e-07b5d87fbbaa}</Project>
+      <Name>Smart.Web.Mvc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Smart.Sample.Core\Smart.Sample.Core.csproj">
       <Project>{fd5d6d82-f297-4fdc-bc41-ac951bf27b0d}</Project>
       <Name>Smart.Sample.Core</Name>

@@ -19,5 +19,11 @@ namespace Smart.Sample.Test
             var regex = new Regex(".*?(?=Smart.Sample.Test)", RegexOptions.IgnoreCase);
             return regex.Match(AppDomain.CurrentDomain.BaseDirectory).Value;
         }
+
+
+        public void Test()
+        {
+            var t = new object();
+        }
     }
 }

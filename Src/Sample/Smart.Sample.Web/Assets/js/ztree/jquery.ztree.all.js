@@ -1,6 +1,6 @@
 
 /*
- * JQuery zTree core v3.5.23
+ * JQuery zTree core v3.5.26
  * http://zTree.me/
  *
  * Copyright (c) 2010 Hunter.z
@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  *
  * email: hunter.z@263.net
- * Date: 2016-04-01
+ * Date: 2016-11-03
  */
 (function($){
 	var settings = {}, roots = {}, caches = {},
@@ -599,7 +599,7 @@
 			var childKey = setting.data.key.children;
 			if (node[childKey]) {
 				for (var i=0, l=node[childKey].length; i<l; i++) {
-					arguments.callee(setting, node[childKey][i]);
+					data.removeNodeCache(setting, node[childKey][i]);
 				}
 			}
 			data.getCache(setting).nodes[data.getNodeCacheId(node.tId)] = null;
@@ -651,7 +651,7 @@
 
 			if (tools.isArray(sNodes)) {
 				var r = [];
-				var tmpMap = [];
+				var tmpMap = {};
 				for (i=0, l=sNodes.length; i<l; i++) {
 					tmpMap[sNodes[i][key]] = sNodes[i];
 				}
@@ -818,7 +818,7 @@
 			if (obj === null) return null;
 			var o = tools.isArray(obj) ? [] : {};
 			for(var i in obj){
-				o[i] = (obj[i] instanceof Date) ? new Date(obj[i].getTime()) : (typeof obj[i] === "object" ? arguments.callee(obj[i]) : obj[i]);
+				o[i] = (obj[i] instanceof Date) ? new Date(obj[i].getTime()) : (typeof obj[i] === "object" ? tools.clone(obj[i]) : obj[i]);
 			}
 			return o;
 		},
@@ -1002,7 +1002,7 @@
                 cache: false,
 				type: setting.async.type,
 				url: tools.apply(setting.async.url, [setting.treeId, node], setting.async.url),
-				data: tmpParam,
+				data: setting.async.contentType.indexOf('application/json') > -1 ? JSON.stringify(tmpParam) : tmpParam,
 				dataType: setting.async.dataType,
 				success: function(msg) {
 					if (_tmpV != data.getRoot(setting)._ver) {
@@ -1119,13 +1119,14 @@
 		expandCollapseNode: function(setting, node, expandFlag, animateFlag, callback) {
 			var root = data.getRoot(setting),
 			childKey = setting.data.key.children;
+			var tmpCb, _callback;
 			if (!node) {
 				tools.apply(callback, []);
 				return;
 			}
 			if (root.expandTriggerFlag) {
-				var _callback = callback;
-				callback = function(){
+				_callback = callback;
+				tmpCb = function(){
 					if (_callback) _callback();
 					if (node.open) {
 						setting.treeObj.trigger(consts.event.EXPAND, [setting.treeId, node]);
@@ -1133,6 +1134,7 @@
 						setting.treeObj.trigger(consts.event.COLLAPSE, [setting.treeId, node]);
 					}
 				};
+				callback = tmpCb;
 				root.expandTriggerFlag = false;
 			}
 			if (!node.open && node.isParent && ((!$$(node, consts.id.UL, setting).get(0)) || (node[childKey] && node[childKey].length>0 && !$$(node[childKey][0], setting).get(0)))) {
@@ -1351,13 +1353,75 @@
 			if (!dom) {
 				return;
 			}
-			if (dom.scrollIntoViewIfNeeded) {
-				dom.scrollIntoViewIfNeeded();
-			} else if (dom.scrollIntoView) {
-				dom.scrollIntoView(false);
-			} else {
-				try{dom.focus().blur();}catch(e){}
+			// code src: http://jsfiddle.net/08u6cxwj/
+			if (!Element.prototype.scrollIntoViewIfNeeded) {
+				Element.prototype.scrollIntoViewIfNeeded = function (centerIfNeeded) {
+					function withinBounds(value, min, max, extent) {
+						if (false === centerIfNeeded || max <= value + extent && value <= min + extent) {
+							return Math.min(max, Math.max(min, value));
+						} else {
+							return (min + max) / 2;
+						}
+					}
+
+					function makeArea(left, top, width, height) {
+						return  { "left": left, "top": top, "width": width, "height": height
+							, "right": left + width, "bottom": top + height
+							, "translate":
+								function (x, y) {
+									return makeArea(x + left, y + top, width, height);
+								}
+							, "relativeFromTo":
+								function (lhs, rhs) {
+									var newLeft = left, newTop = top;
+									lhs = lhs.offsetParent;
+									rhs = rhs.offsetParent;
+									if (lhs === rhs) {
+										return area;
+									}
+									for (; lhs; lhs = lhs.offsetParent) {
+										newLeft += lhs.offsetLeft + lhs.clientLeft;
+										newTop += lhs.offsetTop + lhs.clientTop;
+									}
+									for (; rhs; rhs = rhs.offsetParent) {
+										newLeft -= rhs.offsetLeft + rhs.clientLeft;
+										newTop -= rhs.offsetTop + rhs.clientTop;
+									}
+									return makeArea(newLeft, newTop, width, height);
+								}
+						};
+					}
+
+					var parent, elem = this, area = makeArea(
+						this.offsetLeft, this.offsetTop,
+						this.offsetWidth, this.offsetHeight);
+					while ((parent = elem.parentNode) instanceof HTMLElement) {
+						var clientLeft = parent.offsetLeft + parent.clientLeft;
+						var clientTop = parent.offsetTop + parent.clientTop;
+
+						// Make area relative to parent's client area.
+						area = area.
+						relativeFromTo(elem, parent).
+						translate(-clientLeft, -clientTop);
+
+						parent.scrollLeft = withinBounds(
+							parent.scrollLeft,
+							area.right - parent.clientWidth, area.left,
+							parent.clientWidth);
+
+						parent.scrollTop = withinBounds(
+							parent.scrollTop,
+							area.bottom - parent.clientHeight, area.top,
+							parent.clientHeight);
+
+						// Determine actual scroll amount by reading back scroll properties.
+						area = area.translate(clientLeft - parent.scrollLeft,
+							clientTop - parent.scrollTop);
+						elem = parent;
+					}
+				};
 			}
+			dom.scrollIntoViewIfNeeded();
 		},
 		setFirstNode: function(setting, parentNode) {
 			var childKey = setting.data.key.children, childLength = parentNode[childKey].length;
@@ -1770,7 +1834,7 @@
 						addFlag = setting.view.selectedMulti && addFlag;
 						if (node.parentTId) {
 							view.expandCollapseParentNode(setting, node.getParentNode(), true, false, showNodeFocus);
-						} else {
+						} else if (!isSilent) {
 							try{$$(node, setting).focus().blur();}catch(e){}
 						}
 						view.selectNode(setting, node, addFlag);
@@ -1819,7 +1883,7 @@
 	consts = zt.consts;
 })(jQuery);
 /*
- * JQuery zTree excheck v3.5.23
+ * JQuery zTree excheck v3.5.26
  * http://zTree.me/
  *
  * Copyright (c) 2010 Hunter.z
@@ -1828,7 +1892,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  *
  * email: hunter.z@263.net
- * Date: 2016-04-01
+ * Date: 2016-11-03
  */
 (function($){
 	//default consts of excheck
@@ -2447,7 +2511,7 @@
 	}
 })(jQuery);
 /*
- * JQuery zTree exedit v3.5.23
+ * JQuery zTree exedit v3.5.26
  * http://zTree.me/
  *
  * Copyright (c) 2010 Hunter.z
@@ -2456,7 +2520,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  *
  * email: hunter.z@263.net
- * Date: 2016-04-01
+ * Date: 2016-11-03
  */
 (function($){
 	//default consts of exedit
