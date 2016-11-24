@@ -11,7 +11,7 @@ namespace Smart.Tests
         public DbContextExtensionsTest() : base() { }
 
         /// <summary>
-        /// 
+        /// Sql 查询测试
         /// </summary>
         [TestMethod]
         public void Query()
@@ -19,28 +19,36 @@ namespace Smart.Tests
             var db = new Smart.Data.EF.EFDbContext();
             var users = db.Query<SysUser>("select * from SysUser where SysUserId=@0", 1).ToList();
         }
-
+        /// <summary>
+        ///  Sql 查询测试,返回DataTable
+        /// </summary>
         [TestMethod]
         public void QueryDataTable()
         {
             var db = new Smart.Data.EF.EFDbContext();
             var users = db.QueryDataTable("select * from SysUser where SysUserId=@0", 1);
         }
-
+        /// <summary>
+        /// 执行Sql，返回受影响行数
+        /// </summary>
         [TestMethod]
         public void ExecuteSql()
         {
             var db = new Smart.Data.EF.EFDbContext();
             db.ExecuteSql("update SysUser set UpdateTime=@0 where SysUserId=@1", 1, DateTime.Now);
         }
-
+        /// <summary>
+        /// 执行Sql，返回第一行第一列的值
+        /// </summary>
         [TestMethod]
         public void ExecuteScalar()
         {
             var db = new Smart.Data.EF.EFDbContext();
             var ret = (int)db.ExecuteScalar("select count(1) from SysUser");
         }
-
+        /// <summary>
+        /// 执行存储过程
+        /// </summary>
         [TestMethod]
         public void ExecuteProc()
         {

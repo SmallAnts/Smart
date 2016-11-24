@@ -30,7 +30,8 @@ namespace Smart.Tests.CoreExtensionsTests
             row.CreateColumn("年龄");
 
             var sheetName = "List导出Excel测试";
-            list.ExportExcel(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "list.xls"), sheetName, header);
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "list.xls");
+            list.ExportExcel(path, sheetName, header);
         }
 
         [TestMethod]
