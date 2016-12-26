@@ -6,12 +6,12 @@ using System.IO;
 namespace Smart.Core.Localization
 {
     /// <summary>
-    /// 
+    /// 多语言处理工具类
     /// </summary>
     public static class Language
     {
         /// <summary>
-        /// 
+        /// 获取多语言字符串
         /// </summary>
         /// <param name="key"></param>
         /// <param name="args"></param>
@@ -23,7 +23,7 @@ namespace Smart.Core.Localization
         }
 
         /// <summary>
-        /// 
+        /// 根据指定的语言获取
         /// </summary>
         /// <param name="lang">zh-CN ……</param>
         /// <param name="key"></param>

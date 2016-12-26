@@ -34,6 +34,7 @@ namespace Smart.Core.Extensions
         {
             return stringBuilder.TrimHelper(TrimHead, trimChars);
         }
+
         /// <summary>
         /// 从当前 System.StringBuilder 对象移除数组中指定的字符串的所有前导匹配项。
         /// </summary>
@@ -51,6 +52,7 @@ namespace Smart.Core.Extensions
                 return stringBuilder;
             }
         }
+
         /// <summary>
         /// 从当前 System.StringBuilder 对象移除数组中指定的一组字符的所有尾部匹配项。
         /// </summary>
@@ -62,6 +64,7 @@ namespace Smart.Core.Extensions
         {
             return stringBuilder.TrimHelper(TrimTail, trimChars);
         }
+
         /// <summary>
         /// 从当前 System.StringBuilder 对象移除数组中指定的字符串的所有尾部匹配项。
         /// </summary>
@@ -79,6 +82,7 @@ namespace Smart.Core.Extensions
                 return stringBuilder;
             }
         }
+
         /// <summary>
         /// 从当前 System.StringBuilder 对象移除所有尾部的 "," 号。
         /// </summary>

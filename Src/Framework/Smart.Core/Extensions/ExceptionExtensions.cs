@@ -13,7 +13,7 @@ namespace Smart.Core.Extensions
     public static class ExceptionExtensions
     {
         /// <summary>
-        /// 
+        /// 获取所有错误信息
         /// </summary>
         /// <param name="rex"></param>
         /// <returns></returns>
@@ -22,7 +22,7 @@ namespace Smart.Core.Extensions
             var msg = string.Empty;
             foreach (var ex in rex.LoaderExceptions)
             {
-                msg += string.Format("Exception: {0}", ex.Message) + Environment.NewLine;
+                msg += $"Exception: {ex.Message}{Environment.NewLine}";
             }
             return msg;
         }

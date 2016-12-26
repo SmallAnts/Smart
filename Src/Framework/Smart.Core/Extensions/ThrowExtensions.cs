@@ -56,6 +56,7 @@ namespace Smart.Core.Extensions
                 throw new Exception(message);
             }
         }
+
         /// <summary>
         /// 如果 值 小于 min 或 大于 max 则引发 ArgumentOutOfRangeException 异常
         /// </summary>
@@ -82,6 +83,7 @@ namespace Smart.Core.Extensions
                 throw new ObjectDisposedException(value.GetType().Name);
             }
         }
+
         /// <summary>
         /// 当方法调用对于对象的当前状态无效时引发的异常。
         /// </summary>

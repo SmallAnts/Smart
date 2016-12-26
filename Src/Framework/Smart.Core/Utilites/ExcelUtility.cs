@@ -6,11 +6,19 @@ using System.Data;
 using System.IO;
 using Smart.Core.Extensions;
 using Smart.Core.Model;
+using NPOI.SS.Util;
 
 namespace Smart.Core.Utilites
 {
-    public class ExportUtility
+    /// <summary>
+    /// Excel 操作工具类
+    /// </summary>
+    public class ExcelUtility
     {
+        /// <summary>
+        /// 创建一个表头配置
+        /// </summary>
+        /// <returns></returns>
         public static Header CreateHeader()
         {
             return new Model.Header();
@@ -23,7 +31,7 @@ namespace Smart.Core.Utilites
         /// <param name="fileName"></param>
         /// <param name="sheetName"></param>
         /// <param name="header"></param>
-        public static void ExportExcel<T>(List<T> list, string fileName, string sheetName, Model.Header header = null)
+        public static void Export<T>(List<T> list, string fileName, string sheetName, Model.Header header = null)
         {
             if (!string.IsNullOrEmpty(fileName) && null != list && list.Count > 0)
             {
@@ -69,13 +77,8 @@ namespace Smart.Core.Utilites
                     }
                 }
 
-                // 写入到客户端  
-                using (var ms = new MemoryStream())
-                {
-                    book.Write(ms);
-                    ms.Save(fileName);
-                    book = null;
-                }
+                // 写入到文件  
+                Save(book, fileName);
             }
         }
 
@@ -84,7 +87,7 @@ namespace Smart.Core.Utilites
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="fileName"></param>
-        public static void ExportExcel(DataTable dt, string fileName, string sheetName = null, Model.Header header = null)
+        public static void Export(DataTable dt, string fileName, string sheetName = null, Model.Header header = null)
         {
             if (!string.IsNullOrEmpty(fileName) && null != dt && dt.Rows.Count > 0)
             {
@@ -132,16 +135,38 @@ namespace Smart.Core.Utilites
                     }
                 }
 
-                // 写入到客户端  
-                using (var ms = new MemoryStream())
-                {
-                    book.Write(ms);
-                    ms.Save(fileName);
-                    book = null;
-                }
+                // 写入到文件  
+                Save(book, fileName);
             }
         }
 
+        private static void CreateHeader(ISheet sheet, Model.Header header)
+        {
+            for (int i = 0; i < header.RowCount; i++)
+            {
+                IRow row = sheet.CreateRow(i);
+                for (int j = 0; j < header[i].ColumnCount; j++)
+                {
+                    ICell cell = row.CreateCell(j);
+                    header[i][j].ApplyHeaderCell(cell);
+             
+                    if (header[i][j].GetRowSpan() > 1 || header[i][j].GetColSpan() > 1)
+                    {
+                        sheet.AddMergedRegion(new CellRangeAddress(i, i + header[i][j].GetRowSpan() - 1, j, j + header[i][j].GetColSpan() - 1));    // 合并单元格
+                    }
+                }
+            }
+        }
+        private static void Save(IWorkbook wrokbook, string fileName)
+        {
+            // 写入到客户端  
+            using (var ms = new MemoryStream())
+            {
+                wrokbook.Write(ms);
+                ms.Save(fileName);
+                wrokbook = null;
+            }
+        }
         private static void SetCellValue(ICell cell, object value)
         {
             var type = value.GetType().Name;

@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "下拉控件";
+}
+<link href="~/Assets/css/ztree/metroStyle.css" rel="stylesheet" />
+<br>
+<br>
+<input type="text" id="combotree1" style="width:300px;" />
+<input type="text" id="combotree2" style="width:300px;" />
+<br>
+<button class="btn no-border" id="btnGetValue">get Value 1</button>
+<button class="btn no-border" id="btnGetText">get Text 1</button>
+<button class="btn no-border" id="btnSetValueText1">set Value Text 1</button>
+<button class="btn no-border" id="btnSetValueText2">set Value Text 2</button>
+<script>
+    $LAB.script(js("combotree")).wait(function () {
+        var zNodes = [
+            { id: 1, pId: 0, name: "北京" },
+            { id: 2, pId: 0, name: "天津" },
+            { id: 3, pId: 0, name: "上海" },
+            { id: 6, pId: 0, name: "重庆" },
+            { id: 4, pId: 0, name: "河北省", open: true },
+            { id: 41, pId: 4, name: "石家庄" },
+            { id: 42, pId: 4, name: "保定" },
+            { id: 43, pId: 4, name: "邯郸" },
+            { id: 44, pId: 4, name: "承德" },
+            { id: 5, pId: 0, name: "广东省", open: true },
+            { id: 51, pId: 5, name: "广州" },
+            { id: 52, pId: 5, name: "深圳" },
+            { id: 53, pId: 5, name: "东莞" },
+            { id: 54, pId: 5, name: "佛山" },
+            { id: 6, pId: 0, name: "福建省", open: true },
+            { id: 61, pId: 6, name: "福州" },
+            { id: 62, pId: 6, name: "厦门" },
+            { id: 63, pId: 6, name: "泉州" },
+            { id: 64, pId: 6, name: "三明" }
+        ];
+        var $combotree1 = $("#combotree1").combotree({ check: true, nodes: zNodes });
+        var $combotree2 = $("#combotree2").combotree({
+            nodes: zNodes, beforeClick: function (treeId, treeNode) {
+                var check = (treeNode && !treeNode.isParent);
+                if (!check) alert("只能选择城市...");
+                return check;
+            }
+        });
+        $("#btnGetValue").on("click", function () {
+            alert($combotree1.combotree('getValue'));
+        })
+        $("#btnGetText").on("click", function () {
+            alert($combotree1.combotree('getText'));
+        })
+        $("#btnSetValueText1").on("click", function () {
+            $combotree1.combotree('setValue', "1,2");
+        })
+        $("#btnSetValueText2").on("click", function () {
+            $combotree2.combotree('setValue', 1);
+        })
+    });
+</script>

@@ -139,5 +139,16 @@ namespace Smart.Core.Extensions
         }
 
 #endif
+
+        /// <summary>
+        /// 深拷贝对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static T Copy<T>(this T obj)
+        {
+            return obj.ToJson().JsonDeserialize<T>();
+        }
     }
 }

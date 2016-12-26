@@ -15,11 +15,20 @@ namespace Smart.Core.Infrastructure
     {
         private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^AjaxControlToolkit|^Antlr3|^Autofac|^AutoMapper|^Castle|^ComponentArt|^CppCodeProvider|^DotNetOpenAuth|^EntityFramework|^EPPlus|^FluentValidation|^ImageResizer|^itextsharp|^log4net|^MaxMind|^MbUnit|^MiniProfiler|^Mono.Math|^MvcContrib|^Newtonsoft|^NHibernate|^nunit|^Org.Mentalis|^PerlRegex|^QuickGraph|^Recaptcha|^Remotion|^RestSharp|^Rhino|^Telerik|^Iesi|^TestDriven|^TestFu|^UserAgentStringLibrary|^VJSharpCodeProvider|^WebActivator|^WebDev|^WebGrease|^d3dcompiler_43|^icudt|^libcef|^libegl|^libglesv2|^sqlite.interop|^widevinecdmadapter";
         private IList<Assembly> _assemblies;
+        /// <summary>
+        /// 程序集列表
+        /// </summary>
         public IList<Assembly> Assemblies
         {
             get { return _assemblies ?? (_assemblies = new List<Assembly>()); }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="searchPattern"></param>
+        /// <param name="fileFilter"></param>
+        /// <param name="searchOption"></param>
         public DirectoryTypeFinder(string path = null, string searchPattern = "*.dll", Predicate<string> fileFilter = null, SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             if (string.IsNullOrEmpty(path))
@@ -42,7 +51,11 @@ namespace Smart.Core.Infrastructure
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public IEnumerable<Type> ForTypesDerivedFrom<T>()
         {
             foreach (var assembly in this.Assemblies)
@@ -54,7 +67,11 @@ namespace Smart.Core.Infrastructure
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeFilter"></param>
+        /// <returns></returns>
         public IEnumerable<Type> ForTypesMatching(Predicate<Type> typeFilter)
         {
             foreach (var assembly in this.Assemblies)
@@ -66,7 +83,10 @@ namespace Smart.Core.Infrastructure
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual string GetBinDirectory()
         {
             if (HostingEnvironment.IsHosted)
@@ -108,7 +128,10 @@ namespace Smart.Core.Infrastructure
                 //throw;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public static void Log(string message)
         {
             var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log\\log_" + DateTime.Today.ToString("yyyyMMdd") + ".txt");

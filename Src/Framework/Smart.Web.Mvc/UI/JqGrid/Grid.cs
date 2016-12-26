@@ -1060,9 +1060,7 @@ namespace Smart.Web.Mvc.UI.JqGrid
             }
 
             // Datatype
-            script.Append(_treeGrid
-                ? string.Format("treedatatype:'{0}',", _dataType.ToString().ToLower())
-                : string.Format("datatype:'{0}',", _dataType.ToString().ToLower()));
+            script.Append(_treeGrid ? $"treedatatype:'{_dataType.ToString().ToLower()}'," : $"datatype:'{_dataType.ToString().ToLower()}',");
 
             if (_deepempty) script.Append("deepempty:true,");
             if (_deselectAfterSort == false && _dataType == DataType.Local) script.Append("deselectAfterSort:false,");

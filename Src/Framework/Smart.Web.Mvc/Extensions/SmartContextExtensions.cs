@@ -15,7 +15,7 @@ namespace Smart.Web.Mvc.Extensions
         /// 初始化一个静态实例工厂。
         /// </summary>
         /// <param name="forceRecreate">创建一个新工厂实例，即使工厂已被初始化。</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
+        [MethodImpl(MethodImplOptions.Synchronized)]// 同步方式执行该方法
         public static IContainerManager InitializeMvc(this Core.SmartContext context, SmartConfig config = null, bool forceRecreate = false)
         {
             // 删除不必要的HTTP响应头 "X-AspNetMvc-Version"

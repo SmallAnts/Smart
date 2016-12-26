@@ -6,6 +6,7 @@ var js = function (name) {
     var _scripts = {
         "autosize": "/assets/js/forms/jquery.autosize.min.js",
         "chosen": "/assets/js/forms/chosen.jquery.min.js",
+        "combotree": ["/assets/js/ztree/jquery.ztree.all.min.js","/assets/js/ztree/jquery.combotree.js"],
         "colorpicker": "/assets/js/forms/bootstrap-colorpicker.min.js",
         "datepicker": "/assets/js/forms/date-time/bootstrap-datepicker.min.js",
         "editable": ["/assets/js/bootstrap/bootstrap-editable.min.js", "/assets/js/ace/ace-editable.min.js"],

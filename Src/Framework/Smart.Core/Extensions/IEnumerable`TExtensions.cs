@@ -62,9 +62,17 @@ namespace Smart.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// 将泛型列表导出Excel文件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="fileName"></param>
+        /// <param name="sheetName"></param>
+        /// <param name="header"></param>
         public static void ExportExcel<T>(this List<T> list, string fileName, string sheetName, Model.Header header = null)
         {
-            Utilites.ExportUtility.ExportExcel(list, fileName, sheetName, header);
+            Utilites.ExcelUtility.Export(list, fileName, sheetName, header);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -23,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -224,6 +226,7 @@
     <Content Include="Assets\css\bootstrap\bootstrap.min.css" />
     <Content Include="Assets\css\chosen\chosen-sprite%402x.png" />
     <Content Include="Assets\css\chosen\chosen-sprite.png" />
+    <Content Include="Assets\css\chosen\chosen.css" />
     <Content Include="Assets\css\chosen\chosen.min.css" />
     <Content Include="Assets\css\components\jquery.gritter.css" />
     <Content Include="Assets\css\components\jquery.gritter.min.css" />
@@ -267,7 +270,6 @@
     <Content Include="Assets\images\headphoto.jpg" />
     <Content Include="Assets\images\loading.gif" />
     <Content Include="Assets\images\login_bg.jpg" />
-    <Content Include="Assets\images\logo.gif" />
     <Content Include="Assets\js\ace\ace-editable.js" />
     <Content Include="Assets\js\ace\ace-editable.min.js" />
     <Content Include="Assets\js\ace\ace-elements.js" />
@@ -362,6 +364,7 @@
     <Content Include="Assets\js\fullcalendar\fullcalendar.min.js" />
     <Content Include="Assets\js\jqGrid\grid.locale-cn.js" />
     <Content Include="Assets\js\jqGrid\grid.locale-en.js" />
+    <Content Include="Assets\js\jqGrid\jquery.combogrid.js" />
     <Content Include="Assets\js\jqGrid\jquery.jqGrid.ext.js" />
     <Content Include="Assets\js\jqGrid\jquery.jqGrid.js" />
     <Content Include="Assets\js\jqGrid\jquery.jqGrid.min.js" />
@@ -401,7 +404,7 @@
     <Content Include="Assets\js\validate\jquery.validate.unobtrusive.min.js" />
     <Content Include="Assets\js\validate\messages_zh.min.js" />
     <Content Include="Assets\js\ztree\jquery-1.4.4.min.js" />
-    <Content Include="Assets\js\ztree\jquery.comboBox.js" />
+    <Content Include="Assets\js\ztree\jquery.combotree.js" />
     <Content Include="Assets\js\ztree\jquery.ztree.all.js" />
     <Content Include="Assets\js\ztree\jquery.ztree.all.min.js" />
     <Content Include="Assets\js\ztree\jquery.ztree.core.js" />
@@ -524,7 +527,10 @@
     <Content Include="Views\Home\Index2.cshtml" />
     <Content Include="Views\Shared\_MpaPageLayout.cshtml" />
     <Content Include="Views\Demo\zTree.cshtml" />
-    <Content Include="Views\Demo\Combo.cshtml" />
+    <Content Include="Views\Demo\ComboTree.cshtml" />
+    <Content Include="Views\Demo\Chosen.cshtml" />
+    <Content Include="Views\Demo\Select2.cshtml" />
+    <Content Include="Views\Demo\ImageInput.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -554,11 +560,18 @@
       <Name>Smart.Sample.Services</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\js\ace\ace-myext.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">

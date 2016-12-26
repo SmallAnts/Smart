@@ -25,6 +25,7 @@ TestResults/
 nuget/
 lib/
 Samples/
+[Ll]og/
 
 # Visual Studio 2015 cache/options directory
 .vs/

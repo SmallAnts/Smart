@@ -111,7 +111,7 @@ namespace Smart.Data.EF
 
         public T Get(string predicate, params object[] args)
         {
-            var sql = string.Format("select t.* from {0} t where {1}", typeof(T).Name, predicate);
+            var sql = $"select t.* from {typeof(T).Name} t where {predicate}";
             var ps = this._dbContext.ProcessParams(sql, args);
             sql = ps.Item1;
             args = ps.Item2.ToArray();

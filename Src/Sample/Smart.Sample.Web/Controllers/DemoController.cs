@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -64,11 +65,24 @@ namespace Smart.Sample.Web.Controllers
 
         #endregion
 
-        #region 下拉控件
-        public ActionResult Combo()
+        public ActionResult Chosen()
         {
+            var sexs = new List<dynamic>();
+            sexs.Add(new { Id = 1, Name = "男" });
+            sexs.Add(new { Id = 2, Name = "女" });
+            sexs.Add(new { Id = 9, Name = "未知" });
+            ViewBag.Sexs = sexs;
             return View();
         }
-        #endregion
+        public ActionResult Select2() { return View(); }
+        public ActionResult MultiSelect() { return View(); }
+
+        //下拉树控件
+        public ActionResult ComboTree() { return View(); }
+
+        public ActionResult ComboGrid() { return View(); }
+
+
+        public ActionResult ImageInput() { return View(); }
     }
 }

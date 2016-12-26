@@ -312,7 +312,7 @@ namespace Smart.Core.Extensions
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0}年{1}月{2}天{3}时{4}分{5}秒", this.Year, this.Month, this.Day, this.Hour, this.Minute, this.Second);
+            return $"{Year}年{Month}月{Day}天{Hour}时{Minute}分{Second}秒";
         }
         /// <summary>
         /// 返回此实例的哈希代码。

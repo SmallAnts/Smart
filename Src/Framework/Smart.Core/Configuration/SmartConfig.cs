@@ -44,7 +44,7 @@ namespace Smart.Core.Configuration
 
         private Infrastructure.ITypeFinder _typeFinder;
         /// <summary>
-        /// 获取或设置类型查找工具类
+        /// 获取或设置依赖注入类型查找工具类
         /// </summary>
         public Infrastructure.ITypeFinder TypeFinder
         {

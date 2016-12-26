@@ -59,9 +59,13 @@ namespace Smart.Sample.Test
             funcs.Add(new SysFunc { SysFuncId = "010200", Name = "用户维护", ParentId = "010000", Url = "/sys/sysusers" });
             funcs.Add(new SysFunc { SysFuncId = "010300", Name = "参数设置", ParentId = "010000", Url = "/sys/settings" });
 
-            funcs.Add(new SysFunc { SysFuncId = "020000", Name = "示例", ParentId = "", Icon = "fa-cogs" });
+            funcs.Add(new SysFunc { SysFuncId = "020000", Name = "示例", ParentId = "", Icon = "fa-list" });
             funcs.Add(new SysFunc { SysFuncId = "020100", Name = "树控件", ParentId = "020000", Url = "/demo/ztree" });
-            funcs.Add(new SysFunc { SysFuncId = "020200", Name = "下拉控件", ParentId = "020000", Url = "/demo/combo" });
+            funcs.Add(new SysFunc { SysFuncId = "020200", Name = "下拉树控件", ParentId = "020000", Url = "/demo/combotree" });
+            funcs.Add(new SysFunc { SysFuncId = "020300", Name = "下拉表格控件", ParentId = "020000", Url = "/demo/combogrid" });
+            funcs.Add(new SysFunc { SysFuncId = "020400", Name = "下拉控件Chosen", ParentId = "020000", Url = "/demo/chosen" });
+            funcs.Add(new SysFunc { SysFuncId = "020500", Name = "下拉控件Select2", ParentId = "020000", Url = "/demo/select2" });
+            funcs.Add(new SysFunc { SysFuncId = "020600", Name = "下拉多选控件", ParentId = "020000", Url = "/demo/multiselect" });
 
             var actions = new List<SysAction>();
             var roleActions = new List<RoleSysAction>();

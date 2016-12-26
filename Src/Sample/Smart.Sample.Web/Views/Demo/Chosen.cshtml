@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Chosen";
+}
+<link href="~/Assets/css/chosen/chosen.min.css" rel="stylesheet" />
+
+性别：@Html.DropDownList("Sex", new SelectList(ViewBag.Sexs, "Id", "Name"))
+
+<script>
+    $LAB.script(js("chosen")).wait(function () {
+        $("#Sex").chosen({ search_contains: false });
+    });
+</script>

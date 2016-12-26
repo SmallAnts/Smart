@@ -122,14 +122,13 @@
     <Compile Include="UI\JqGrid\Options\GroupingView.cs" />
     <Compile Include="UI\Nav.cs" />
     <Compile Include="UI\Shortcut.cs" />
+    <Compile Include="UI\zTree.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Filters\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Smart.Core\Smart.Core-4.0.csproj">
       <Project>{2f3cbfff-d6d8-4c21-8fc4-804248a2f6b2}</Project>

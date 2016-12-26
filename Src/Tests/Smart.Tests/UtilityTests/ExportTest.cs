@@ -13,6 +13,27 @@ namespace Smart.Tests.CoreExtensionsTests
         public ExportTest() : base() { }
 
         [TestMethod]
+        public void Export()
+        {
+            var book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            var sheet = book.CreateSheet("Sheet1");
+
+            var row = sheet.CreateRow(0);
+            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, 0, 5));
+            row.CreateCell(0).SetCellValue("列1");
+            row.CreateCell(6).SetCellValue("列2");
+            var row2 = sheet.CreateRow(1);
+            row2.CreateCell(0).SetCellValue("列3");
+
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.xls");
+            using (var file = new FileStream(path, FileMode.Create))
+            {
+                book.Write(file);
+                file.Close();
+            }
+        }
+
+        [TestMethod]
         public void ListExport()
         {
             var list = new List<UserInfo>();
@@ -22,12 +43,12 @@ namespace Smart.Tests.CoreExtensionsTests
                 list.Add(new UserInfo { Name = "姓名" + i, Sex = i % 2 == 0 ? "女" : "男", Birthday = birthday, Age = birthday.GetAge().Year });
             }
             // 创建表头
-            var header = Core.Utilites.ExportUtility.CreateHeader();
+            var header = Core.Utilites.ExcelUtility.CreateHeader();
             var row = header.CreateRow();
-            row.CreateColumn("姓名").SetAlignment(Core.Model.HorizontalAlignment.Center);
-            row.CreateColumn("性别");
-            row.CreateColumn("出生日期").SetDataFromat("yyyy-MM-dd").SetWidth(12);
-            row.CreateColumn("年龄");
+            row.CreateColumn("姓名", "Name").SetAlignment(Core.Model.HorizontalAlignment.Center);
+            row.CreateColumn("性别", "Sex");
+            row.CreateColumn("出生日期", "Brithday").SetDataFromat("yyyy-MM-dd").SetWidth(12);
+            row.CreateColumn("年龄", "Age");
 
             var sheetName = "List导出Excel测试";
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "list.xls");
@@ -50,12 +71,12 @@ namespace Smart.Tests.CoreExtensionsTests
             }
 
             // 创建表头
-            var header = Core.Utilites.ExportUtility.CreateHeader();
+            var header = Core.Utilites.ExcelUtility.CreateHeader();
             var row = header.CreateRow();
-            row.CreateColumn("姓名").SetAlignment(Core.Model.HorizontalAlignment.Center);
-            row.CreateColumn("性别");
-            row.CreateColumn("出生日期").SetDataFromat("yyyy-MM-dd").SetWidth(12);
-            row.CreateColumn("年龄");
+            row.CreateColumn("姓名", "Name").SetAlignment(Core.Model.HorizontalAlignment.Center);
+            row.CreateColumn("性别", "Sex");
+            row.CreateColumn("出生日期", "Brithday").SetDataFromat("yyyy-MM-dd").SetWidth(12);
+            row.CreateColumn("年龄", "Age");
 
             var sheetName = "DataTable导出Excel测试";
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "datatable.xls");
@@ -72,4 +93,7 @@ namespace Smart.Tests.CoreExtensionsTests
 
         }
     }
+
+
+
 }

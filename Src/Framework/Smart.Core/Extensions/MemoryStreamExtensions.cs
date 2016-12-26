@@ -12,6 +12,11 @@ namespace Smart.Core.Extensions
     /// </summary>
     public static class MemoryStreamExtensions
     {
+        /// <summary>
+        /// 将MemoryStream 数据保存为文件
+        /// </summary>
+        /// <param name="ms"></param>
+        /// <param name="fileName"></param>
         public static void Save(this MemoryStream ms, string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))

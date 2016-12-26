@@ -88,10 +88,5 @@ namespace Smart.Core.Caching
                 }
             }
         }
-
-        protected override void Dispose(bool disposing)
-        {
-        }
-
     }
 }

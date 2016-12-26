@@ -57,8 +57,13 @@ function submitForm(button, url, end) {
                 if (name === undefined) return true;
                 if ($.inArray(name, chksNames) >= 0) return true;
                 var $els = $("input[name='" + name + "']", $form);
-                if ($els.size() == 1) {
-                    $this.val($this.prop("checked") ? 1 : 0);
+                if ($els.length == 1) {
+                    var val = $els.data("val");
+                    if (val === true) {
+                        $this.val($this.prop("checked"));
+                    } else {
+                        $this.val($this.prop("checked") ? 1 : 0);
+                    }
                 } else {
                     chksNames.push(name);
                 }
@@ -135,8 +140,8 @@ function loadData(obj) {
                 if (type == 'radio') {
                     $this.prop('checked', $this.val() == value);
                 } else if (type == 'checkbox') {
-                    if ($els.size() == 1) {
-                        var checked = value == 1 || value == "1";
+                    if ($els.length == 1) {
+                        var checked = value == 1 || value == "1" || value == true || value == "true" || value == "Yes";
                         $this.val(checked ? 1 : 0).prop('checked', checked);
                     } else {
                         arr = (value || 0).toString().split(',');
@@ -148,6 +153,8 @@ function loadData(obj) {
                             }
                         }
                     }
+                } else if (type == 'img') {
+                    $this.attr("src", value);
                 } else {
                     $this.val(value);
                 }

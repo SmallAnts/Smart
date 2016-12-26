@@ -52,6 +52,7 @@
     <Compile Include="EF\EFRepository`T.cs" />
     <Compile Include="EF\IEFRepository`T.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
+    <Compile Include="Extensions\DbDataReaderExtensions.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
     <Compile Include="Extensions\DbModelBuilderExtensions.cs" />
     <Compile Include="Orderable.cs" />

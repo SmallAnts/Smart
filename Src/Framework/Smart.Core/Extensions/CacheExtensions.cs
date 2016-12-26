@@ -4,7 +4,7 @@ using System;
 namespace Smart.Core.Extensions
 {
     /// <summary>
-    /// 
+    /// 缓存相关扩展方法
     /// </summary>
     public static class CacheExtensions
     {

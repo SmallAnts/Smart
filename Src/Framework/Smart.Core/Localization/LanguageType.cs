@@ -39,19 +39,19 @@ namespace Smart.Core.Localization
         /// <summary>
         ///  阿拉伯文(伊拉克)
         /// </summary>
-        public const string ar_IQ = "";
+        public const string ar_IQ = "ar_IQ";
         /// <summary>
         /// 阿拉伯文(约旦)
         /// </summary>
-        public const string ar_JO = "";
+        public const string ar_JO = "ar_JO";
         /// <summary>
         /// 阿拉伯文(科威特)
         /// </summary>
-        public const string ar_KW = "";
+        public const string ar_KW = "ar_KW";
         /// <summary>
         /// 阿拉伯文(黎巴嫩)
         /// </summary>
-        public const string ar_LB = "";
+        public const string ar_LB = "ar_LB";
         /// <summary>
         /// 阿拉伯文(利比亚)
         /// </summary>

@@ -132,9 +132,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Filters\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Smart.Core\Smart.Core.csproj">
       <Project>{0400237a-7a93-4bed-b788-bd54d7e132c0}</Project>

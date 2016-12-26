@@ -2,6 +2,9 @@
 using System.Drawing.Drawing2D;
 using Smart.Core.Utilites;
 using System.Drawing.Imaging;
+using System.Text.RegularExpressions;
+using System;
+using System.IO;
 
 namespace Smart.Core.Extensions
 {
@@ -109,6 +112,47 @@ namespace Smart.Core.Extensions
             }
             #endregion
             return GetThumbnailImage(originalImage, destRect, srcRect);
+        }
+
+        /// <summary>
+        /// 将base64字符串转换为IMAGE
+        /// </summary>
+        /// <param name="base64String"></param>
+        /// <returns></returns>
+        public static Image Base64ToImage(this string base64String)
+        {
+            var ext = Regex.Match(base64String, "(?<=data:image/)[^;]+").Value?.ToLower();
+            byte[] arr = Convert.FromBase64String(Regex.Replace(base64String, "^.*base64,", ""));
+            using (var ms = new MemoryStream(arr))
+            {
+                using (var bmp = new Bitmap(ms))
+                {
+                    return bmp;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 将IMAGE转换为base64字符串
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static string ToBase64String(this Image image, ImageFormat format = null)
+        {
+            if (format == null)
+            {
+                format = image.RawFormat;
+            }
+            using (var ms = new MemoryStream())
+            {
+                image.Save(ms, format);
+                var array = new byte[ms.Length];
+                ms.Position = 0;
+                ms.Read(array, 0, (int)ms.Length);
+                var baser64String = Convert.ToBase64String(array);
+                return baser64String;
+            }
         }
     }
 }

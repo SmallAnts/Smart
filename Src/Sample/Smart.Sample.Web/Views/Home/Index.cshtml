@@ -123,27 +123,36 @@ if (menu.Menus != null && menu.Menus.Count > 0)
     </div>
 </div>
 @section scripts{
-    <script>
-        $LAB.setOptions({ AlwaysPreserveOrder: true })
-           .script(IS_IE || IS_OLD_IE ? "/assets/js/jquery1.min.js" : "/assets/js/jquery2.min.js")
-           .script(IS_CHROME ? null : "/assets/js/components/touche.min.js")
-           .script("/assets/js/bootstrap/bootstrap.min.js")
-           .script("/assets/js/ace/ace-elements.min.js")
-           .script("/assets/js/ace/ace.min.js")
-           .script("/assets/js/components/jquery.gritter.js")
-           .script("/assets/js/common.js")
-           .wait(function () {
-               $.gritter.options = $.extend($.gritter.options, {
-                   title: 'Info',
-                   sticky: false,
-                   time: 2000,
-                   speed: 500,
-                   class_name: 'gritter-info'
-               });
-               init_navbar();
-               init_sidebar();
-           });
+    <!--[if IE]>
+        <script src="/assets/js/jquery1.min.js"></script>
+    <![endif]-->
+    <!--[if !IE]><!-->
+    <script src="/assets/js/jquery2.min.js"></script>
+    <!--<![endif]-->
+    <script src="~/assets/js/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        if ('ontouchstart' in document.documentElement)
+            document.write("<script src='/assets/js/mobile/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+        if (!IS_CHROME)
+            document.write("<script src='/assets/js/components/touche.min.js'>" + "<" + "/script>");
+    </script>
+    <script src="~/assets/js/components/jquery.gritter.min.js"></script>
+    <script src="~/assets/js/ace/ace-elements.min.js"></script>
+    <script src="~/assets/js/ace/ace.min.js"></script>
+    <script src="~/assets/js/common.js"></script>
 
+    <script>
+        function indexPage_init() {
+            $.gritter.options = $.extend($.gritter.options, {
+                title: 'Info',
+                sticky: false,
+                time: 2000,
+                speed: 500,
+                class_name: 'gritter-info'
+            });
+            init_navbar();
+            init_sidebar();
+        }
         function init_navbar() {
             $("#btn-exit").on("click", function () {
                 var url = $(this).attr("href");
@@ -156,7 +165,6 @@ if (menu.Menus != null && menu.Menus.Count > 0)
                 return false;
             });
         }
-
         function init_sidebar() {
             //$("#sidebar").sidebar({
             //    url: '/home/sidebar',
@@ -167,8 +175,10 @@ if (menu.Menus != null && menu.Menus.Count > 0)
             //    //    { buttonClass: "btn-danger", iconClass: "fa-cogs" }],
             //    onComplete: function () {
             $("#sidebar li a").on("click", function (ev) {
+                console.log("menu click");
                 var href = $(this).attr('href');
-                if (href == "#") return true;
+                //if (href == "#") return true;
+                console.log(href);
                 //if (href[0] != "#") href = "#" + href;
                 //if (window.location.hash != href) gotoUrl(href);
             });
@@ -181,5 +191,7 @@ if (menu.Menus != null && menu.Menus.Count > 0)
             //    }
             //});
         }
+        indexPage_init();
+
     </script>
 }

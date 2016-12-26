@@ -9,19 +9,19 @@ namespace Smart.Core.Caching
     public class CacheInfo<T> where T : class
     {
         /// <summary>
-        /// 
+        /// 构造函数
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">被缓存的对象</param>
         public CacheInfo(T value)
         {
             this.SlidingExpiration = System.Web.Caching.Cache.NoSlidingExpiration;
         }
 
         /// <summary>
-        /// 
+        /// 构造函数
         /// </summary>
-        /// <param name="slidingExpiration"></param>
-        /// <param name="value"></param>
+        /// <param name="slidingExpiration">相对过期时间</param>
+        /// <param name="value">被缓存的对象</param>
         public CacheInfo(TimeSpan slidingExpiration, T value)
         {
             this.SlidingExpiration = slidingExpiration;

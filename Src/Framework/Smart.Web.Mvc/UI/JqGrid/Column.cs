@@ -446,7 +446,7 @@ namespace Smart.Web.Mvc.UI.JqGrid
 
                 if (_searchOptions.Any())
                 {
-                    searchOptions.Add("sopt", string.Format("['{0}']", _searchOptions.Aggregate((current, next) => current + "',  '" + next)));
+                    searchOptions.Add("sopt", $"['{_searchOptions.Aggregate((current, next) => $"{current}',  '{next}")}']");
                 }
                 else
                 {
@@ -461,7 +461,7 @@ namespace Smart.Web.Mvc.UI.JqGrid
                     if (_searchTerms != null)
                     {
                         var emtpyOption = (_searchTerms.Any()) ? ":;" : ":";
-                        searchOptions.Add("value", "\"" + string.Format("{0}{1}", emtpyOption, string.Join(";", _searchTerms.Select(s => s.Key + ":" + s.Value).ToArray())) + "\"");
+                        searchOptions.Add("value", $"\"{emtpyOption}{string.Join(";", _searchTerms.Select(s => $"{s.Key}:{s.Value}").ToArray())}\"");
                     }
                     else
                     {
