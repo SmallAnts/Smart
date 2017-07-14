@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2F3CBFFF-D6D8-4C21-8FC4-804248A2F6B2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Smart.Core</RootNamespace>
+    <AssemblyName>Smart.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\lib\net40\</OutputPath>
+    <DefineConstants>TRACE;NET40</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>..\..\..\lib\net40\Smart.Core.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Smart.Core\Caching\CacheInfo`T.cs" />
+    <Compile Include="..\Smart.Core\Computer\CpuMonitor.cs" />
+    <Compile Include="..\Smart.Core\Computer\LogicalDiskMonitor.cs" />
+    <Compile Include="..\Smart.Core\Computer\MemoryMonitor.cs" />
+    <Compile Include="..\Smart.Core\Computer\Monitor.cs" />
+    <Compile Include="..\Smart.Core\Computer\NetWorkMonitor.cs" />
+    <Compile Include="..\Smart.Core\Data\IEntity.cs">
+      <Link>IEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Smart.Core\Data\IRepository`T.cs" />
+    <Compile Include="..\Smart.Core\Dependency\IDependency.cs" />
+    <Compile Include="..\Smart.Core\Dependency\IDependencyResolver.cs">
+      <Link>IDependencyResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Smart.Core\Export\ExportBase.cs" />
+    <Compile Include="..\Smart.Core\Export\HtmlExcelExport.cs" />
+    <Compile Include="..\Smart.Core\Export\IExport.cs" />
+    <Compile Include="..\Smart.Core\Extensions\CacheExtensions.cs" />
+    <Compile Include="..\Smart.Core\Caching\HttpCache.cs" />
+    <Compile Include="..\Smart.Core\Caching\ICache.cs" />
+    <Compile Include="..\Smart.Core\Configuration\SmartConfig.cs" />
+    <Compile Include="..\Smart.Core\DisposableObject.cs" />
+    <Compile Include="..\Smart.Core\Extensions\DataTableExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\DateTimeExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\EnumExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\ExceptionExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\IEnumerable`TExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\ImageExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\MemoryStreamExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\ObjectExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\StopwatchExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\StringBuilderExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\StringExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\ThrowExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\TypeExtensions.cs" />
+    <Compile Include="..\Smart.Core\Extensions\WinControlExtensions.cs" />
+    <Compile Include="..\Smart.Core\Infrastructure\DirectoryTypeFinder.cs" />
+    <Compile Include="..\Smart.Core\Dependency\IDependencyRegistrar.cs" />
+    <Compile Include="..\Smart.Core\Dependency\IContainerManager.cs" />
+    <Compile Include="..\Smart.Core\Infrastructure\IStartupTask.cs" />
+    <Compile Include="..\Smart.Core\Infrastructure\ITypeFinder.cs" />
+    <Compile Include="..\Smart.Core\Infrastructure\Singleton.cs" />
+    <Compile Include="..\Smart.Core\Localization\Language.cs" />
+    <Compile Include="..\Smart.Core\Infrastructure\IService.cs" />
+    <Compile Include="..\Smart.Core\Export\Model\Column.cs" />
+    <Compile Include="..\Smart.Core\Export\Model\ColumnModel.cs" />
+    <Compile Include="..\Smart.Core\NativeMethods.cs" />
+    <Compile Include="..\Smart.Core\ProxyGenerator.cs" />
+    <Compile Include="..\Smart.Core\Extensions\Retry.cs" />
+    <Compile Include="..\Smart.Core\SmartContext.cs" />
+    <Compile Include="..\Smart.Core\Dependency\ContainerManager.cs" />
+    <Compile Include="..\Smart.Core\SmartException.cs" />
+    <Compile Include="..\Smart.Core\Properties\AssemblyInfo.cs" />
+    <Compile Include="..\Smart.Core\Utilites\CryptoUtility.cs" />
+    <Compile Include="..\Smart.Core\Utilites\ImageUtility.cs" />
+    <Compile Include="..\Smart.Core\Utilites\InputCodeUtility.cs" />
+    <Compile Include="..\Smart.Core\Utilites\LocationUtility.cs" />
+    <Compile Include="..\Smart.Core\Utilites\WebUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -51,35 +51,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EF\EFRepository`T.cs" />
-    <Compile Include="EF\IEFRepository`T.cs" />
-    <Compile Include="Extensions\DbContextExtensions.cs" />
-    <Compile Include="Extensions\DbDataReaderExtensions.cs" />
-    <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
-    <Compile Include="Extensions\DbModelBuilderExtensions.cs" />
-    <Compile Include="Orderable.cs" />
-    <Compile Include="Page.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EF\EFDbContext.cs" />
+    <Compile Include="..\Smart.Data\EF\EFRepository`T.cs" />
+    <Compile Include="..\Smart.Data\EF\IEFRepository`T.cs" />
+    <Compile Include="..\Smart.Data\Extensions\DbContextExtensions.cs" />
+    <Compile Include="..\Smart.Data\Extensions\DbDataReaderExtensions.cs" />
+    <Compile Include="..\Smart.Data\Extensions\DbEntityValidationExceptionExtensions.cs" />
+    <Compile Include="..\Smart.Data\Extensions\DbModelBuilderExtensions.cs" />
+    <Compile Include="..\Smart.Data\Orderable.cs" />
+    <Compile Include="..\Smart.Data\Page.cs" />
+    <Compile Include="..\Smart.Data\Properties\AssemblyInfo.cs" />
+    <Compile Include="..\Smart.Data\EF\EFDbContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="T4\GeneratorHelper.ttinclude" />
-    <Content Include="T4\ModelsGenerator.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Smart.Core\Smart.Core-4.0.csproj">
+    <ProjectReference Include="..\Smart.Core.40\Smart.Core-4.0.csproj">
       <Project>{2f3cbfff-d6d8-4c21-8fc4-804248a2f6b2}</Project>
       <Name>Smart.Core-4.0</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
