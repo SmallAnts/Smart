@@ -14,7 +14,7 @@ namespace Smart.Core.Dependency
         #region 私有字段
 
         internal Autofac.IContainer _container;
-
+        IDependencyResolver _resolver;
         #endregion
 
         #region 私有方法
@@ -43,28 +43,26 @@ namespace Smart.Core.Dependency
         {
             // 初始化容器
             var builder = new Autofac.ContainerBuilder();
-            this._container = builder.Build();
 
             #region 注册依赖实例
 
-            builder = new Autofac.ContainerBuilder();
             builder.RegisterInstance(config.TypeFinder).As<ITypeFinder>().SingleInstance();
             builder.RegisterInstance(config).As<SmartConfig>().SingleInstance();
             builder.RegisterInstance(this).As<IContainerManager>().SingleInstance();
-            builder.RegisterType<Caching.HttpCache>().Named<Caching.ICache>("smart.httpCache").SingleInstance();
-            builder.Update(this._container);
+            builder.RegisterType<Caching.HttpCache>().Named<Caching.ICache>(SmartContext.DEFAULT_CACHE_KEY).SingleInstance();
+            builder.RegisterInstance(new Export.HtmlExcelExport()).As<Export.IExport>().SingleInstance();
 
             #endregion
 
             #region 注册实现 IDependency 接口的依赖类型
 
-            builder = new Autofac.ContainerBuilder();
             var dependencies = config.TypeFinder.ForTypesDerivedFrom<IDependency>().ToList();
             foreach (var dependency in dependencies)
             {
                 var reg = builder.RegisterType(dependency)
                     .AsImplementedInterfaces() // 注册所有接口
-                    .PropertiesAutowired(); // 自动属性注入
+                    .PropertiesAutowired() // 自动属性注入
+                    ;
                 if (typeof(ISingletonDependency).IsAssignableFrom(dependency))
                 {
                     reg.SingleInstance();
@@ -78,13 +76,11 @@ namespace Smart.Core.Dependency
                     reg.InstancePerLifetimeScope();
                 }
             }
-            builder.Update(this._container);
 
             #endregion
 
             #region 注册其他程序集所提供的依赖关系（实现 IDependencyRegistrar 接口的类）
 
-            builder = new ContainerBuilder();
             var drInstances = config.TypeFinder.ForTypesDerivedFrom<IDependencyRegistrar>()
                 .ToInstances<IDependencyRegistrar>()
                 .OrderBy(t => t.Order)
@@ -93,10 +89,9 @@ namespace Smart.Core.Dependency
             {
                 dependencyRegistrar.Register(builder, config);
             }
-            builder.Update(this._container);
 
             #endregion
-
+            this._container = builder.Build();
             // 注册完成后处理
             if (config.OnDependencyRegistered != null)
             {
@@ -135,14 +130,35 @@ namespace Smart.Core.Dependency
         /// <typeparam name="T">T</typeparam>
         /// <param name="serviceName">服务名称</param>
         /// <returns></returns>
-        public T Resolve<T>(string serviceName = null) where T : class
+        public T Resolve<T>(string serviceName) where T : class
         {
             if (string.IsNullOrEmpty(serviceName))
+            {
+                object resolver;
+                if (_container.TryResolve(typeof(IDependencyResolver), out resolver))
+                {
+                    _resolver = resolver as IDependencyResolver;
+                }
+                if (_resolver != null)
+                {
+                    return (T)_resolver.GetService(typeof(T));
+                }
                 return _container.Resolve<T>();
+            }
             else
+            {
                 return _container.ResolveNamed<T>(serviceName);
+            }
         }
 
+        /// <summary>
+        /// 开启一个新的生命周期范围
+        /// </summary>
+        /// <returns></returns>
+        public ILifetimeScope BeginLifetimeScope()
+        {
+            return this._container?.BeginLifetimeScope();
+        }
         #endregion
     }
 }

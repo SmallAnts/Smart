@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\lib\net45\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,36 +35,13 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.0.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.0.1\lib\net45\Autofac.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NPOI.2.2.1\lib\net40\NPOI.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NPOI.OOXML, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NPOI.2.2.1\lib\net40\NPOI.OOXML.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NPOI.OpenXml4Net, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NPOI.2.2.1\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NPOI.OpenXmlFormats, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NPOI.2.2.1\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -85,14 +62,23 @@
     <Compile Include="Computer\MemoryMonitor.cs" />
     <Compile Include="Computer\Monitor.cs" />
     <Compile Include="Computer\NetWorkMonitor.cs" />
+    <Compile Include="Data\IEntity.cs" />
     <Compile Include="Data\IRepository`T.cs" />
     <Compile Include="Dependency\IDependency.cs" />
-    <Compile Include="DynamicLinq.cs" />
+    <Compile Include="Dependency\IDependencyResolver.cs" />
+    <Compile Include="Export\ExportBase.cs" />
+    <Compile Include="Export\HtmlExcelExport.cs" />
+    <Compile Include="Export\IExport.cs" />
+    <Compile Include="Export\Model\Column.cs" />
+    <Compile Include="Export\Model\ColumnModel.cs" />
     <Compile Include="Extensions\CacheExtensions.cs" />
     <Compile Include="Caching\HttpCache.cs" />
     <Compile Include="Caching\ICache.cs" />
     <Compile Include="Configuration\SmartConfig.cs" />
     <Compile Include="DisposableObject.cs" />
+    <Compile Include="Extensions\FileInfoExtensions.cs" />
+    <Compile Include="Extensions\Retry.cs" />
+    <Compile Include="Extensions\StopwatchExtensions.cs" />
     <Compile Include="Extensions\WinControlExtensions.cs" />
     <Compile Include="Extensions\DataTableExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
@@ -114,23 +100,18 @@
     <Compile Include="Infrastructure\Singleton.cs" />
     <Compile Include="Localization\Language.cs" />
     <Compile Include="Infrastructure\IService.cs" />
-    <Compile Include="Model\Row.cs" />
-    <Compile Include="Model\Column.cs" />
-    <Compile Include="Model\Header.cs" />
     <Compile Include="ProxyGenerator.cs" />
     <Compile Include="SmartContext.cs" />
     <Compile Include="Dependency\ContainerManager.cs" />
     <Compile Include="SmartException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilites\CryptoUtility.cs" />
-    <Compile Include="Utilites\ExcelUtility.cs" />
     <Compile Include="Utilites\ImageUtility.cs" />
     <Compile Include="Utilites\InputCodeUtility.cs" />
     <Compile Include="Utilites\LocationUtility.cs" />
     <Compile Include="Utilites\WebUtility.cs" />
     <Compile Include="NativeMethods.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>

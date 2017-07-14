@@ -14,11 +14,14 @@ namespace Smart.Core.Dependency
         void Initialize(SmartConfig config);
 
         /// <summary>
-        /// 从上下文检索服务
+        /// 从上下文检索服务,当serviceName不为空的时候，
+        /// 使用默认的生命周期管理,
+        /// 否则当注入IDependencyResolver 类型时使用IDependencyResolver的生命周期管理
         /// </summary>
         /// <typeparam name="T">T</typeparam>
         /// <param name="serviceName">服务名称</param>
         /// <returns></returns>
         T Resolve<T>(string serviceName = null) where T : class;
+   
     }
 }
