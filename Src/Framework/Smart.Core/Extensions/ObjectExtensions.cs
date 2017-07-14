@@ -2,7 +2,10 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Reflection;
+using System.Linq;
 using System.Threading.Tasks;
+using Smart.Core.Data;
 
 namespace Smart.Core.Extensions
 {
@@ -30,8 +33,26 @@ namespace Smart.Core.Extensions
             if (value == null || value is DBNull) return defaultValue;
             try
             {
+                var targetType = typeof(TValue);
+                var valueType = value.GetType();
+                // 类型相同
+                if (valueType == targetType)
+                {
+                    return (TValue)value;
+                }
+                if (targetType.IsEnum)
+                {
+                    if (valueType == typeof(int))
+                    {
+                        return (TValue)Enum.ToObject(targetType, value);
+                    }
+                    else
+                    {
+                        return (TValue)Enum.Parse(targetType, value.ToString());
+                    }
+                }
                 // 类型是否可以从对象转换
-                var converter = TypeDescriptor.GetConverter(typeof(TValue));
+                var converter = TypeDescriptor.GetConverter(targetType);
                 if (converter.CanConvertFrom(value.GetType()))
                 {
                     TValue result = (TValue)converter.ConvertFrom(value);
@@ -39,9 +60,9 @@ namespace Smart.Core.Extensions
                 }
                 // 值是否可以转换为指定的类型
                 converter = TypeDescriptor.GetConverter(value.GetType());
-                if (converter.CanConvertTo(typeof(TValue)))
+                if (converter.CanConvertTo(targetType))
                 {
-                    TValue result = (TValue)converter.ConvertTo(value, typeof(TValue));
+                    TValue result = (TValue)converter.ConvertTo(value, targetType);
                     return result;
                 }
             }
@@ -87,6 +108,66 @@ namespace Smart.Core.Extensions
             return false;
         }
 
+        /// <summary>
+        /// 通过属性名称动态给属性赋值
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="name">属性名称</param>
+        /// <param name="value">属性值</param>
+        public static void Set<TValue>(this IEntity obj, string name, TValue value)
+        {
+            var cache = SmartContext.Current.Resolve<Caching.ICache>(SmartContext.DEFAULT_CACHE_KEY);
+            var type = obj.GetType();
+            var pis = cache.Get(type.FullName, () => type.GetProperties());
+            var pi = pis.FirstOrDefault(p => p.Name == name);
+            if (pi == null)
+            {
+                throw new ArgumentException("name", $"{name}属性不存在。");
+            }
+            var valueType = value.GetType();
+            // 类型相同，或和可空类型中的类型相同，不需要类型转换
+            if (valueType == pi.PropertyType)// || Nullable.GetUnderlyingType(pi.PropertyType) == valueType
+            {
+                pi.SetValue(obj, value, null);
+                return;
+            }
+            // 类型是否可以从对象转换
+            var converter = TypeDescriptor.GetConverter(pi.PropertyType);
+            if (converter.CanConvertFrom(value.GetType()))
+            {
+                pi.SetValue(obj, converter.ConvertFrom(value), null);
+                return;
+            }
+            // 值是否可以转换为指定的类型
+            converter = TypeDescriptor.GetConverter(value.GetType());
+            if (converter.CanConvertTo(pi.PropertyType))
+            {
+                pi.SetValue(obj, converter.ConvertTo(value, pi.PropertyType), null);
+                return;
+            }
+            throw new ArgumentException("value", $"{value.GetType().FullName}和{pi.PropertyType.FullName}类型不一致。");
+        }
+
+        /// <summary>
+        /// 通过属性名称获取属性值。
+        /// </summary>
+        /// <typeparam name="T">属性类型</typeparam>
+        /// <param name="obj"></param>
+        /// <param name="name">属性名称</param>
+        /// <returns></returns>
+        public static object Get(this IEntity obj, string name)
+        {
+            var cache = SmartContext.Current.Resolve<Caching.ICache>(SmartContext.DEFAULT_CACHE_KEY);
+            var type = obj.GetType();
+            var pis = cache.Get(type.FullName, () => type.GetProperties());
+            var pi = pis.FirstOrDefault(p => p.Name == name);
+            if (pi == null)
+            {
+                throw new ArgumentException("name", $"{name}属性不存在。");
+            }
+            return pi.GetValue(obj, null);
+        }
         /// <summary>
         /// 将对象序列化为JSON字符串，循环引用的对象将被忽略
         /// </summary>
