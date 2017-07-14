@@ -3,6 +3,9 @@ using System.Text.RegularExpressions;
 using Smart.Core.Utilites;
 using Newtonsoft.Json;
 using System.Globalization;
+using System.Text;
+using System.IO;
+using System.IO.Compression;
 
 namespace Smart.Core.Extensions
 {
@@ -354,6 +357,89 @@ namespace Smart.Core.Extensions
             return InputCodeUtility.GetPinYin(value);
         }
 
+        #endregion
+
+        #region 字符串压缩
+
+        /// <summary>  
+        /// 对字符串进行压缩  
+        /// </summary>  
+        /// <param name="str">待压缩的字符串</param>  
+        /// <returns>压缩后的字符串</returns>  
+        public static string Compress(this string str)
+        {
+            string compressString = string.Empty;
+            byte[] compressBeforeByte = Encoding.GetEncoding("UTF-8").GetBytes(str);
+            byte[] compressAfterByte = Compress(compressBeforeByte);
+            compressString = Convert.ToBase64String(compressAfterByte, Base64FormattingOptions.None);
+            return compressString;
+        }
+
+        /// <summary>  
+        /// 对字符串进行解压缩  
+        /// </summary>  
+        /// <param name="str">待解压缩的字符串</param>  
+        /// <returns>解压缩后的字符串</returns>  
+        public static string Decompress(this string str)
+        {
+            string compressString = string.Empty;
+            byte[] compressBeforeByte = Convert.FromBase64String(str);
+            byte[] compressAfterByte = Decompress(compressBeforeByte);
+            compressString = Encoding.GetEncoding("UTF-8").GetString(compressAfterByte);
+            return compressString;
+        }
+
+        private static byte[] Compress(byte[] data)
+        {
+            byte[] buffer = null;
+            try
+            {
+                using (var ms = new MemoryStream())
+                {
+                    using (var zip = new DeflateStream(ms, CompressionMode.Compress, true))
+                    {
+                        zip.Write(data, 0, data.Length);
+                    }
+                    buffer = new byte[ms.Length];
+                    ms.Position = 0;
+                    ms.Read(buffer, 0, buffer.Length);
+                }
+                return buffer;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        private static byte[] Decompress(byte[] data)
+        {
+            try
+            {
+                byte[] buffer = null;
+                using (var ms = new MemoryStream(data))
+                {
+                    using (var zip = new DeflateStream(ms, CompressionMode.Decompress, true))
+                    {
+                        buffer = new byte[0x1000];
+                        using (var msreader = new MemoryStream())
+                        {
+                            int len = 0;
+                            while ((len = zip.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                msreader.Write(buffer, 0, len);
+                            }
+                            msreader.Position = 0;
+                            buffer = msreader.ToArray();
+                        }
+                    }
+                }
+                return buffer;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         #endregion
 
         #region JSON序列化 基于 Newtonsoft.Json
