@@ -11,7 +11,10 @@ namespace Smart.Core
     public class SmartContext
     {
         #region 属性
-
+        /// <summary>
+        /// 默认的缓存键
+        /// </summary>
+        public const string DEFAULT_CACHE_KEY = "smart.httpCache";
         /// <summary>
         /// 获取配置信息
         /// </summary>
@@ -40,7 +43,9 @@ namespace Smart.Core
         /// <summary>
         /// 初始化一个静态实例工厂。
         /// </summary>
+        /// <param name="config">配置信息</param>
         /// <param name="forceRecreate">创建一个新工厂实例，即使工厂已被初始化。</param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static IContainerManager Initialize(SmartConfig config = null, bool forceRecreate = false)
         {
