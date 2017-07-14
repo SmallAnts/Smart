@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.IO;
 
 namespace Smart.Core.Extensions
 {
@@ -12,11 +13,22 @@ namespace Smart.Core.Extensions
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="fileName"></param>
-        /// <param name="sheetName"></param>
         /// <param name="header"></param>
-        public static void ExportExcel(this DataTable dt, string fileName, string sheetName = null, Model.Header header = null)
+        public static void ExportExcel(this DataTable dt, string fileName, Export.Model.ColumnModel colModel)
         {
-            Utilites.ExcelUtility.Export(dt, fileName, sheetName, header);
+            var export = SmartContext.Current.Resolve<Export.IExport>();
+            export.Export(dt, fileName, colModel);
+        }
+
+        /// <summary>
+        /// 将DataTable导出Excel流
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="header"></param>
+        public static Stream ExportExcel(this DataTable dt, Export.Model.ColumnModel colModel)
+        {
+            var export = SmartContext.Current.Resolve<Export.IExport>();
+            return export.ToStream(dt, colModel);
         }
     }
 }

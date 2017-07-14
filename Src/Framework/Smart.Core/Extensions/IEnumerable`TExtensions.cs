@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Smart.Core.Extensions
 {
@@ -68,11 +69,24 @@ namespace Smart.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <param name="fileName"></param>
-        /// <param name="sheetName"></param>
         /// <param name="header"></param>
-        public static void ExportExcel<T>(this List<T> list, string fileName, string sheetName, Model.Header header = null)
+        public static void ExportExcel<T>(this List<T> list, string fileName, Export.Model.ColumnModel header = null)
         {
-            Utilites.ExcelUtility.Export(list, fileName, sheetName, header);
+            var export = SmartContext.Current.Resolve<Export.IExport>();
+            export.Export(list, fileName, header);
+        }
+
+        /// <summary>
+        ///  将泛型列表导出Excel流
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="header"></param>
+        /// <returns></returns>
+        public static Stream ExportExcel<T>(this List<T> list, Export.Model.ColumnModel header = null)
+        {
+            var export = SmartContext.Current.Resolve<Export.IExport>();
+            return export.ToStream(list, header);
         }
     }
 
