@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Caching;
 
 namespace Smart.Core.Caching
 {
@@ -12,9 +13,8 @@ namespace Smart.Core.Caching
         /// 构造函数
         /// </summary>
         /// <param name="value">被缓存的对象</param>
-        public CacheInfo(T value)
+        public CacheInfo(T value) : this(Cache.NoSlidingExpiration, value)
         {
-            this.SlidingExpiration = System.Web.Caching.Cache.NoSlidingExpiration;
         }
 
         /// <summary>
