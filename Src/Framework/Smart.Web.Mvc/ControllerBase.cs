@@ -49,7 +49,6 @@ namespace Smart.Web.Mvc
         /// <para>按默认规则生成路径：this.Upload();</para>
         /// 自定义保存的文件名：this.Upload((i,f) => Path.Combine("/upload/user/", User.GetUserId()));
         /// </summary>
-        /// <param name="controller"></param>
         /// <param name="setFileName">自定义文件名，返回网站相对路径，默认按GUID生成。</param>
         /// <param name="savedCallback"></param>
         /// <returns></returns>

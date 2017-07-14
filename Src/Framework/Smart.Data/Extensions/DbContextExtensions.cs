@@ -802,10 +802,10 @@ namespace Smart.Data.Extensions
                 else
                 {
                     var param = dbProviderFactory.CreateParameter();
-                    param.ParameterName = paramName;
+                    param.ParameterName = parameters.Count.ToString();
                     param.Value = paramValue;
                     parameters.Add(param);
-                    return prefix + (parameters.Count - 1).ToString();
+                    return prefix + param.ParameterName;
                 }
                 #endregion
 

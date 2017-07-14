@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿extern alias sld;
+using Newtonsoft.Json;
 using Smart.Core.Extensions;
 using System;
 using System.Collections;
@@ -7,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
-using System.Linq.Dynamic;
+using sld::System.Linq.Dynamic;
 using System.Reflection;
 using System.Web.UI;
 
