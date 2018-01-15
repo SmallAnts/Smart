@@ -8,220 +8,223 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Data.Entity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Smart.Sample.Core.Entites
 {
     /// <summary>
     /// 系统支持 角色 实体类
     /// </summary>
-    [Serializable]
 	public partial class Role
 	{
          /// <summary>
-         /// 获取或设置 角色ID
+         /// 获取或设置 角色ID True   True
          /// </summary>
 		public virtual int RoleId { get; set; }
          /// <summary>
-         /// 获取或设置 门店ID
+         /// 获取或设置 门店ID False   False
          /// </summary>
 		public virtual int? BeautySalonId { get; set; }
          /// <summary>
-         /// 获取或设置 角色名称
+         /// 获取或设置 角色名称 True   False
          /// </summary>
 		public virtual string Name { get; set; }
          /// <summary>
-         /// 获取或设置 角色说明
+         /// 获取或设置 角色说明 False   False
          /// </summary>
 		public virtual string Note { get; set; }
          /// <summary>
-         /// 获取或设置 是否是系统角色
+         /// 获取或设置 是否是系统角色 True   False
          /// </summary>
 		public virtual bool IsSysRole { get; set; }
          /// <summary>
-         /// 获取或设置 上次更新人
+         /// 获取或设置 上次更新人 False   False
          /// </summary>
 		public virtual int? UpdateUserId { get; set; }
          /// <summary>
-         /// 获取或设置 创建时间
+         /// 获取或设置 创建时间 True   False
          /// </summary>
 		public virtual DateTime CreateTime { get; set; }
          /// <summary>
-         /// 获取或设置 创建人
+         /// 获取或设置 创建人 True   False
          /// </summary>
 		public virtual int CreateUserId { get; set; }
          /// <summary>
-         /// 获取或设置 更新时间
+         /// 获取或设置 更新时间 False   False
          /// </summary>
 		public virtual DateTime? UpdateTime { get; set; }
+         /// <summary>
+         /// 获取或设置 fdsafdsa False   False
+         /// </summary>
+		public virtual double? fdsafdsa { get; set; }
+         /// <summary>
+         /// 获取或设置 32342432 False   False
+         /// </summary>
+		public virtual int? Column_11 { get; set; }
 	}
     /// <summary>
     /// 系统支持 角色权限关联 实体类
     /// </summary>
-    [Serializable]
 	public partial class RoleSysAction
 	{
          /// <summary>
-         /// 获取或设置 
+         /// 获取或设置  True   True
          /// </summary>
 		public virtual int RoleSysActionId { get; set; }
          /// <summary>
-         /// 获取或设置 角色ID
+         /// 获取或设置 角色ID True   False
          /// </summary>
 		public virtual int RoleId { get; set; }
          /// <summary>
-         /// 获取或设置 操作权限ID
+         /// 获取或设置 操作权限ID True   False
          /// </summary>
 		public virtual string SysActionId { get; set; }
          /// <summary>
-         /// 获取或设置 创建时间
+         /// 获取或设置 创建时间 True   False
          /// </summary>
 		public virtual DateTime CreateTime { get; set; }
          /// <summary>
-         /// 获取或设置 创建人
+         /// 获取或设置 创建人 True   False
          /// </summary>
 		public virtual int CreateUserId { get; set; }
 	}
     /// <summary>
     /// 系统支持 操作权限 实体类
     /// </summary>
-    [Serializable]
 	public partial class SysAction
 	{
          /// <summary>
-         /// 获取或设置 
+         /// 获取或设置  True   True
          /// </summary>
 		public virtual string SysActionId { get; set; }
          /// <summary>
-         /// 获取或设置 操作名称
+         /// 获取或设置 操作名称 True   False
          /// </summary>
 		public virtual string Name { get; set; }
          /// <summary>
-         /// 获取或设置 功能Id
+         /// 获取或设置 功能Id True   False
          /// </summary>
 		public virtual string SysFuncId { get; set; }
          /// <summary>
-         /// 获取或设置 操作说明
+         /// 获取或设置 操作说明 False   False
          /// </summary>
 		public virtual string Remark { get; set; }
 	}
     /// <summary>
     /// 系统支持 系统功能 实体类
     /// </summary>
-    [Serializable]
 	public partial class SysFunc
 	{
          /// <summary>
-         /// 获取或设置 功能编码
+         /// 获取或设置 功能编码 True   True
          /// </summary>
 		public virtual string SysFuncId { get; set; }
          /// <summary>
-         /// 获取或设置 功能名称
+         /// 获取或设置 功能名称 True   False
          /// </summary>
 		public virtual string Name { get; set; }
          /// <summary>
-         /// 获取或设置 功能地址
+         /// 获取或设置 功能地址 False   False
          /// </summary>
 		public virtual string Url { get; set; }
          /// <summary>
-         /// 获取或设置 上级功能编码
+         /// 获取或设置 上级功能编码 True   False
          /// </summary>
 		public virtual string ParentId { get; set; }
          /// <summary>
-         /// 获取或设置 显示顺序
+         /// 获取或设置 显示顺序 True   False
          /// </summary>
 		public virtual int DisplayIndex { get; set; }
          /// <summary>
-         /// 获取或设置 显示图标
+         /// 获取或设置 显示图标 False   False
          /// </summary>
 		public virtual string Icon { get; set; }
          /// <summary>
-         /// 获取或设置 功能说明
+         /// 获取或设置 功能说明 False   False
          /// </summary>
 		public virtual string Remark { get; set; }
 	}
     /// <summary>
     /// 系统支持 系统用户 实体类
     /// </summary>
-    [Serializable]
 	public partial class SysUser
 	{
          /// <summary>
-         /// 获取或设置 系统用户ID
+         /// 获取或设置 系统用户ID True   True
          /// </summary>
 		public virtual int SysUserId { get; set; }
          /// <summary>
-         /// 获取或设置 门店ID
+         /// 获取或设置 门店ID True   False
          /// </summary>
 		public virtual int BeautySalonId { get; set; }
          /// <summary>
-         /// 获取或设置 员工ID
+         /// 获取或设置 员工ID False   False
          /// </summary>
 		public virtual int? EmployeeId { get; set; }
          /// <summary>
-         /// 获取或设置 用户名
+         /// 获取或设置 用户名 True   False
          /// </summary>
 		public virtual string UserName { get; set; }
          /// <summary>
-         /// 获取或设置 登录名称
+         /// 获取或设置 登录名称 True   False
          /// </summary>
 		public virtual string LoginName { get; set; }
          /// <summary>
-         /// 获取或设置 登录密码
+         /// 获取或设置 登录密码 True   False
          /// </summary>
 		public virtual string Password { get; set; }
          /// <summary>
-         /// 获取或设置 是否是超级管理 员
+         /// 获取或设置 是否是超级管理 员 True   False
          /// </summary>
 		public virtual bool IsAdmin { get; set; }
          /// <summary>
-         /// 获取或设置 删除标志
+         /// 获取或设置 删除标志 True   False
          /// </summary>
 		public virtual bool IsDelete { get; set; }
          /// <summary>
-         /// 获取或设置 最后一次登录时间
+         /// 获取或设置 最后一次登录时间 False   False
          /// </summary>
 		public virtual DateTime? LastLoginTime { get; set; }
          /// <summary>
-         /// 获取或设置 创建时间
+         /// 获取或设置 创建时间 True   False
          /// </summary>
 		public virtual DateTime CreateTime { get; set; }
          /// <summary>
-         /// 获取或设置 创建人
+         /// 获取或设置 创建人 True   False
          /// </summary>
 		public virtual int CreateUserId { get; set; }
          /// <summary>
-         /// 获取或设置 修改时间
+         /// 获取或设置 修改时间 False   False
          /// </summary>
 		public virtual DateTime? UpdateTime { get; set; }
          /// <summary>
-         /// 获取或设置 修改人
+         /// 获取或设置 修改人 False   False
          /// </summary>
 		public virtual int? UpdateUserId { get; set; }
 	}
     /// <summary>
     /// 系统支持 用户角色 实体类
     /// </summary>
-    [Serializable]
 	public partial class UserRole
 	{
          /// <summary>
-         /// 获取或设置 
+         /// 获取或设置  True   True
          /// </summary>
 		public virtual int UserRoleId { get; set; }
          /// <summary>
-         /// 获取或设置 
+         /// 获取或设置  True   False
          /// </summary>
 		public virtual int UserId { get; set; }
          /// <summary>
-         /// 获取或设置 
+         /// 获取或设置  True   False
          /// </summary>
 		public virtual int RoleId { get; set; }
          /// <summary>
-         /// 获取或设置 
+         /// 获取或设置  True   False
          /// </summary>
 		public virtual DateTime CreateTime { get; set; }
          /// <summary>
-         /// 获取或设置 
+         /// 获取或设置  True   False
          /// </summary>
 		public virtual int CreateUserId { get; set; }
 	}

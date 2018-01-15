@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>3e82282b-92e0-4b08-a6f5-106bf4401e4a</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Smart.Core</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\PropertyInfoExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\BaseItem`T.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\CacheInfo`T.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\HttpCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\ICache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\SmartConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IRepository`T.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependency\ContainerManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependency\IContainerManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependency\IDependency.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependency\IDependencyRegistrar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dependency\IDependencyResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DisposableObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Export\ExportBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Export\HtmlExcelExport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Export\IExport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Export\Model\Column.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Export\Model\ColumnModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\CacheExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DataTableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DateTimeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ExceptionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\FiledInfoExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\FileInfoExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IEnumerable`TExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ImageExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\MemberInfoExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\MemoryStreamExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ObjectExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ProcessExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\RandomExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Retry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StopwatchExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringBuilderExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\TaskExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ThrowExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\TypeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\WinControlExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectoryTypeFinder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\IService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\IStartupTask.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\ITypeFinder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\Singleton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Localization\Language.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Localization\LanguageType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProxyGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SmartContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SmartException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilites\CryptoUtility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilites\ImageUtility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilites\InputCodeUtility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilites\LocationUtility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilites\WebUtility.cs" />
+  </ItemGroup>
+</Project>

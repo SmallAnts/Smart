@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using Smart.Web.Mvc.UI.JqGrid;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Smart.Core.Extensions;
 
 namespace Smart.Sample.Web.Controllers
 {
@@ -82,7 +85,31 @@ namespace Smart.Sample.Web.Controllers
 
         public ActionResult ComboGrid() { return View(); }
 
+        [HttpPost]
+        public JsonResult ComboGridData(BindArgs args, string search)
+        {
+            var data = new List<dynamic>();
+            var size = new Random().Next(5, 50);
+            for (int i = 1; i < size; i++)
+            {
+                data.Add(new { Id = i.ToString("D3"), Name = search ?? Char.ConvertFromUtf32(i + 64) });
+            }
+
+            return Json(new GridData
+            {
+                Page = args.PageIndex,
+                Records = data.Count,
+                Rows = data,
+                Total = data.Count / args.PageSize + data.Count % args.PageSize > 0 ? 1 : 0
+            });
+        }
 
         public ActionResult ImageInput() { return View(); }
+
+        public ActionResult FormSubmit() { return View(); }
+        public JsonResult Submit1(string str1)
+        {
+            return Json(new { str1 = str1 });
+        }
     }
 }

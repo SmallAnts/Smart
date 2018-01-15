@@ -4,32 +4,96 @@
         <a class="combobox">\
             <span></span><abbr></abbr><div><b class="drop"></b></div>\
         </a>\
-        <div class="combobox-drop">\
-            <table id="${id}_grid"></table><div id="${id}_grid_pager"></div>\
+        <div class="combobox-drop" style="width:360px;">\
+             <input type="text" class="input-search" style="width:100%;">\
+             <table id="{id}_grid"></table><div id="{id}_grid_keynav"></div>\
         </div>\
     </div>';
-    // { check:true, beforeClick:function(treeId,znode){}, beforeCheck:function(treeId,znode){},nodes:[] }
+    // { check:true, beforeClick:function(gridId,znode){}, beforeCheck:function(gridId,znode){},nodes:[] }
     var ComboGrid = function (el, options) {
         var self = this;
         self.element = $(el);
-        self.options = $.extend({}, options);
+        self.options = $.extend({
+            altRows: true,
+            datatype: 'json',
+            gridView: true,
+            height: 200,
+            width: 358,
+            mtype: 'POST',
+            pager: "#" + self.element.attr("id") + '_grid_keynav',
+            rownumbers: true,
+            rownumWidth: 25,
+            shrinkToFit: true,
+            sortable: false,
+            viewrecords: true,
+            valuefield: "",
+            textfield: "",
+        }, options);
         _init.call(self);
     };
     function _init() {
         try {
             var self = this;
-            this.element.hide().after(combogridTmpl);
+            var id = self.element.attr("id");
+            var gridId = id + "_grid";
+            this.element.hide().after(combogridTmpl.replace(/\{id\}/gi, id));
             var $combo = this.element.next().width(this.element.width());
-            // 初始化下表格
-            // TODO:
+            // 初始化下拉表格
+            self.options.ondblClickRow = function (rowid, iRow, iCol, e) {
+                onRowClick.call(self, this, rowid);
+            };
+            if (self.options.multiselect) {
+                //self.options.multiboxonly = true;
+                self.options.onSelectAll = function (rowids, status) {
+                    if (status) {
+                        setByChecks.call(self, this, rowids);
+                    } else {
+                        self.setValue.call(self, "", "");
+                    }
+                }
+                self.options.onSelectRow = function () {
+                    setByChecks.call(self, this);
+                }
+            }
+
+            $("#" + gridId)
+                .jqGrid('GridDestroy')
+                .jqGrid(self.options)
+                .jqGrid('navGrid', "#" + gridId + "_keynav", { edit: false, add: false, del: false })
+                .jqGrid('bindKeys', {
+                    "onEnter": function (rowid) {
+                        onRowClick.call(self, this, rowid);
+                    }
+                });
+
+            //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+            $("#" + gridId + "_keynav_left").hide();
+            $("#" + gridId + "_keynav_center").width(240);
+            self.element.next().find(".input-search")
+                .on("keydown", function (e) {
+                    $(this).data("oldval", this.value);
+                })
+                .on("keyup", function () {
+                    if ($(this).data("oldval") != this.value) {
+                        $("#" + gridId).jqGrid("setGridParam", { postData: { search: this.value }, page: 1 }).trigger("reloadGrid");
+                    }
+                });
             // 下拉按钮
             $combo.find(".drop").on("click", function () {
                 var $box = $combo.find(".combobox");
                 $(this).addClass("down");
                 $combo.find(".combobox-drop").css({ left: "0px", top: ($box.height() - 1) + "px" }).slideDown("fast");
+                $combo.find(".input-search").focus();
                 $("body").bind("mousedown", function (e) {
                     onBodyDown.call(self, e);
                 });
+
+                var $grid = $("#" + gridId);
+                var rowids = $grid.jqGrid('getGridParam', 'selarrrow');
+                var ids = $.extend([], rowids);
+                for (var i = 0; i < ids.length; i++) {
+                    $grid.jqGrid('setSelection', ids[i], false);
+                }
             });
             // 清除按钮
             $combo.find("abbr").on("click", function () {
@@ -52,36 +116,10 @@
     // 公共方法
     ComboGrid.prototype = {
         setValue: function (value, text) {
-            // set value
             this.element.val(value);
-            // set text
-            if (text == undefined) {
-                var treeObj = $.fn.zTree.getZTreeObj(this.element.attr("id") + "_ztree");
-                if (!treeObj) return;
-                if (this.options.check) {
-                    var ids = value.split(',');
-                    var texts = [];
-                    treeObj.checkAllNodes(false);
-                    treeObj.getNodesByFilter(function (node) {
-                        if ($.inArray(node.id.toString(), ids) >= 0) {
-                            treeObj.checkNode(node, true, true);
-                            texts.push(node.name);
-                        }
-                        return false;
-                    });
-                    text = texts.join(',');
-                } else {
-                    var node = treeObj.getNodeByParam("id", value, null);
-                    if (node) {
-                        text = node.name;
-                        treeObj.selectNode(node);
-                    }
-                }
-            }
             this.element.next().find(".combobox span").text(text);
         },
         getValue: function () {
-            console.log(this.element.val());
             return this.element.val();
         },
         getText: function () {
@@ -102,26 +140,29 @@
         return returnValue == undefined ? ret : returnValue;
     };
     $.fn.combogrid.Constructor = ComboGrid;
-    function onRowClick(e, treeId, treeNode) {
-        var treeObj = $.fn.zTree.getZTreeObj(treeId);
-        var nodes = treeObj.getSelectedNodes();
-        _setValueText.call(this, nodes);
+    function setByChecks(grid, rowids) {
+        var value = [], text = [];
+        var $grid = $(grid);
+        if (!rowids) {
+            rowids = $grid.jqGrid('getGridParam', 'selarrrow');
+        }
+        for (var i = 0; i < rowids.length; i++) {
+            var rowdata = $grid.jqGrid("getRowData", rowids[i]);
+            value.push(rowdata[this.options.valuefield]);
+            text.push(rowdata[this.options.textfield]);
+        }
+        this.setValue.call(this, value.join(','), text.join(','));
+    }
+    function onRowClick(grid, rowid) {
+        var $grid = $(grid);
+        if (this.options.multiselect) {
+            return;
+        }
+        var rowdata = $grid.jqGrid('getRowData', rowid);
+        this.setValue.call(this, rowdata[this.options.valuefield], rowdata[this.options.textfield]);
         hideMenu.call(this);
     }
-    function onRowCheck(event, treeId, treeNode) {
-        var treeObj = $.fn.zTree.getZTreeObj(treeId);
-        var nodes = treeObj.getCheckedNodes(true);
-        _setValueText.call(this, nodes);
-    }
-    function _setValueText(nodes) {
-        var text = [], value = [];
-        //nodes.sort(function compare(a, b) { return a.id - b.id; });
-        for (var i = 0, l = nodes.length; i < l; i++) {
-            text.push(nodes[i].name);
-            value.push(nodes[i].id);
-        }
-        this.setValue(value.join(","), text.join(","));
-    }
+
     function hideMenu() {
         $(".combobox-drop").fadeOut("fast");
         this.element.next().find(".drop").removeClass("down");

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>99c632a6-d6c0-447b-b53d-ef505e17d3a0</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Smart.Data.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)EF\EFDbContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EF\EFRepository`T.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EF\IEFRepository`T.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DbContextExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DbDataReaderExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DbEntityValidationExceptionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DbModelBuilderExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IRepository`TExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Orderable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Page.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)T4\" />
+  </ItemGroup>
+</Project>

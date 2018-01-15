@@ -56,7 +56,7 @@ namespace Smart.Sample.Web.Controllers
                         json = sr.ReadToEnd();
                     }
                 }
-                var sysParams = json.JsonDeserialize<SysParam>();
+                var sysParams = json.JsonTo<SysParam>();
                 return sysParams;
             }
             catch (System.Exception ex)

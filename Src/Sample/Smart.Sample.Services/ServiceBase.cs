@@ -12,6 +12,8 @@ namespace Smart.Sample.Services
             get
             {
                 return _db ?? (_db = SmartContext.Current.Resolve<SampleDbContext>());
+
+                 
             }
             set
             {

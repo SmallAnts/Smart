@@ -1,0 +1,34 @@
+﻿<#
+//启用调式：同时取消下面两行语句的注释时启用
+//System.Diagnostics.Debugger.Launch(); 
+//System.Diagnostics.Debugger.Break(); 
+
+string dbContextName="SampleDbContext";
+string ConnectionStringName="SampleConnection";
+bool ToUpper=false;
+// 设置项
+string pdmPath=Path.Combine(GetSolutionPath(1), @"docs\2-设计文档");
+string pdmFile=Path.Combine(pdmPath, @"SmartInfo.pdm");
+
+// 根据匹配条件获取表
+var excludes =new string[]{}; //排除
+var includes =new string[]{}; //包含
+
+// pdm 文件过滤
+Func<string,bool> pdmFilter = f=> true;
+// 表过滤
+Func<TableInfo, bool> tableFilter = tb => true;
+// 列过滤
+Func<TableInfo, ColumnInfo, bool> columnFilter = null;	//(tb,tc) => true;
+
+SetParam("DataTypeMaps", new Dictionary<string,string>() {
+	// {"表名.列名","数据类型"},
+});
+
+SetParam("SequenceMaps", new Dictionary<string,string>() {
+	//{"表名","序列名"},
+});
+
+#>
+<#@ include file="$(SolutionDir)T4\PetapocoEntitesGenerator.ttinclude" #>
+<#@ include file="$(SolutionDir)T4\GeneratorHelper.ttinclude" #>

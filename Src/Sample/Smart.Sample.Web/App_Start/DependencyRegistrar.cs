@@ -1,6 +1,8 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Smart.Core.Configuration;
 using Smart.Core.Dependency;
+using System.Web.Mvc;
 
 namespace Smart.Sample.Web
 {
@@ -13,6 +15,9 @@ namespace Smart.Sample.Web
             log4net.Config.XmlConfigurator.Configure();
             var log = log4net.LogManager.GetLogger(typeof(DependencyRegistrar));
             builder.RegisterInstance(log).As<log4net.ILog>();
+  
         }
     }
+
+  
 }

@@ -1,0 +1,114 @@
+﻿/*
+ * WEBAPI 生成 
+ *
+ * Copyright (c) 2015 Smallants
+ * Dual licensed under the MIT and GPL licenses.
+ * author:Liujunfei
+ * Version: 1.0.0
+ */
+<#@ output extension=".cs"#>
+<#@ template language="C#" debug="true" hostspecific="true"#>
+<#@ assembly name="$(SolutionDir)T4\EnvDTE.dll" #>
+<#@ assembly name="System.Windows.Forms.dll" #>
+<#@ import namespace="System.Windows.Forms"#>
+
+using System;
+using System.Collections.Generic;
+using System.Web.Http;
+
+namespace Etrack.NIS.Api.Controllers
+{
+<#
+var assembly = LoadDll(dllfile);
+var xmlDoc = XElement.Load(xmlfile);
+var message = new StringBuilder();
+var summaryFiled = typeof(XElement).GetField("content", BindingFlags.Instance | BindingFlags.NonPublic);
+var serviceInterfaces = assembly.ExportedTypes.Where(t => t.Name.StartsWith("I") && t.Name.EndsWith("Service"));
+
+foreach (var serviceInterface in serviceInterfaces)
+{
+	var interfaceNode=  (from node in xmlDoc.Descendants("member")
+                     where node.Attribute("name").Value == "T:" + serviceInterface.FullName
+                     select node).FirstOrDefault();
+    if ( interfaceNode == null ) {
+		message.AppendLine($"接口 {serviceInterface.FullName} 没有添加注释.");
+	}
+	else {
+		var summary = summaryFiled.GetValue(interfaceNode).ToString().Split('\n');
+    for (int i = 0; i < summary.Length; i++)
+    {
+		if(summary[i].Trim()==string.Empty) continue;
+#>
+    <#=$"/// {summary[i].Trim()}" #>
+<#
+    }	
+}
+#>
+    public partial class <#=Regex.Match(serviceInterface.Name,"(?<=I).+(?=Service)").Value#>Controller : ApiController
+    {
+<#
+	var methods = serviceInterface.GetMethods();
+
+    foreach (var method in methods)
+    {
+		var methodNode = (from node in xmlDoc.Descendants("member")
+                      where node.Attribute("name").Value.StartsWith($"M:{serviceInterface.FullName}.{method.Name}(")
+                      select node).FirstOrDefault();
+		if (methodNode == null){
+			methodNode = (from node in xmlDoc.Descendants("member")
+                      where node.Attribute("name").Value.StartsWith($"M:{serviceInterface.FullName}.{method.Name}")
+                      select node).FirstOrDefault();
+		}
+        if ( methodNode == null ) {
+			message.AppendLine($"接口 {serviceInterface.FullName} 的方法 {method.Name} 没有添加注释.");
+	    }
+		else {
+				// 方法摘要信息
+			var summary = methodNode.ToString().Split('\n');
+			for (int i = 1; i < summary.Length-1; i++)
+			{
+#>
+        <#=$"/// {summary[i].Trim()}" #>
+<#
+			}
+		}
+		
+        var parameters = method.GetParameters();
+        var paramStr1 = new StringBuilder();
+        var paramStr2 = new StringBuilder();
+        for (int i = 0; i < parameters.Length; i++)
+        {
+		    if( methodNode !=null && (from node in methodNode.Descendants("param") 
+													   where node.Attribute("name")?.Value == parameters[i].Name 
+													   select node).Count() == 0) 
+			{
+				message.AppendLine($"接口 {serviceInterface.FullName} 的方法 {method.Name} 的参数 {parameters[i].Name} 没有添加注释.");
+			}
+
+			if ( i>0 ) {
+				paramStr1.Append(", ");
+				paramStr2.Append(", ");
+			}
+			if(!method.Name.StartsWith("Get")) paramStr1.Append("[FromBody]");
+            paramStr1.Append($"{parameters[i].ParameterType.ToString()} {parameters[i].Name}");
+            paramStr2.Append(parameters[i].Name);
+        }
+        string returnStr = method.ReturnType == typeof(void) ? "void" : method.ReturnType.ToString().Replace("`1[","<").Replace("]",">");
+#>		[Http<#=method.Name.StartsWith("Get")?"Get":"Post"#>]
+		public <#=returnStr#> <#=method.Name#>(
+            <#=paramStr1#>)
+		{
+            var service = this.GetService<<#=serviceInterface.FullName#>>();
+            <#=method.ReturnType == typeof(void) ? "" :"return "#>service.<#=method.Name#>(<#=paramStr2#>);
+		}
+
+<#
+    }
+#>
+    }
+
+<#
+} if (message.Length>0) MessageBox.Show(message.ToString(), "警告信息", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#>
+}
+<#@ include file="$(SolutionDir)T4\GeneratorHelper.ttinclude" #>

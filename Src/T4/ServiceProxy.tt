@@ -1,0 +1,10 @@
+﻿<#@ assembly name="$(SolutionDir)\bin\Petapoco.dll" #>
+<#
+	string nameSpace="Smart.Sample";
+    string solutionPath = GetSolutionPath();
+	string xml_file = Path.Combine(solutionPath, @"Bin\Smart.Sample.Core.xml");
+	string dll_file = Path.Combine(solutionPath, @"Bin\Smart.Sample.Core.dll");
+	string type_member_name ="T:Smart\\.Sample\\.([^>]*\\.I([^>]+Service))";
+#>
+<#@ include file="$(SolutionDir)T4\ServicesProxy.ttinclude" #>
+<#@ include file="$(SolutionDir)T4\GeneratorHelper.ttinclude" #>

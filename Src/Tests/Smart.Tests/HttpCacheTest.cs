@@ -1,6 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Smart.Core.Extensions;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Smart.Tests
 {
@@ -18,14 +22,27 @@ namespace Smart.Tests
         }
 
         [TestMethod]
+        public void TestSet()
+        {
+            var cache = new Core.Caching.HttpCache();
+            var data = new List<SysUser>();
+            data.Add(new Tests.SysUser { SysUserId = 111 });
+            cache.Set<List<SysUser>>("users", data);
+            var users = cache.Get<List<SysUser>>("users");
+        }
+
+        [TestMethod]
         public void Test()
         {
-            IRepository<SysUser, IDbContext> repo = new Repository<SysUser, MyDbContext>(new MyDbContext());
+            var user = new SysUser();
+            user.Set("SysUserId", 1231);
+            var id = user.Get("SysUserId").As<int>();
+
         }
 
     }
 
-    public class SysUser
+    public class SysUser : Core.Data.IEntity
     {
         public int SysUserId { get; set; }
     }

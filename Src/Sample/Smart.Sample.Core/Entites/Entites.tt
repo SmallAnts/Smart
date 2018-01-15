@@ -27,5 +27,5 @@ SetParam("DataTypeMaps", new Dictionary<string,string>() {
 
 #>
 <#=pdmFile#>
-<#@ include file="$(SolutionDir)T4\EntitesGenerator.ttinclude" #>
+<#@ include file="$(SolutionDir)T4\EFDomainGenerator.ttinclude" #>
 <#@ include file="$(SolutionDir)T4\GeneratorHelper.ttinclude" #>

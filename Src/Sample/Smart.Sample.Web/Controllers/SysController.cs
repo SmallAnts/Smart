@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 
 namespace Smart.Sample.Web.Controllers
 {
+    [FormAuthorize]
     public class SysController : ControllerBase
     {
         Core.IServices.IUserService userService;

@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Data.Entity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Smart.Sample.Core.Context
 {
@@ -47,11 +48,15 @@ namespace Smart.Sample.Core.Context
 		protected void BuilderPrimaryKey(DbModelBuilder modelBuilder)
 		{
             modelBuilder.Entity<Entites.Role>().HasKey(m => m.RoleId);
+            modelBuilder.Entity<Entites.Role>().Property(m => m.RoleId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             modelBuilder.Entity<Entites.RoleSysAction>().HasKey(m => m.RoleSysActionId);
+            modelBuilder.Entity<Entites.RoleSysAction>().Property(m => m.RoleSysActionId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             modelBuilder.Entity<Entites.SysAction>().HasKey(m => m.SysActionId);
             modelBuilder.Entity<Entites.SysFunc>().HasKey(m => m.SysFuncId);
             modelBuilder.Entity<Entites.SysUser>().HasKey(m => m.SysUserId);
+            modelBuilder.Entity<Entites.SysUser>().Property(m => m.SysUserId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             modelBuilder.Entity<Entites.UserRole>().HasKey(m => m.UserRoleId);
+            modelBuilder.Entity<Entites.UserRole>().Property(m => m.UserRoleId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
 		}
 	}

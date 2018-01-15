@@ -1,4 +1,12 @@
-﻿<#@ assembly name="Microsoft.CSharp.dll" #>
+﻿/*
+ * T4模板生成多文件输出管理类
+ *
+ * Copyright (c) 2015 Smallants
+ * Dual licensed under the MIT and GPL licenses.
+ * author:Liujunfei
+ * Version: 1.0.0
+ */
+<#@ assembly name="Microsoft.CSharp.dll" #>
 <#@ assembly name="System.Configuration.dll" #>
 <#@ assembly name="System.Core.dll" #>
 <#@ assembly name="System.Data.dll" #>
@@ -403,7 +411,9 @@ public class PdmReader
                     break;
                 case "a:Identity": mColumn.Identity = string.Compare(xnP.InnerText, "true", true) == 0;
                     break;
-                case "a:Mandatory": mColumn.Mandatory = string.Compare(xnP.InnerText, "1", true) == 0;
+                case "a:Mandatory":
+                case "a:Column.Mandatory": 
+                    mColumn.Mandatory = string.Compare(xnP.InnerText, "1", true) == 0;
                     break;
                 case "a:PhysicalOptions": mColumn.PhysicalOptions = xnP.InnerText;
                     break;

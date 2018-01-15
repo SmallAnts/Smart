@@ -12,9 +12,10 @@ namespace Smart.Sample.Core
 
         public void Register(ContainerBuilder builder, SmartConfig config)
         {
+            builder.RegisterType<HttpDependencyResover>()
+              .As<Smart.Core.Dependency.IDependencyResolver>()
+              .SingleInstance();
             builder.RegisterType<Context.SampleDbContext>().As<DbContext>().As<Context.SampleDbContext>().InstancePerDependency();
-            //builder.RegisterGeneric(typeof(EFRepository<>)).As(typeof(IEFRepository<>)).InstancePerLifetimeScope();
-            //builder.RegisterGeneric(typeof(EFRepository<,>)).As(typeof(IEFRepository<,>)).InstancePerLifetimeScope();
         }
     }
 }

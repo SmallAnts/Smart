@@ -1,0 +1,11 @@
+﻿<#@ assembly name="$(SolutionDir)\bin\Petapoco.dll" #>
+<#
+//启用调式：同时取消下面两行语句的注释时启用
+//System.Diagnostics.Debugger.Launch(); 
+//System.Diagnostics.Debugger.Break(); 
+
+var solutionPath = GetSolutionPath();
+string xmlfile = Path.Combine(solutionPath, @"bin\Smart.Sample.Core.xml");
+string dllfile = Path.Combine(solutionPath, @"bin\Smart.Sample.Core.dll");
+#>
+<#@ include file="$(SolutionDir)T4\WebApiGenerator.ttinclude" #>

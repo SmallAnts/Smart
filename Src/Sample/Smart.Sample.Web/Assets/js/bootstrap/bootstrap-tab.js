@@ -145,13 +145,14 @@ window.Addtabs = {
         $("#tab_" + id).remove();
         $("#" + id).remove();
         Addtabs.drop();
-        Addtabs.options.callback();
+        Addtabs.options.callback(id);
     },
     closeAll: function () {
         $.each(obj.find('li[id]'), function () {
             var id = $(this).children('a').attr('aria-controls');
             $("#tab_" + id).remove();
             $("#" + id).remove();
+            Addtabs.options.callback(id);
         });
         obj.find('li[role = "presentation"]').first().addClass('active');
         var firstID = obj.find('li[role = "presentation"]').first().children('a').attr('aria-controls');

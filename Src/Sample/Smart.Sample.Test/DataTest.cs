@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using Smart.Sample.Core.Context;
 using Smart.Sample.Core.Entites;
-using System.Linq.Dynamic;
+using Smart.Core.Extensions;
 
 namespace Smart.Sample.Test
 {
@@ -18,6 +19,30 @@ namespace Smart.Sample.Test
         {
             userService = new Services.Sys.UserService();
 
+        }
+
+        [TestMethod]
+        public void TransTest()
+        {
+            var db = new SampleDbContext();
+            var entity = db.SysUser.FirstOrDefault();
+            var entity2 = entity.Copy();
+            entity.UpdateTime = DateTime.Now;
+
+            var trans = db.Database.BeginTransaction();
+            //db.Database.BeginTransaction();
+            var db2 = new SampleDbContext();
+
+            var t = db2.Database.Connection.Equals(db.Database.Connection);
+            db2.Database.UseTransaction(trans.UnderlyingTransaction);
+            //db2.Database.BeginTransaction();
+            db.SysUser.Add(entity2);
+            db.SaveChanges();
+            trans.Rollback();
+            entity2.LoginName = "test003";
+            db.SaveChanges();
+
+            trans.Commit();
         }
 
         // 初始化数据库
@@ -51,11 +76,18 @@ namespace Smart.Sample.Test
         public void Init_SysFuncs()
         {
             var funcs = new List<SysFunc>();
-
+            var actions = new List<SysAction>();
+         
             funcs.Add(new SysFunc { SysFuncId = "000000", Name = "主页", ParentId = "", Icon = "fa-home", Url = "/home/firstpage" });
 
             funcs.Add(new SysFunc { SysFuncId = "010000", Name = "系统设置", ParentId = "", Icon = "fa-cogs" });
+
             funcs.Add(new SysFunc { SysFuncId = "010100", Name = "角色维护", ParentId = "010000", Url = "/sys/roles" });
+            actions.Add(new SysAction { Name = "新增", SysFuncId = "010100",SysActionId="01010002" });
+            actions.Add(new SysAction { Name = "修改", SysFuncId = "010100",SysActionId="01010003" });
+            actions.Add(new SysAction { Name = "删除", SysFuncId = "010100", SysActionId="01010004" });
+            actions.Add(new SysAction { Name = "权限设置", SysFuncId = "010100", SysActionId="01010005" });
+            
             funcs.Add(new SysFunc { SysFuncId = "010200", Name = "用户维护", ParentId = "010000", Url = "/sys/sysusers" });
             funcs.Add(new SysFunc { SysFuncId = "010300", Name = "参数设置", ParentId = "010000", Url = "/sys/settings" });
 
@@ -67,7 +99,6 @@ namespace Smart.Sample.Test
             funcs.Add(new SysFunc { SysFuncId = "020500", Name = "下拉控件Select2", ParentId = "020000", Url = "/demo/select2" });
             funcs.Add(new SysFunc { SysFuncId = "020600", Name = "下拉多选控件", ParentId = "020000", Url = "/demo/multiselect" });
 
-            var actions = new List<SysAction>();
             var roleActions = new List<RoleSysAction>();
             for (int i = 0; i < funcs.Count; i++)
             {

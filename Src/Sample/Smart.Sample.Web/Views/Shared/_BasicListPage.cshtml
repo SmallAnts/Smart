@@ -2,7 +2,7 @@
     <div class="pull-left form-inline">
         @if (ViewBag.ShowAddButton != false)
         {
-            <button class="btn btn-primary btn-sm no-border" id="btn_add">
+            <button class="btn btn-primary btn-sm no-border" id="btn_add" data-power="2">
                 <i class="fa fa-plus"></i> @(ViewBag.AddButtonText ?? this.T("Add"))
             </button>
         }

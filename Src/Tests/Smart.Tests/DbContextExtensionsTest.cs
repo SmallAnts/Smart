@@ -13,6 +13,11 @@ namespace Smart.Tests
     public class DbContextExtensionsTest : TestBase
     {
         public DbContextExtensionsTest() : base() { }
+
+
+
+
+
         // TODO:增加批量执行SQL方法
         /// <summary>
         /// Sql 查询测试
@@ -77,6 +82,27 @@ namespace Smart.Tests
             var hasRoleParam = db.CreateDbParameter("hasRole", DbType.Int32, ParameterDirection.Output);
             // TODO：增加多个输出参数的方法
             var ret = db.ExecuteProc("HasRoleProc", inParams, hasRoleParam);
+        }
+
+        [TestMethod]
+
+        public void SqlTest()
+        {
+            var testsql = @"SELECT (ZZYPMC || ' ' || ZZYPGG) YPPMGG,
+       GGBZDW,
+       DECODE(ZZYPLX, 2, '成药', 4, '草药', '西药') ZZYPLX,
+       TO_NUMBER(FUN_HI_GETDRUGPRICEINFO(@0, YPCDID, 0, 'BCZXDJ')) CFYPDJ,
+       YPKCSL,
+       DECODE(YPBMXZ, 1, YPZHID, FUN_HI_GETDRUGMAINGROUPID(YPCDID)) YPZHID,
+       0 XDCFPB
+  FROM CJ_DRUGSTOCK
+ WHERE ZZJGDM = @0
+   AND KFSYLX = 0
+   AND (ZZYPLX = @1 OR (@1 = 1 AND ZZYPLX = 8))
+   AND hzsrm1 LIKE @2
+   AND KSKFPB = 0";
+            var db = new SampleDbContext();
+            db.QueryPage<dynamic>(1, 2, testsql, "zzjgdm", "zzyplx", "code");
         }
     }
 }

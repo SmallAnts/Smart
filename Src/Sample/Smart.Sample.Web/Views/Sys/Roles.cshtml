@@ -52,6 +52,7 @@
 @section init_scripts{
     <script>
         var setRoleId='';
+        var _powers=@Html.Raw(ViewBag.Powers);
         function setPrivilege(id) {
             setRoleId=id;
             var data=$grid.jqGrid('getRowData',id);

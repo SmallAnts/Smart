@@ -209,6 +209,14 @@ function gotoUrl(href) {
         _$request = $.ajax({ url: url, data: { _: Math.random() } }).done(function (result) {
             $('#page-content').addClass('hidden').empty().html(result).removeClass('hidden');
             ret = scrollToTarget(href);
+            if (window._powers) {
+                $("a[data-power],button[data-power]").each(function () {
+                    var $this = $(this);
+                    if (!$.inArray($this.data("power"), _powers || [])) {
+                        $this.hide().unbind("click");
+                    }
+                });
+            }
             //if (ret) document.title = ret;
         }).fail(function (e) {
             if (e.statusText == "abort") return;
@@ -365,7 +373,6 @@ function getNowDate() {
             return flag ? val : ret;
         });
     }
-
     $.fn.sidebar.defaults = {
         url: null,
         postParam: null,
@@ -395,4 +402,4 @@ function getNowDate() {
         return serializeObj;
     };
 })(jQuery);
-
+// 权限控制

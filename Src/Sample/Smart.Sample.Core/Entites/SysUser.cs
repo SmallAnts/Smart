@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using FluentValidation.Attributes;
+using Newtonsoft.Json;
 using Smart.Core.Extensions;
+using System.Collections.Generic;
 
 namespace Smart.Sample.Core.Entites
 {
@@ -8,6 +10,23 @@ namespace Smart.Sample.Core.Entites
     [Validator(typeof(SysUserValidator))]
     public partial class SysUser
     {
+        [JsonProperty]
+        private Dictionary<string, object> dics;
+        public object this[string key]
+        {
+            get
+            {
+                if (dics == null) dics = new Dictionary<string, object>();
+                object ret = null;
+                dics.TryGetValue(key, out ret);
+                return ret;
+            }
+            set
+            {
+                if (dics == null) dics = new Dictionary<string, object>();
+                dics[key] = value;
+            }
+        }
     }
 
     // 添加验证信息

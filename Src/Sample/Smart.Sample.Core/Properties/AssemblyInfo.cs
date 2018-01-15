@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly:InternalsVisibleTo("Smart.Sample.Services")]
 [assembly:InternalsVisibleTo("Smart.Sample.Test")]
-
+[assembly:InternalsVisibleTo("Smart.Tests")]
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
 [assembly: Guid("fd5d6d82-f297-4fdc-bc41-ac951bf27b0d")]
 

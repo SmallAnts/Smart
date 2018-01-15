@@ -172,7 +172,7 @@ namespace Smart.Sample.Services.Sys
                             where a.UserId == userId
                             orderby d.DisplayIndex
                             select d;
-                var user_funcs = query.ToList();
+                var user_funcs = query.Distinct().ToList();
 
                 //递归添加上级功能信息
                 var funcPids = user_funcs.Where(f => !f.ParentId.IsEmpty()).Select(f => f.ParentId).Distinct().ToArray();
