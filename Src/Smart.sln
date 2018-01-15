@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Tests", "Tests\Smart.Tests\Smart.Tests.csproj", "{7C26F201-06B5-4003-9AAF-E1BCBD13646A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NET40", "NET40", "{CB297CCD-B129-4933-B20C-8A95653A0371}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Smart.Core.Shared", "Framework\Smart.Core.Shared\Smart.Core.Shared.shproj", "{3E82282B-92E0-4B08-A6F5-106BF4401E4A}"
@@ -55,10 +53,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0400237A-7A93-4BED-B788-BD54D7E132C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0400237A-7A93-4BED-B788-BD54D7E132C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0400237A-7A93-4BED-B788-BD54D7E132C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
