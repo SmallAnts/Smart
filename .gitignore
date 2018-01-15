@@ -22,8 +22,10 @@ bld/
 [Oo]bj/
 [Pp]ackages/
 TestResults/
+Tests/
 nuget/
 lib/
+Sample/
 Samples/
 [Ll]og/
 
