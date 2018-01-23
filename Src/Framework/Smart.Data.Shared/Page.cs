@@ -14,7 +14,6 @@ namespace Smart.Data
         /// <summary>
         /// 结果列表
         /// </summary>
-
         public new List<T> Items { get; set; }
     }
     /// <summary>
@@ -27,11 +26,12 @@ namespace Smart.Data
         /// 获取或设置当前页码，从1开始
         /// </summary>
         public int CurrentPage { get; set; }
+
         /// <summary>
         /// 获取或设置分页大小，每页记录数
         /// </summary>
         public int PageSize { get; set; }
-        private int _pages;
+
         /// <summary>
         /// 获取总页数
         /// </summary>
@@ -42,10 +42,12 @@ namespace Smart.Data
                 return PageSize > 0 ? TotalItems / PageSize + (TotalItems % PageSize > 0 ? 1 : 0) : 1;
             }
         }
+
         /// <summary>
         /// 获取或设置总记录数
         /// </summary>
         public int TotalItems { get; set; }
+
         /// <summary>
         /// 获取分页数据
         /// </summary>

@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.NPOI", "Framework\Sma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Web.Mvc", "Framework\Smart.Web.Mvc.40\Smart.Web.Mvc.csproj", "{0E8752E6-D51A-40AA-B81E-56DB3E0CA914}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Tests", "..\Tests\Smart.Tests\Smart.Tests.csproj", "{7C26F201-06B5-4003-9AAF-E1BCBD13646A}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Framework\Smart.Core.Shared\Smart.Core.Shared.projitems*{0400237a-7a93-4bed-b788-bd54d7e132c0}*SharedItemsImports = 4
@@ -85,6 +87,10 @@ Global
 		{0E8752E6-D51A-40AA-B81E-56DB3E0CA914}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E8752E6-D51A-40AA-B81E-56DB3E0CA914}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E8752E6-D51A-40AA-B81E-56DB3E0CA914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

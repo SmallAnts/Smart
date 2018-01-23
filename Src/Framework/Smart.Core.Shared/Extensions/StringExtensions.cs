@@ -29,8 +29,7 @@ namespace Smart.Core.Extensions
         /// <returns>true 如果 <paramref name="value" /> 可以转换为指定的类型; 否则, false.</returns>
         public static bool IsBool(this string value)
         {
-            bool flag;
-            return bool.TryParse(value, out flag);
+            return bool.TryParse(value, out bool flag);
         }
 
         /// <summary>检查一个字符串是否可以转换为整形。</summary>
@@ -38,8 +37,7 @@ namespace Smart.Core.Extensions
         /// <returns>true 如果 <paramref name="value" /> 可以转换为指定的类型; 否则, false.</returns>
         public static bool IsInt(this string value)
         {
-            int num;
-            return int.TryParse(value, out num);
+            return int.TryParse(value, out int num);
         }
 
         /// <summary>检查一个字符串是否可以转换为 <see cref="T:System.Decimal" /> 类型.</summary>
@@ -55,8 +53,7 @@ namespace Smart.Core.Extensions
         /// <returns>true 如果 <paramref name="value" /> 可以转换为指定的类型; 否则, false.</returns>
         public static bool IsFloat(this string value)
         {
-            float num;
-            return float.TryParse(value, out num);
+            return float.TryParse(value, out float num);
         }
 
         /// <summary>检查一个字符串是否可以转换为 <see cref="T:System.DateTime" /> 类型.</summary>
@@ -64,8 +61,7 @@ namespace Smart.Core.Extensions
         /// <returns>true 如果 <paramref name="value" /> 可以转换为指定的类型; 否则, false.</returns>
         public static bool IsDateTime(this string value)
         {
-            DateTime dateTime;
-            return DateTime.TryParse(value, out dateTime);
+            return DateTime.TryParse(value, out DateTime dateTime);
         }
 
         /// <summary>
@@ -121,8 +117,7 @@ namespace Smart.Core.Extensions
         /// <returns></returns>
         public static bool IsNumericString(this string value)
         {
-            double result;
-            return (double.TryParse(value, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out result));
+            return (double.TryParse(value, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out double result));
         }
 
         /// <summary>
@@ -154,8 +149,7 @@ namespace Smart.Core.Extensions
         /// <returns>转换后的值。</returns>
         public static int? AsInt(this string value, int? defaultValue)
         {
-            int result;
-            if (!int.TryParse(value, out result))
+            if (!int.TryParse(value, out int result))
             {
                 return defaultValue;
             }
@@ -176,8 +170,7 @@ namespace Smart.Core.Extensions
         /// <returns>转换后的值。</returns>
         public static long? AsLong(this string value, long? defaultValue)
         {
-            long result;
-            if (!long.TryParse(value, out result))
+            if (!long.TryParse(value, out long result))
             {
                 return defaultValue;
             }
@@ -198,8 +191,7 @@ namespace Smart.Core.Extensions
         /// <returns>转换后的值。</returns>
         public static decimal? AsDecimal(this string value, decimal? defaultValue)
         {
-            decimal result;
-            if (!decimal.TryParse(value, out result))
+            if (!decimal.TryParse(value, out decimal result))
             {
                 return defaultValue;
             }
@@ -220,8 +212,7 @@ namespace Smart.Core.Extensions
         /// <returns>转换后的值。</returns>
         public static float? AsFloat(this string value, float? defaultValue)
         {
-            float result;
-            if (!float.TryParse(value, out result))
+            if (!float.TryParse(value, out float result))
             {
                 return defaultValue;
             }
@@ -242,8 +233,7 @@ namespace Smart.Core.Extensions
         /// <returns>转换后的值。</returns>
         public static double? AsDouble(this string value, double? defaultValue)
         {
-            double result;
-            if (!double.TryParse(value, out result))
+            if (!double.TryParse(value, out double result))
             {
                 return defaultValue;
             }
@@ -264,8 +254,7 @@ namespace Smart.Core.Extensions
         /// <returns>转换后的值。</returns>
         public static DateTime? AsDateTime(this string value, DateTime? defaultValue)
         {
-            DateTime result;
-            if (!DateTime.TryParse(value, out result))
+            if (!DateTime.TryParse(value, out DateTime result))
             {
                 return defaultValue;
             }
@@ -286,8 +275,7 @@ namespace Smart.Core.Extensions
         /// <returns>转换后的值。</returns>
         public static bool? AsBool(this string value, bool? defaultValue)
         {
-            bool result;
-            if (!bool.TryParse(value, out result))
+            if (!bool.TryParse(value, out bool result))
             {
                 return defaultValue;
             }
@@ -469,6 +457,18 @@ namespace Smart.Core.Extensions
         {
             return JsonConvert.DeserializeObject<T>(json);
         }
+
+        /// <summary>
+        /// JSON 字符串反序列化为对象
+        /// </summary>
+        /// <param name="json">JSON字符串</param>
+        /// <param name="type">反序列化的对象类型</param>
+        /// <returns></returns>
+        public static object JsonTo(this string json, Type type)
+        {
+            return JsonConvert.DeserializeObject(json, type);
+        }
+
         /// <summary>
         /// 以该字符串为键值获取本地化语言。
         /// </summary>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -11,12 +13,34 @@ namespace Smart.Core
     /// </summary>
     public static class ProxyGenerator
     {
+        private static AssemblyBuilder _assemblyBuilder;
+        private static ModuleBuilder _moduleBuilder;
+
         /// <summary>
         /// 运行时类型句柄缓存列表
         /// </summary>
-        static ConcurrentDictionary<string, RuntimeTypeHandle> typeHandles
-           = new ConcurrentDictionary<string, RuntimeTypeHandle>();
+        static ConcurrentDictionary<string, Type> types
+           = new ConcurrentDictionary<string, Type>();
 
+        /// <summary>
+        /// 运行时类型句柄缓存列表
+        /// </summary>
+        static ConcurrentBag<Type> extendTypes
+           = new ConcurrentBag<Type>();
+
+        static ProxyGenerator()
+        {
+            var nameOfAssembly = "SmartProxyAssembly";
+            var nameOfModule = "SmartProxyModule";
+            var assemblyName = new AssemblyName(nameOfAssembly); // 程序集名称
+            // 定义程序集
+            var aba = AssemblyBuilderAccess.RunAndCollect;
+            _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, aba);
+            // 定义动态模块
+            _moduleBuilder = aba == AssemblyBuilderAccess.RunAndSave || aba == AssemblyBuilderAccess.Save
+                ? _assemblyBuilder.DefineDynamicModule(nameOfModule, nameOfAssembly + ".dll")
+                : _assemblyBuilder.DefineDynamicModule(nameOfModule, false);
+        }
         /// <summary>
         /// 根据拦截器类型动态生成代理类并缓存
         /// </summary>
@@ -26,16 +50,15 @@ namespace Smart.Core
         public static T CreateInstanceByCache<T>(IInterceptor interceptor) where T : class
         {
             var cacheKey = typeof(T).FullName + "Proxy";
-            if (typeHandles.TryGetValue(cacheKey, out RuntimeTypeHandle handle))
+            if (types.TryGetValue(cacheKey, out Type type))
             {
-                var type = Type.GetTypeFromHandle(handle);
                 return Activator.CreateInstance(type, interceptor) as T;
             }
             else
             {
-                var t = CreateInstance<T>(interceptor);
-                typeHandles.TryAdd(cacheKey, t.GetType().TypeHandle);
-                return t;
+                var instance = CreateInstance<T>(interceptor);
+                types.TryAdd(cacheKey, instance.GetType());
+                return instance;
             }
         }
 
@@ -48,8 +71,92 @@ namespace Smart.Core
         public static T CreateInstance<T>(IInterceptor interceptor) where T : class
         {
             var typeBuilder = GetTypeBuilder<T>();
-            InjectionOfInterceptor<T>(typeBuilder, interceptor);
-            return CreateInstance<T>(typeBuilder, interceptor);
+            typeBuilder.InjectionOfInterceptor<T>(interceptor);
+            return typeBuilder.CreateInstance<T>(interceptor);
+        }
+
+        /// <summary>
+        /// 创建动态对象
+        /// </summary>
+        /// <param name="extendObject"></param>
+        /// <returns></returns>
+        public static Data.ExtendObject CreateExtendObject(object extendObject)
+        {
+            var type = CreateType(extendObject);
+            var instance = Activator.CreateInstance(type);
+            var pis = extendObject.GetType().GetProperties();
+            foreach (var pi in pis)
+            {
+                type.GetProperty(pi.Name).SetValue(instance, pi.GetValue(extendObject, null), null);
+            }
+            return (Data.ExtendObject)instance;
+        }
+
+        /// <summary>
+        ///  创建动态对象
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        public static Data.ExtendObject CreateExtendObject(IEnumerable<ProxyPropertyInfo> properties)
+        {
+            var type = CreateType(properties);
+            var instance = Activator.CreateInstance(type);
+            foreach (var pi in properties)
+            {
+                if (pi.Value != null)
+                {
+                    type.GetProperty(pi.Name).SetValue(instance, pi.Value, null);
+                }
+            }
+            return (Data.ExtendObject)instance;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="extendObject"></param>
+        /// <returns></returns>
+        private static Type CreateType(object extendObject)
+        {
+            if (extendObject == null) return typeof(Data.ExtendObject);
+            var pis = extendObject.GetType().GetProperties();
+            var type = GetExtendTypeByCache(pis);
+            if (type != null)
+            {
+                return type;
+            }
+            else
+            {
+                var properties = pis
+                      .Select(p => new ProxyPropertyInfo(p.Name, p.PropertyType, p.GetValue(extendObject, null)))
+                      .ToList();
+                type = CreateType(properties);
+                extendTypes.Add(type);
+                return type;
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        private static Type CreateType(IEnumerable<ProxyPropertyInfo> properties)
+        {
+            if (properties == null) return typeof(Data.ExtendObject);
+
+            var typeBuilder = GetTypeBuilder<Data.ExtendObject>();
+
+            #region 定义无参构造函数并初始化字段
+
+            foreach (var pi in properties)
+            {
+                typeBuilder.AddProperty(pi);
+            }
+
+            #endregion
+            return typeBuilder.CreateType();
         }
 
         /// <summary>
@@ -57,7 +164,176 @@ namespace Smart.Core
         /// </summary>
         public static void ClearCache()
         {
-            typeHandles.Clear();
+            types.Clear();
+        }
+
+        /// <summary>
+        /// 获取代理类生成器
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="aba"></param>
+        /// <returns></returns>
+        private static TypeBuilder GetTypeBuilder<T>(AssemblyBuilderAccess aba = AssemblyBuilderAccess.RunAndCollect) where T : class
+        {
+            var sourceType = typeof(T);
+            var nameOfType = $"{sourceType.Name}_{DateTime.Now.Ticks}";
+            // 定义类生成器
+            var typeBuilder = _moduleBuilder.DefineType(nameOfType, TypeAttributes.Public);
+            // 设置代理类的继承类型
+            if (sourceType.IsInterface)
+            {
+                typeBuilder.AddInterfaceImplementation(sourceType);
+            }
+            else
+            {
+                typeBuilder.SetParent(sourceType);
+            }
+            return typeBuilder;
+        }
+
+        private static Type GetExtendTypeByCache(PropertyInfo[] pis)
+        {
+            foreach (var item in extendTypes)
+            {
+                bool isTheType = true;
+                var extendPis = item.GetProperties();
+                if (extendPis.Length != pis.Length) continue;
+                foreach (var pi in extendPis)
+                {
+                    if (pis.FirstOrDefault(p => p.Name == pi.Name && p.PropertyType == pi.PropertyType) == null)
+                    {
+                        isTheType = false;
+                        break;
+                    }
+                }
+                if (isTheType) return item;
+            }
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 拦截器接口
+    /// </summary>
+    public interface IInterceptor
+    {
+        /// <summary>
+        /// 拦截方法
+        /// </summary>
+        /// <param name="invocation">调用信息对象</param>
+        void Intercept(Invocation invocation);
+    }
+
+    /// <summary>
+    ///  拦截器调用对象
+    /// </summary>
+    public class Invocation
+    {
+        /// <summary>
+        /// 被代理的源对象
+        /// </summary>
+        public object Source { get; set; }
+        /// <summary>
+        /// 当前调用的方法名称
+        /// </summary>
+        public string MethodName { get; set; }
+        /// <summary>
+        /// 当前调用方法的参数
+        /// </summary>
+        public object[] Parameters { get; set; }
+        /// <summary>
+        /// 返回值
+        /// </summary>
+        public object ReturnValue { get; set; }
+        /// <summary>
+        /// 执行被调用的方法
+        /// </summary>
+        /// <returns></returns>
+        public object Invoke()
+        {
+            if (Source == null) return null;
+            var method = Source.GetType().GetMethod(MethodName);
+            if (method == null) throw new Exception("不能从类型 Source 中获取到方法 " + MethodName);
+            this.ReturnValue = method.Invoke(Source, Parameters);
+            //if (method.ReturnType != typeof(void) && this.ReturnValue == null && method.ReturnType.IsValueType)
+            //{
+            //    this.ReturnValue = Activator.CreateInstance(method.ReturnType);
+            //}
+            return this.ReturnValue;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class TypeBuilderExtensions
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeBuilder"></param>
+        /// <param name="propertyInfo"></param>
+        public static void AddProperty(this TypeBuilder typeBuilder, ProxyPropertyInfo propertyInfo, FieldBuilder field = null)
+        {
+            #region 定义字段
+
+            if (field == null)
+            {
+                field = typeBuilder.DefineField("_" + propertyInfo.Name, propertyInfo.Type, FieldAttributes.Private);
+                if (propertyInfo.Value != null)
+                {
+                    field.SetConstant(propertyInfo.Value);
+                }
+            }
+            #endregion
+
+            #region 构造属性get方法 
+
+            var methodGet = typeBuilder.DefineMethod(
+                "get" + propertyInfo.Name,
+                MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
+                propertyInfo.Type, Type.EmptyTypes);
+
+            // return this._filedName;
+            var ilOfGet = methodGet.GetILGenerator();
+            ilOfGet.Emit(OpCodes.Ldarg_0);
+            ilOfGet.Emit(OpCodes.Ldfld, field);
+            ilOfGet.Emit(OpCodes.Ret);
+
+            #endregion
+
+            #region 构造属性set方法
+
+            var methodSet = typeBuilder.DefineMethod(
+                "set" + propertyInfo.Name,
+                MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
+                null,
+                new Type[] { propertyInfo.Type });
+            // this._filedName = value;
+            var ilOfSet = methodSet.GetILGenerator();
+            ilOfSet.Emit(OpCodes.Ldarg_0);
+            ilOfSet.Emit(OpCodes.Ldarg_1);
+            ilOfSet.Emit(OpCodes.Stfld, field);
+            ilOfSet.Emit(OpCodes.Ret);
+
+            #endregion
+
+            var property = typeBuilder.DefineProperty(propertyInfo.Name, PropertyAttributes.None, propertyInfo.Type, null);
+            property.SetGetMethod(methodGet);
+            property.SetSetMethod(methodSet);
+        }
+
+        /// <summary>
+        /// 创建类型实例
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="typeBuilder"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static T CreateInstance<T>(this TypeBuilder typeBuilder, params object[] args) where T : class
+        {
+            var t = typeBuilder.CreateType();
+            return (T)Activator.CreateInstance(t, args);
         }
 
         /// <summary>
@@ -66,7 +342,7 @@ namespace Smart.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="typeBuilder"></param>
         /// <param name="interceptor"></param>
-        private static void InjectionOfInterceptor<T>(TypeBuilder typeBuilder, IInterceptor interceptor)
+        public static void InjectionOfInterceptor<T>(this TypeBuilder typeBuilder, IInterceptor interceptor)
         {
             if (typeBuilder == null)
                 throw new ArgumentNullException("typeBuilder");
@@ -189,96 +465,19 @@ namespace Smart.Core
             }
             #endregion
         }
-
-        /// <summary>
-        /// 获取代理类生成器
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="aba"></param>
-        /// <returns></returns>
-        private static TypeBuilder GetTypeBuilder<T>(AssemblyBuilderAccess aba = AssemblyBuilderAccess.Run) where T : class
-        {
-            var sourceType = typeof(T);
-            var nameOfAssembly = sourceType.Name + "ProxyAssembly";
-            var nameOfModule = sourceType.Name + "ProxyModule";
-            var nameOfType = sourceType.Name + "Proxy";
-            var assemblyName = new AssemblyName(nameOfAssembly); // 程序集名称
-            // 定义程序集
-            var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, aba);
-            // 定义动态模块
-            var moduleBuilder = aba == AssemblyBuilderAccess.RunAndSave || aba == AssemblyBuilderAccess.Save
-                ? assembly.DefineDynamicModule(nameOfModule, nameOfAssembly + ".dll")
-                : assembly.DefineDynamicModule(nameOfModule, false);
-            // 定义类生成器
-            var typeBuilder = moduleBuilder.DefineType(nameOfType, TypeAttributes.Public);
-            // 设置代理类的继承类型
-            if (sourceType.IsInterface) typeBuilder.AddInterfaceImplementation(sourceType);
-            else typeBuilder.SetParent(sourceType);
-            return typeBuilder;
-        }
-
-        /// <summary>
-        /// 创建类型实例
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="typeBuilder"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static T CreateInstance<T>(TypeBuilder typeBuilder, params object[] args) where T : class
-        {
-            var t = typeBuilder.CreateType();
-            return (T)Activator.CreateInstance(t, args);
-        }
     }
 
-    /// <summary>
-    /// 拦截器接口
-    /// </summary>
-    public interface IInterceptor
+    public class ProxyPropertyInfo
     {
-        /// <summary>
-        /// 拦截方法
-        /// </summary>
-        /// <param name="invocation">调用信息对象</param>
-        void Intercept(Invocation invocation);
-    }
-
-    /// <summary>
-    ///  拦截器调用对象
-    /// </summary>
-    public class Invocation
-    {
-        /// <summary>
-        /// 被代理的源对象
-        /// </summary>
-        public object Source { get; set; }
-        /// <summary>
-        /// 当前调用的方法名称
-        /// </summary>
-        public string MethodName { get; set; }
-        /// <summary>
-        /// 当前调用方法的参数
-        /// </summary>
-        public object[] Parameters { get; set; }
-        /// <summary>
-        /// 返回值
-        /// </summary>
-        public object ReturnValue { get; set; }
-        /// <summary>
-        /// 执行被调用的方法
-        /// </summary>
-        /// <returns></returns>
-        public object Invoke()
+        public ProxyPropertyInfo(string name, Type type, object value)
         {
-            if (Source == null) return null;
-            var method = Source.GetType().GetMethod(MethodName);
-            if (method == null) throw new Exception("不能从类型 Source 中获取到方法 " + MethodName);
-            this.ReturnValue = method.Invoke(Source, Parameters);
-            //if (method.ReturnType != typeof(void) && this.ReturnValue == null && method.ReturnType.IsValueType)
-            //{
-            //    this.ReturnValue = Activator.CreateInstance(method.ReturnType);
-            //}
-            return this.ReturnValue;
+            this.Name = name;
+            this.Type = type;
+            this.Value = value;
         }
+
+        public string Name { get; private set; }
+        public Type Type { get; private set; }
+        public object Value { get; private set; }
     }
 }

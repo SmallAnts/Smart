@@ -12,24 +12,39 @@ namespace Smart.Core.Extensions
     public static class TypeExtensions
     {
         /// <summary>
-        /// 获取 DisplayName
+        /// 获取 类型的显示名称 ,依次从 DescriptionAttribute ，DisplayNameAttribute，DisplayAttribute 特性获取
         /// </summary>
         /// <param name="type"></param>
         /// <param name="inherit">指定是否搜索该成员的继承链以查找这些特性。</param>
         /// <returns></returns>
         public static string GetDisplayName(this Type type, bool inherit = true)
         {
-
-            var attrs = type.GetCustomAttributes(typeof(DisplayNameAttribute), inherit);
+            string displayName = string.Empty;
+            var attrs = type.GetCustomAttributes(typeof(DescriptionAttribute), inherit);
             if (attrs.Length > 0)
             {
-                return (attrs[0] as DisplayNameAttribute).DisplayName ?? type.Name;
+                displayName = (attrs[0] as DescriptionAttribute).Description;
             }
-            else
+
+            if (displayName.IsEmpty())
+            {
+                attrs = type.GetCustomAttributes(typeof(DisplayNameAttribute), inherit);
+                if (attrs.Length > 0)
+                {
+                    displayName = (attrs[0] as DisplayNameAttribute).DisplayName;
+                }
+            }
+
+            if (displayName.IsEmpty())
             {
                 attrs = type.GetCustomAttributes(typeof(DisplayAttribute), inherit);
-                return attrs.Length > 0 ? (attrs[0] as DisplayAttribute).Name ?? type.Name : type.Name;
+                if (attrs.Length > 0)
+                {
+                    displayName = (attrs[0] as DisplayAttribute).Name;
+                }
             }
+
+            return displayName.IsEmpty() ? type.Name : displayName;
         }
 
         /// <summary>

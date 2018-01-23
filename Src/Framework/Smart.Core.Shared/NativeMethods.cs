@@ -111,6 +111,14 @@ namespace Smart.Core
         [DllImport("Kernel32.dll")]
         public static extern void GetSystem(ref SystemTimeInfo stinfo);
 
+        /// <summary>
+        /// 设置当前本地时间及日期。
+        /// </summary>
+        /// <param name="lpSystemTime"></param>
+        /// <returns></returns>
+        [DllImport("Kernel32.dll")]
+        public static extern bool SetLocalTime(ref SystemTimeInfo lpSystemTime);
+
         #endregion
 
         #region shell32.dll
@@ -130,25 +138,41 @@ namespace Smart.Core
         #endregion
 
         #region user32.dll
+
         /// <summary>
-        /// 
+        /// 获取焦点控件句柄
         /// </summary>
-        /// <param name="hWnd"></param>
-        /// <param name="cmdShow"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// 函数执行成功时返回当前得到焦点控件的引用，发生错误时返回无效引用。
+        /// 用法应用程序利用IsValid()函数可以检测GetFocus()是否返回有效的控件引用。
+        /// 同时，使用TypeOf()函数可以确定控件的类型。
+        /// </returns>
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetFocus();
+
+        /// <summary>
+        /// 设置由不同线程产生的窗口的显示状态。
+        /// </summary>
+        /// <param name="hWnd">窗口句柄</param>
+        /// <param name="cmdShow">指定窗口如何显示。查看允许值列表，请查阅ShowWlndow函数的说明部分。</param>
+        /// <returns>如果函数原来可见，返回值为非零；如果函数原来被隐藏，返回值为零。</returns>
         [DllImport("user32.dll")]
         public static extern bool ShowWindowAsync(System.IntPtr hWnd, int cmdShow);
+
         /// <summary>
-        /// 
+        /// 创建指定窗口的线程设置到前台，并且激活该窗口
         /// </summary>
-        /// <param name="hWnd"></param>
-        /// <returns></returns>
+        /// <param name="hWnd">窗口句柄</param>
+        /// <returns>如果窗口设入了前台，返回值为非零；如果窗口未被设入前台，返回值为零。</returns>
         [DllImport("user32.dll")]
         public static extern bool SetForegroundWindow(System.IntPtr hWnd);
 
         /// <summary>
-        /// 返回hWnd参数所指定的窗口的设备环境
+        /// 返回hWnd参数所指定的窗口的设备环境，
+        /// 用完后一定要用ReleaseDC函数释放场景
         /// </summary>
+        /// <param name="hWnd">窗口句柄</param>
+        /// <returns></returns>
         [DllImport("user32.dll")]
         public static extern IntPtr GetWindowDC(IntPtr hWnd);
 
@@ -3502,6 +3526,30 @@ namespace Smart.Core
             /// 
             /// </summary>
             public ushort wMilliseconds;
+            /// <summary>
+            /// 从System.DateTime转换。
+            /// </summary>
+            /// <param name="time">System.DateTime类型的时间。</param>
+            public SystemTimeInfo(DateTime time)
+            {
+                wYear = (ushort)time.Year;
+                wMonth = (ushort)time.Month;
+                wDayOfWeek = (ushort)time.DayOfWeek;
+                wDay = (ushort)time.Day;
+                wHour = (ushort)time.Hour;
+                wMinute = (ushort)time.Minute;
+                wSecond = (ushort)time.Second;
+                wMilliseconds = (ushort)time.Millisecond;
+            }
+
+            /// <summary>
+            /// 转换为System.DateTime类型。
+            /// </summary>
+            /// <returns></returns>
+            public DateTime ToDateTime()
+            {
+                return new DateTime(wYear, wMonth, wDay, wHour, wMinute, wSecond, wMilliseconds);
+            }
         }
 
         /// <summary>
@@ -3535,6 +3583,7 @@ namespace Smart.Core
             [MarshalAs(UnmanagedType.LPStr)]
             public string lpData;
         }
+
         #endregion
 
         #region enums

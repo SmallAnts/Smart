@@ -9,6 +9,7 @@
     <Import_RootNamespace>Smart.Core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ExtendObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\BaseItem`T.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\CacheInfo`T.cs" />

@@ -9,6 +9,8 @@ namespace Smart.Core.Extensions
     /// </summary>
     public static class WinControlExtensions
     {
+        static PropertyInfo OwnerPI = typeof(AccessibleObject).GetProperty("Owner");
+
         /// <summary>
         /// 启用或禁用双缓冲
         /// </summary>
@@ -55,6 +57,31 @@ namespace Smart.Core.Extensions
             {
                 action();
             }
+        }
+
+        /// <summary>
+        /// 获取分配控件
+        /// </summary>
+        /// <param name="control"></param>
+        public static Control GetAccessibilityObjectOwner(this Control control)
+        {
+            if (control?.AccessibilityObject == null) return control;
+            return (Control)OwnerPI.GetValue(control.AccessibilityObject, null);
+        }
+
+        /// <summary>
+        /// 获取焦点所在控件
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
+        public static Control GetFocusControl(this Form form)
+        {
+            var intptr = NativeMethods.GetFocus();
+            if (intptr != IntPtr.Zero)
+            {
+                return Control.FromHandle(intptr);
+            }
+            return null;
         }
     }
 }
