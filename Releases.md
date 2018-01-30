@@ -1,4 +1,12 @@
-﻿		1.5.0
+﻿		1.6.0
+		新增：
+			1. 基于 MemoryCache 的缓存实现。
+			2. 新增一些扩展方法。
+
+		bug修复：
+			1. 修复 GetAccessibilityObjectOwner 扩展方法未将对象引用到对象实例错误。
+			
+		1.5.0
 		新增：
 			1. 新增设置系统时间扩展方法 bool SetLocalTime(this DateTime theTime)
 			2. 新增获取焦点控件扩展方法 Control GetFocusControl(this Form form)

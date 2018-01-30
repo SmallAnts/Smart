@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Web;
-using System.Web.Caching;
 
 namespace Smart.Core.Caching
 {
     /// <summary>
-    /// 基于当前应用程序的 System.Web.Caching.Cache 的缓存服务
+    /// 基于当前应用程序的 System.Runtime.Caching.MemoryCache 的缓存服务
     /// </summary>
-    public class HttpCache : DisposableObject, ICache
+    public class MemoryCache : DisposableObject, ICache
     {
-        private static readonly Cache _cache = HttpRuntime.Cache;
+        //private static readonly Object _locker = new object();
+        private static readonly System.Runtime.Caching.MemoryCache _cache = System.Runtime.Caching.MemoryCache.Default;
 
         /// <summary>
         /// 获取缓存
@@ -31,10 +32,14 @@ namespace Smart.Core.Caching
         /// <param name="key">缓存键值</param>
         /// <param name="cache">缓存信息</param>
         /// <returns>如果添加的项之前存储在缓存中，则为表示该项的对象；否则为 null。</returns>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public T Set<T>(string key, CacheInfo<T> cache) where T : class
         {
-            cache.Key = key;
-            var oldCache = _cache.Add(key, cache.Value, null, Cache.NoAbsoluteExpiration, cache.SlidingExpiration, CacheItemPriority.Default, null);
+            var oldCache = _cache.Get(key);
+            var cacheItem = new System.Runtime.Caching.CacheItem(key, cache.Value);
+            var policy = new System.Runtime.Caching.CacheItemPolicy();
+            policy.SlidingExpiration = cache.SlidingExpiration;
+            _cache.Set(cacheItem, policy);
             return oldCache == null ? null : (T)oldCache;
         }
 
@@ -56,12 +61,13 @@ namespace Smart.Core.Caching
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void RemoveAll(Predicate<string> match)
         {
-            var caches = _cache.GetEnumerator();
-            while (caches.MoveNext())
+            var mget = _cache.GetType().GetMethod("GetEnumerator", BindingFlags.Instance | BindingFlags.NonPublic);
+            var enumerator = (IEnumerator<KeyValuePair<string, object>>)mget.Invoke(_cache, null);
+            while (enumerator.MoveNext())
             {
-                if (match != null && match(caches.Key.ToString()))
+                if (match != null && match(enumerator.Current.Key))
                 {
-                    _cache.Remove(caches.Key.ToString());
+                    _cache.Remove(enumerator.Current.Key);
                 }
             }
         }

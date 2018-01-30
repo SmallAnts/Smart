@@ -9,7 +9,7 @@ namespace Smart.Core.Extensions
     /// </summary>
     public static class WinControlExtensions
     {
-        static PropertyInfo OwnerPI = typeof(AccessibleObject).GetProperty("Owner");
+        static PropertyInfo OwnerPI;
 
         /// <summary>
         /// 启用或禁用双缓冲
@@ -66,6 +66,10 @@ namespace Smart.Core.Extensions
         public static Control GetAccessibilityObjectOwner(this Control control)
         {
             if (control?.AccessibilityObject == null) return control;
+            if (OwnerPI == null)
+            {
+                OwnerPI = control.AccessibilityObject.GetType().GetProperty("Owner");
+            }
             return (Control)OwnerPI.GetValue(control.AccessibilityObject, null);
         }
 

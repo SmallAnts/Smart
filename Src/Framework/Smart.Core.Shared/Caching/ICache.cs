@@ -25,13 +25,6 @@ namespace Smart.Core.Caching
         T Set<T>(string key, CacheInfo<T> cache) where T : class;
 
         /// <summary>
-        /// 获取是否存在指定键的缓存对象
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        bool Exists(string key);
-
-        /// <summary>
         /// 从缓存中移除指定项
         /// </summary>
         /// <typeparam name="T">缓存数据类型</typeparam>
@@ -45,9 +38,5 @@ namespace Smart.Core.Caching
         /// <param name="match">移除条件</param>
         void RemoveAll(Predicate<string> match);
 
-        /// <summary>
-        /// 清除所有缓存
-        /// </summary>
-        void Clear();
     }
 }

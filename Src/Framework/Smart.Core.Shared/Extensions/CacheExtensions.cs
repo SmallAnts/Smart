@@ -1,5 +1,6 @@
 ﻿using Smart.Core.Caching;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Smart.Core.Extensions
 {
@@ -55,6 +56,7 @@ namespace Smart.Core.Extensions
         /// <param name="cacheManager"></param>
         /// <param name="key">缓存键值</param>
         /// <param name="data">缓存对象</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Set<T>(this ICache cacheManager, string key, T data) where T : class
         {
             cacheManager.Set<T>(key, new CacheInfo<T>(data));
@@ -68,10 +70,30 @@ namespace Smart.Core.Extensions
         /// <param name="key">缓存键值</param>
         /// <param name="data">缓存对象</param>
         /// <param name="slidingExpiration">相对超时时间</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Set<T>(this ICache cacheManager, string key, T data, TimeSpan slidingExpiration) where T : class
         {
             cacheManager.Set<T>(key, new CacheInfo<T>(slidingExpiration, data));
         }
 
+        /// <summary>
+        /// 获取一个值，该值指示是否存在指定键的缓存对象
+        /// </summary>
+        /// <param name="cacheManager"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static bool Exists(this ICache cacheManager, string key)
+        {
+            return cacheManager.Get<Object>(key) != null;
+        }
+        /// <summary>
+        /// 清除所有缓存
+        /// </summary>
+        /// <param name="cacheManager"></param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void Clear(this ICache cacheManager)
+        {
+            cacheManager.RemoveAll(k => true);
+        }
     }
 }
