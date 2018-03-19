@@ -9,7 +9,6 @@ namespace Smart.Core.Infrastructure
     /// </summary>
     public class BaseItem : BaseItem<int>
     {
-
     }
 
     /// <summary>
