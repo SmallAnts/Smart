@@ -35,6 +35,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Web.Mvc", "Framework\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Tests", "..\Tests\Smart.Tests\Smart.Tests.csproj", "{7C26F201-06B5-4003-9AAF-E1BCBD13646A}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Smart.SqliteCache.Shared", "Framework\Smart.SqliteCache.Shared\Smart.SqliteCache.Shared.shproj", "{EA6EC9AD-8AFE-4BD6-B611-784D18712ABB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.SqliteCache", "Framework\Smart.SqliteCache.45\Smart.SqliteCache.csproj", "{672EE79B-AACE-4008-8836-622AB7E89D5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.SqliteCache", "Framework\Smart.SqliteCache.40\Smart.SqliteCache.csproj", "{3CA29F1B-08FD-4513-899D-E6BAB31C45A4}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Smart.Redis.Shared", "Framework\Smart.Redis.Shared\Smart.Redis.Shared.shproj", "{F3F93B2D-551C-4EE9-86AC-689CF3768CB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Redis", "Framework\Smart.Redis.45\Smart.Redis.csproj", "{F0DC715C-1B6B-47A9-8246-B5EEA025F433}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Redis", "Framework\Smart.Redis.40\Smart.Redis.csproj", "{A06880A3-5828-45A3-A215-3C40458E9C6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.CacheServer", "Framework\Smart.CacheServer\Smart.CacheServer.csproj", "{50A9D35A-0F78-4A5E-AA3A-2C3ED3088249}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Framework\Smart.Core.Shared\Smart.Core.Shared.projitems*{0400237a-7a93-4bed-b788-bd54d7e132c0}*SharedItemsImports = 4
@@ -42,13 +56,19 @@ Global
 		Framework\Smart.Web.Mvc.Shared\Smart.Web.Mvc.Shared.projitems*{0e8752e6-d51a-40aa-b81e-56db3e0ca914}*SharedItemsImports = 4
 		Framework\Smart.NPOI.Shared\Smart.NPOI.Shared.projitems*{29afb851-7dc8-4027-9660-57e105b1c9a5}*SharedItemsImports = 13
 		Framework\Smart.Web.Mvc.Shared\Smart.Web.Mvc.Shared.projitems*{35d5d20f-7ae9-4d02-9c0e-07b5d87fbbaa}*SharedItemsImports = 4
+		Framework\Smart.SqliteCache.Shared\Smart.SqliteCache.Shared.projitems*{3ca29f1b-08fd-4513-899d-e6bab31c45a4}*SharedItemsImports = 4
 		Framework\Smart.Core.Shared\Smart.Core.Shared.projitems*{3e82282b-92e0-4b08-a6f5-106bf4401e4a}*SharedItemsImports = 13
 		Framework\Smart.Data.Shared\Smart.Data.Shared.projitems*{49d991c7-be7d-4aae-98cd-c6f7e7d69cfc}*SharedItemsImports = 4
 		Framework\Smart.Web.Mvc.Shared\Smart.Web.Mvc.Shared.projitems*{66352521-da3c-4754-9f63-e51275249a8a}*SharedItemsImports = 13
+		Framework\Smart.SqliteCache.Shared\Smart.SqliteCache.Shared.projitems*{672ee79b-aace-4008-8836-622ab7e89d5b}*SharedItemsImports = 4
 		Framework\Smart.Core.Shared\Smart.Core.Shared.projitems*{73f8a79c-d93c-430f-ba0a-7f1480d6afb7}*SharedItemsImports = 4
 		Framework\Smart.Data.Shared\Smart.Data.Shared.projitems*{99c632a6-d6c0-447b-b53d-ef505e17d3a0}*SharedItemsImports = 13
+		Framework\Smart.Redis.Shared\Smart.Redis.Shared.projitems*{a06880a3-5828-45a3-a215-3c40458e9c6b}*SharedItemsImports = 4
 		Framework\Smart.NPOI.Shared\Smart.NPOI.Shared.projitems*{c3eedf30-4fc6-4378-9731-73ee283aca25}*SharedItemsImports = 4
+		Framework\Smart.SqliteCache.Shared\Smart.SqliteCache.Shared.projitems*{ea6ec9ad-8afe-4bd6-b611-784d18712abb}*SharedItemsImports = 13
+		Framework\Smart.Redis.Shared\Smart.Redis.Shared.projitems*{f0dc715c-1b6b-47a9-8246-b5eea025f433}*SharedItemsImports = 4
 		Framework\Smart.NPOI.Shared\Smart.NPOI.Shared.projitems*{f282ef98-93b8-4998-9069-0f0dc7f337b2}*SharedItemsImports = 4
+		Framework\Smart.Redis.Shared\Smart.Redis.Shared.projitems*{f3f93b2d-551c-4ee9-86ac-689cf3768cb8}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +111,26 @@ Global
 		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C26F201-06B5-4003-9AAF-E1BCBD13646A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{672EE79B-AACE-4008-8836-622AB7E89D5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{672EE79B-AACE-4008-8836-622AB7E89D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{672EE79B-AACE-4008-8836-622AB7E89D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{672EE79B-AACE-4008-8836-622AB7E89D5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CA29F1B-08FD-4513-899D-E6BAB31C45A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CA29F1B-08FD-4513-899D-E6BAB31C45A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CA29F1B-08FD-4513-899D-E6BAB31C45A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CA29F1B-08FD-4513-899D-E6BAB31C45A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0DC715C-1B6B-47A9-8246-B5EEA025F433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0DC715C-1B6B-47A9-8246-B5EEA025F433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0DC715C-1B6B-47A9-8246-B5EEA025F433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0DC715C-1B6B-47A9-8246-B5EEA025F433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A06880A3-5828-45A3-A215-3C40458E9C6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A06880A3-5828-45A3-A215-3C40458E9C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A06880A3-5828-45A3-A215-3C40458E9C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A06880A3-5828-45A3-A215-3C40458E9C6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50A9D35A-0F78-4A5E-AA3A-2C3ED3088249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50A9D35A-0F78-4A5E-AA3A-2C3ED3088249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50A9D35A-0F78-4A5E-AA3A-2C3ED3088249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50A9D35A-0F78-4A5E-AA3A-2C3ED3088249}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +148,12 @@ Global
 		{092C3ADA-7A24-4704-9CD0-59AC28F8A177} = {CB297CCD-B129-4933-B20C-8A95653A0371}
 		{C3EEDF30-4FC6-4378-9731-73EE283ACA25} = {CB297CCD-B129-4933-B20C-8A95653A0371}
 		{0E8752E6-D51A-40AA-B81E-56DB3E0CA914} = {CB297CCD-B129-4933-B20C-8A95653A0371}
+		{EA6EC9AD-8AFE-4BD6-B611-784D18712ABB} = {9D784D80-1780-47BC-901A-CB1FC8AA3D3A}
+		{672EE79B-AACE-4008-8836-622AB7E89D5B} = {B80EF91F-1626-4BA6-BBDA-3CA46B81A450}
+		{3CA29F1B-08FD-4513-899D-E6BAB31C45A4} = {CB297CCD-B129-4933-B20C-8A95653A0371}
+		{F3F93B2D-551C-4EE9-86AC-689CF3768CB8} = {9D784D80-1780-47BC-901A-CB1FC8AA3D3A}
+		{F0DC715C-1B6B-47A9-8246-B5EEA025F433} = {B80EF91F-1626-4BA6-BBDA-3CA46B81A450}
+		{A06880A3-5828-45A3-A215-3C40458E9C6B} = {CB297CCD-B129-4933-B20C-8A95653A0371}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7863FAA3-5AC8-4362-B993-EE7F6714AFB2}
