@@ -131,6 +131,7 @@ namespace Smart.Core.Extensions
         {
             return Regex.IsMatch(value, regex, options);
         }
+
         #endregion
 
         #region 类型转换 As
@@ -261,6 +262,26 @@ namespace Smart.Core.Extensions
             return result;
         }
 
+        /// <summary>将字符串转换为 <see cref="T:System.TimeSpan" /> ，并指定一个默认值。 </summary>
+        /// <param name="value">要转换的值。</param>
+        /// <returns>转换后的值。</returns>
+        public static TimeSpan AsTimeSpan(this string value)
+        {
+            return value.AsTimeSpan(new TimeSpan?(default(TimeSpan))).Value;
+        }
+        /// <summary> 将字符串转换为 <see cref="T:System.TimeSpan" /> ，并指定一个默认值。 </summary>
+        /// <param name="value">要转换的值。</param>
+        /// <param name="defaultValue">如果 <paramref name="value" /> 为空或是一个无效的值则返回该值,。</param>
+        /// <returns>转换后的值。</returns>
+        public static TimeSpan? AsTimeSpan(this string value, TimeSpan? defaultValue)
+        {
+            if (!TimeSpan.TryParse(value, out TimeSpan result))
+            {
+                return defaultValue;
+            }
+            return result;
+        }
+
         /// <summary>将字符串转换为 <see cref="T:System.Boolean" /></summary>
         /// <param name="value">要转换的值。</param>
         /// <returns>转换后的值。</returns>
@@ -303,7 +324,9 @@ namespace Smart.Core.Extensions
         /// <returns></returns>
         public static string ToInitialUppercase(this string word)
         {
-            return String.Concat(word.Substring(0, 1).ToUpper(), word.Substring(1).ToLower());
+            if (word.IsEmpty()) return word;
+            else if (word.Length == 1) return word.ToUpper();
+            else return String.Concat(word.Substring(0, 1).ToUpper(), word.Substring(1).ToLower());
         }
 
         /// <summary>
@@ -313,7 +336,9 @@ namespace Smart.Core.Extensions
         /// <returns></returns>
         public static string ToInitialLowercase(this string word)
         {
-            return String.Concat(word.Substring(0, 1).ToLower(), word.Substring(1));
+            if (word.IsEmpty()) return word;
+            else if (word.Length == 1) return word.ToLower();
+            else return String.Concat(word.Substring(0, 1).ToLower(), word.Substring(1));
         }
 
         /// <summary>

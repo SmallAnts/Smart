@@ -18,12 +18,12 @@ namespace Smart.Core.Extensions
         [Browsable(false),
         EditorBrowsable(EditorBrowsableState.Never),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public static void Update(string name, string connectionString)
+        public static void Update(this ConnectionStringSettingsCollection connectionStrings, string name, string connectionString)
         {
-            var conn = ConfigurationManager.ConnectionStrings[name];
+            var conn = connectionStrings[name];
             if (conn == null) return; // 连接名不存在
 
-            //_values.GetConfigValue("connectionString").Value = connectionString;
+            #region 通过反射执行 _values.GetConfigValue("connectionString").Value = connectionString;
 
             var _valuesField = typeof(ConfigurationElement).GetField("_values",
                 BindingFlags.Instance | BindingFlags.NonPublic);
@@ -36,6 +36,9 @@ namespace Smart.Core.Extensions
             var setConfigValue = configValue.GetType().GetField("Value",
                 BindingFlags.Instance | BindingFlags.NonPublic);
             setConfigValue.SetValue(configValue, connectionString);
+
+            #endregion
+
         }
     }
 }
