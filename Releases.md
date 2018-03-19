@@ -1,4 +1,10 @@
-﻿		1.6.0
+﻿﻿		1.7.0
+		新增：
+			1. 基于 Wcf 的缓存实现。
+			2. 新增 DefaultDependencyResover (当 HttpContext.Current != null 时，每次请求使用一个生命周期范围，否则每个线程使用一个生命周期范围)。
+			3. 新增一些扩展方法。
+
+		1.6.0
 		新增：
 			1. 基于 MemoryCache 的缓存实现。
 			2. 新增一些扩展方法。
