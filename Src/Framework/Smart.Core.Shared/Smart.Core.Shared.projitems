@@ -9,7 +9,10 @@
     <Import_RootNamespace>Smart.Core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\DefaultCacheService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\ICacheService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\MemoryCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\WcfCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ExtendObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ConnectionStringSettingsCollectionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PropertyInfoExtensions.cs" />
@@ -68,7 +71,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilites\CryptoUtility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilites\ImageUtility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilites\InputCodeUtility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilites\IPAddressUtility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilites\LocationUtility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilites\WebUtility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WCF\WcfClient.cs" />
   </ItemGroup>
 </Project>
