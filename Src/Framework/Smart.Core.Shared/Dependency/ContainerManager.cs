@@ -46,8 +46,9 @@ namespace Smart.Core.Dependency
 
             #region 注册依赖实例
 
-            builder.RegisterInstance(config.TypeFinder).As<ITypeFinder>().SingleInstance();
             builder.RegisterInstance(config).As<SmartConfig>().SingleInstance();
+            builder.RegisterType<DefaultDependencyResolver>().As<IDependencyResolver>().SingleInstance();
+            builder.RegisterInstance(config.TypeFinder).As<ITypeFinder>().SingleInstance();
             builder.RegisterInstance(this).As<IContainerManager>().SingleInstance();
             builder.RegisterType<Caching.HttpCache>().Named<Caching.ICache>(SmartContext.DEFAULT_CACHE_KEY).SingleInstance();
             builder.RegisterInstance(new Export.HtmlExcelExport()).As<Export.IExport>().SingleInstance();
@@ -91,6 +92,7 @@ namespace Smart.Core.Dependency
             }
 
             #endregion
+
             this._container = builder.Build();
             // 注册完成后处理
             if (config.OnDependencyRegistered != null)
@@ -132,23 +134,21 @@ namespace Smart.Core.Dependency
         /// <returns></returns>
         public T Resolve<T>(string serviceName)
         {
-            object resolver;
-            if (_container.TryResolve(typeof(IDependencyResolver), out resolver))
+            if (this._resolver == null)
             {
-                _resolver = resolver as IDependencyResolver;
+                if (_container.TryResolve<IDependencyResolver>(out IDependencyResolver resolver))
+                {
+                    this._resolver = resolver;
+                }
             }
-            if (_resolver != null)
+
+            if (this._resolver != null)
             {
-                return _resolver.Resolve<T>(serviceName);
+                return this._resolver.Resolve<T>(serviceName);
             }
-            if (serviceName.IsEmpty())
-            {
-                return _container.Resolve<T>();
-            }
-            else
-            {
-                return _container.ResolveNamed<T>(serviceName);
-            }
+
+            return serviceName.IsEmpty() ? _container.Resolve<T>() : _container.ResolveNamed<T>(serviceName);
+
         }
 
         /// <summary>
