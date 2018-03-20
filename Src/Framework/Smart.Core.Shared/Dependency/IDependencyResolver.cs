@@ -36,7 +36,7 @@ namespace Smart.Core.Dependency
     public class DefaultDependencyResolver : IDependencyResolver
     {
         Dictionary<int, ILifetimeScope> _threadLifetimeScopes;
-
+        const int keepAlivePeriod = 60000;    //Configuration.SmartConfig.LifetimeScopeKeepAlivePeriod
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -44,6 +44,74 @@ namespace Smart.Core.Dependency
         {
             this._threadLifetimeScopes = new Dictionary<int, ILifetimeScope>();
             this.StartCheck();
+        }
+
+        /// <summary>
+        /// 生命周期范围
+        /// </summary>
+        protected virtual ILifetimeScope LifetimeScope
+        {
+            get
+            {
+                if (HttpContext.Current != null)
+                {
+                    var scope = HttpContext.Current.Items["smart_autofac_scope"] as ILifetimeScope;
+                    if (scope == null)
+                    {
+                        scope = ((ContainerManager)SmartContext.Current).BeginLifetimeScope();
+                        HttpContext.Current.Items["smart_autofac_scope"] = scope;
+                    }
+                    return scope;
+                }
+                else
+                {
+                    int threadId = NativeMethods.GetCurrentThreadId();
+
+                    if (!_threadLifetimeScopes.TryGetValue(threadId, out ILifetimeScope threadScope))
+                    {
+                        threadScope = ((ContainerManager)SmartContext.Current).BeginLifetimeScope();
+                        _threadLifetimeScopes.Add(threadId, threadScope);
+                    }
+                    return threadScope;
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// 从上下文中检索服务。
+        /// </summary>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="serviceName">服务注册名称</param>
+        /// <returns></returns>
+        public object Resolve(Type serviceType, string serviceName = null)
+        {
+            if (serviceName.IsEmpty())
+            {
+                return LifetimeScope.Resolve(serviceType);
+            }
+            else
+            {
+                return LifetimeScope.ResolveNamed(serviceName, serviceType);
+            }
+        }
+
+        /// <summary>
+        /// 从上下文中检索服务。
+        /// </summary>
+        /// <typeparam name="T">服务类型</typeparam>
+        /// <param name="serviceName">服务注册名称</param>
+        /// <returns></returns>
+        public T Resolve<T>(string serviceName = null)
+        {
+            if (serviceName.IsEmpty())
+            {
+                return LifetimeScope.Resolve<T>();
+            }
+            else
+            {
+                return LifetimeScope.ResolveNamed<T>(serviceName);
+            }
         }
 
         private void StartCheck()
@@ -56,7 +124,7 @@ namespace Smart.Core.Dependency
                 {
                     try
                     {
-                        Thread.Sleep(5000);
+                        Thread.Sleep(keepAlivePeriod);
                         if (_threadLifetimeScopes.Count == 0) continue;
 
                         var threads = Process.GetCurrentProcess().Threads;
@@ -112,7 +180,6 @@ namespace Smart.Core.Dependency
             thread.IsBackground = true;
             thread.Start();
         }
-
         private void DisposeScope(int threadId)
         {
             if (_threadLifetimeScopes.TryGetValue(threadId, out ILifetimeScope scope))
@@ -122,72 +189,6 @@ namespace Smart.Core.Dependency
             }
         }
 
-        /// <summary>
-        /// 生命周期范围
-        /// </summary>
-        protected virtual ILifetimeScope LifetimeScope
-        {
-            get
-            {
-                if (HttpContext.Current != null)
-                {
-                    var scope = HttpContext.Current.Items["smart_autofac_scope"] as ILifetimeScope;
-                    if (scope == null)
-                    {
-                        scope = ((ContainerManager)SmartContext.Current).BeginLifetimeScope();
-                        HttpContext.Current.Items["smart_autofac_scope"] = scope;
-                    }
-                    return scope;
-                }
-                else
-                {
-                    int threadId = Thread.CurrentThread.ManagedThreadId;
-                    if (!_threadLifetimeScopes.TryGetValue(threadId, out ILifetimeScope threadScope))
-                    {
-                        threadScope = ((ContainerManager)SmartContext.Current).BeginLifetimeScope();
-                        _threadLifetimeScopes.Add(threadId, threadScope);
-                    }
-                    return threadScope;
-                }
-
-            }
-        }
-
-        /// <summary>
-        /// 从上下文中检索服务。
-        /// </summary>
-        /// <param name="serviceType">服务类型</param>
-        /// <param name="serviceName">服务注册名称</param>
-        /// <returns></returns>
-        public object Resolve(Type serviceType, string serviceName = null)
-        {
-            if (serviceName.IsEmpty())
-            {
-                return LifetimeScope.Resolve(serviceType);
-            }
-            else
-            {
-                return LifetimeScope.ResolveNamed(serviceName, serviceType);
-            }
-        }
-
-        /// <summary>
-        /// 从上下文中检索服务。
-        /// </summary>
-        /// <typeparam name="T">服务类型</typeparam>
-        /// <param name="serviceName">服务注册名称</param>
-        /// <returns></returns>
-        public T Resolve<T>(string serviceName = null)
-        {
-            if (serviceName.IsEmpty())
-            {
-                return LifetimeScope.Resolve<T>();
-            }
-            else
-            {
-                return LifetimeScope.ResolveNamed<T>(serviceName);
-            }
-        }
     }
 
     /// <summary>
