@@ -1,4 +1,8 @@
-﻿﻿		
+﻿﻿
+		1.7.1
+		bug修复：
+			1. 修复 DefaultDependencyResolver 定时检查中的线程不一致问题。
+
 		1.7.0
 		新增：
 			1. 基于 Wcf 的缓存实现。
