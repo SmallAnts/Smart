@@ -249,6 +249,28 @@ namespace Smart.Core.Extensions
         {
             return dt.HasValue ? dt.Value.ToString("yyyy-MM-dd HH:mm:ss") : null;
         }
+
+        /// <summary>
+        /// 将日期转换指定的字符串格式并将阿拉伯数字转换为中文小写数字
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="format">日期格式化字符串</param>
+        /// <returns></returns>
+        public static string ToChineseString(this DateTime dt, string format)
+        {
+            return dt.ToString(format).ToChineseNumber();
+        }
+
+        /// <summary>
+        /// 将日期转换指定的字符串格式并将阿拉伯数字转换为中文小写数字
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="format">日期格式化字符串</param>
+        /// <returns></returns>
+        public static string ToChineseString(this DateTime? dt, string format)
+        {
+            return dt.HasValue ? dt.ToString(format).ToChineseNumber() : null;
+        }
     }
 
     /// <summary>
