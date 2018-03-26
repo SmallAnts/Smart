@@ -371,6 +371,19 @@ namespace Smart.Core.Extensions
             return InputCodeUtility.GetPinYin(value);
         }
 
+        /// <summary>
+        /// 将字符串中的数字转换为中文小写字符
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToChineseNumber(this string value)
+        {
+            return Regex.Replace(value, @"\d+", m =>
+            {
+                return m.Value.AsInt().ToChinese().ToString();
+            });
+        }
+
         #endregion
 
         #region 字符串压缩
