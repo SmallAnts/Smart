@@ -1,4 +1,12 @@
 ﻿﻿
+
+		1.8.0
+		新增：
+			1. ExtendObject 重写，增加数据绑定方法，支持双向绑定，并提供属性访问索引。
+			2. DateTime 增加 ToChineseString 扩展方法，将日期转换指定的字符串格式并将阿拉伯数字转换为中文小写数字。
+			3. int,long,float,double,decimal 类型增加ToRMB 扩展方法，将数字转换为大写或小写的人民币字符串。
+			4. string 增加 NumberToChinese 扩展方法，将字符串中的拉伯数字转换为中文小写数字。
+			
 		1.7.1
 		bug修复：
 			1. 修复 DefaultDependencyResolver 定时检查中的线程不一致问题。
