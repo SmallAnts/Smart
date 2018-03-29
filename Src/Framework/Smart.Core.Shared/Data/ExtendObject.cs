@@ -46,17 +46,18 @@ namespace Smart.Core.Data
 
         #region 构造函数
 
+        public ExtendObject()
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="obj"></param>
-        public ExtendObject(ExtendObject obj = null)
+        public ExtendObject(ExtendObject obj)
         {
-            if (obj != null)
-            {
-                this.bindings = obj.bindings;
-                this.properties = obj.properties;
-            }
+            this.bindings = obj.bindings;
+            this.properties = obj.properties;
         }
 
         #endregion
