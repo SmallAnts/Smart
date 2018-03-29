@@ -1,21 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Smart.Core.Extensions;
 
 namespace Smart.Core.Data
 {
     /// <summary>
-    /// 可扩展对象
+    /// 可动态扩展的对象
     /// </summary>
     public class ExtendObject : DynamicObject, INotifyPropertyChanged
     {
-        Dictionary<string, Binding> bindings { get; } = new Dictionary<string, Binding>();
-        Dictionary<string, object> properties = new Dictionary<string, object>();
+        /// <summary>
+        /// 
+        /// </summary>
+        internal protected Dictionary<string, Binding> bindings { get; } = new Dictionary<string, Binding>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal protected Dictionary<string, object> properties = new Dictionary<string, object>();
 
         #region 属性修改通知 INotifyPropertyChanged
 
+        /// <summary>
+        /// 
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -23,7 +35,7 @@ namespace Smart.Core.Data
             {
                 bind.ReadValue();
             }
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         protected virtual void RaisePropertyChanged(string propertyName)
         {
@@ -32,30 +44,66 @@ namespace Smart.Core.Data
 
         #endregion
 
+        #region 构造函数
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        public ExtendObject(ExtendObject obj = null)
+        {
+            if (obj != null)
+            {
+                this.bindings = obj.bindings;
+                this.properties = obj.properties;
+            }
+        }
+
+        #endregion
+
+        #region 索引
+
         /// <summary>
         /// 索引属性值
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="propertyName">属性名</param>
         /// <returns></returns>
-        public object this[string name]
+        public object this[string propertyName]
         {
             get
             {
-                properties.TryGetValue(name, out object value);
+                this.properties.TryGetValue(propertyName, out object value);
                 return value;
             }
             set
             {
-                this.SetMember(name, value);
+                this.SetMember(propertyName, value);
             }
+        }
+
+        #endregion
+
+        #region 公共方法
+
+        /// <summary>
+        /// 添加属性，如果属性名已经存在则忽略该操作
+        /// </summary>
+        /// <typeparam name="T">属性类型</typeparam>
+        /// <param name="propertyName">属性名</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void AddProperty<T>(string propertyName)
+        {
+            if (this.properties.ContainsKey(propertyName)) return;
+            this.properties[propertyName] = default(T);
         }
 
         /// <summary>
         /// 控件数据绑定
         /// </summary>
-        /// <param name="dataMember"></param>
-        /// <param name="control"></param>
-        /// <param name="propertyName"></param>
+        /// <param name="dataMember">当前对象的属性名</param>
+        /// <param name="control">控件</param>
+        /// <param name="propertyName">控件绑定值的属性名</param>
+        /// <param name="dataSourceUpdateMode">数据源更新模式</param>
         public void DataBind(string dataMember, Control control,
             string propertyName = "EditValue",
             DataSourceUpdateMode dataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged)
@@ -68,7 +116,34 @@ namespace Smart.Core.Data
             control.DataBindings.Add(bind);
         }
 
+        /// <summary>
+        /// 加载JSON数据
+        /// </summary>
+        /// <param name="json"></param>
+        public void LoadJSON(string json)
+        {
+            if (json.IsEmpty()) return;
+
+            this.properties = json.JsonTo<Dictionary<string, object>>();
+            foreach (var item in properties)
+            {
+                this.RaisePropertyChanged(item.Key);
+            }
+        }
+
+        #endregion
+
         #region 重写基类方法
+
+        public override DynamicMetaObject GetMetaObject(Expression parameter)
+        {
+            return base.GetMetaObject(parameter);
+        }
+
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            return this.properties.Keys;
+        }
 
         /// <summary>
         /// 
@@ -78,8 +153,9 @@ namespace Smart.Core.Data
         /// <returns></returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            return properties.TryGetValue(binder.Name, out result);
+            return this.properties.TryGetValue(binder.Name, out result);
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -91,6 +167,7 @@ namespace Smart.Core.Data
             this.SetMember(binder.Name, value);
             return true;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -106,25 +183,40 @@ namespace Smart.Core.Data
             }
             return false;
         }
+
+        public override string ToString()
+        {
+            return this.properties.ToJson();
+        }
+
         #endregion
 
+        /// <summary>
+        /// 属性负值
+        /// </summary>
+        /// <param name="propertyName">属性名</param>
+        /// <param name="value">值</param>
         protected virtual void SetMember(string propertyName, object value)
         {
             var result = this.properties.TryGetValue(propertyName, out object oldValue);
-            if (!result || oldValue != null && !oldValue.Equals(value))
+            if (!result || oldValue != null && !oldValue.Equals(value) || oldValue == null && value != null)
             {
                 this.properties[propertyName] = value;
                 this.RaisePropertyChanged(propertyName);
             }
         }
+
         /// <summary>
-        /// 
+        /// 添加数据绑定对象
         /// </summary>
-        /// <param name="dataMember"></param>
-        /// <param name="propertyName"></param>
-        /// <param name="dataSourceUpdateMode"></param>
-        /// <returns></returns>
-        protected Binding AddBinding(string dataMember, string propertyName, DataSourceUpdateMode dataSourceUpdateMode)
+        /// <param name="dataMember">数据源对象的属性名</param>
+        /// <param name="propertyName">控件绑定数据的属性名</param>
+        /// <param name="dataSourceUpdateMode">数据源更新模式</param>
+        /// <returns>数据绑定对象</returns>
+        protected virtual Binding AddBinding(
+            string dataMember,
+            string propertyName,
+            DataSourceUpdateMode dataSourceUpdateMode)
         {
             var bind = new Binding(propertyName, this, null, false, dataSourceUpdateMode);
             bind.Format += (o, c) => c.Value = this[dataMember];
@@ -133,9 +225,5 @@ namespace Smart.Core.Data
             return bind;
         }
 
-        public override string ToString()
-        {
-            return properties.ToJson();
-        }
     }
 }
