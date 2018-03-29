@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Redis", "Framework\Sm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.CacheServer", "Framework\Smart.CacheServer\Smart.CacheServer.csproj", "{50A9D35A-0F78-4A5E-AA3A-2C3ED3088249}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Sample.Winform", "..\Sample\Smart.Sample.Winform\Smart.Sample.Winform.csproj", "{80CD6DD5-F510-4C00-AFE4-1E42991CD42E}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Framework\Smart.Core.Shared\Smart.Core.Shared.projitems*{0400237a-7a93-4bed-b788-bd54d7e132c0}*SharedItemsImports = 4
@@ -131,6 +133,10 @@ Global
 		{50A9D35A-0F78-4A5E-AA3A-2C3ED3088249}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50A9D35A-0F78-4A5E-AA3A-2C3ED3088249}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50A9D35A-0F78-4A5E-AA3A-2C3ED3088249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80CD6DD5-F510-4C00-AFE4-1E42991CD42E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80CD6DD5-F510-4C00-AFE4-1E42991CD42E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80CD6DD5-F510-4C00-AFE4-1E42991CD42E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80CD6DD5-F510-4C00-AFE4-1E42991CD42E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

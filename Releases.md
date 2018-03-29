@@ -1,5 +1,13 @@
 ﻿﻿
 
+		1.8.2
+		修改：
+			1. ExtendObject 增加  public void AddProperty<T>(string propertyName) 方法
+
+		1.8.1
+		修改：
+			1. ExtendObject 支持构从造函数初始化初始化属性
+			
 		1.8.0
 		新增：
 			1. ExtendObject 重写，增加数据绑定方法，支持双向绑定，并提供属性访问索引。

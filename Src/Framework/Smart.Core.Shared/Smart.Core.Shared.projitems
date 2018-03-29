@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Caching\WcfCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ExtendObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ConnectionStringSettingsCollectionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\NumberTypeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\BaseItem`T.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\CacheInfo`T.cs" />
