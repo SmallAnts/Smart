@@ -38,7 +38,7 @@ namespace Smart.Core.Extensions
                 return cacheManager.Get<T>(key);
             }
             var result = acquire();
-            if (slidingExpiration == null)
+            if (slidingExpiration == null || slidingExpiration == System.Web.Caching.Cache.NoSlidingExpiration)
             {
                 cacheManager.Set(key, new CacheInfo<T>(result));
             }
