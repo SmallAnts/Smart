@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using Smart.Core.Data;
+﻿using Smart.Core.Data;
 using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 
 namespace Smart.Core.Extensions
@@ -257,7 +255,6 @@ namespace Smart.Core.Extensions
             return pi.GetValue(obj, null);
         }
 
-
         /// <summary>
         /// 通过属性名称动态给属性赋值
         /// </summary>
@@ -303,26 +300,40 @@ namespace Smart.Core.Extensions
         /// 将对象序列化为JSON字符串，循环引用的对象将被忽略
         /// </summary>
         /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToJson(this object value)
+        {
+            var settings = new Newtonsoft.Json.JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore, // 忽略循环引用
+            };
+            return Newtonsoft.Json.JsonConvert.SerializeObject(value, settings);
+        }
+
+        /// <summary>
+        /// 将对象序列化为JSON字符串，循环引用的对象将被忽略
+        /// </summary>
+        /// <param name="value"></param>
         /// <param name="formatting"></param>
         /// <param name="settings"></param>
         /// <param name="nullValue"></param>
         /// <param name="referenceLoop"></param>
         /// <returns></returns>
         public static string ToJson(this object value,
-            Formatting formatting = Formatting.None,
-            NullValueHandling nullValue = NullValueHandling.Ignore,
-            ReferenceLoopHandling referenceLoop = ReferenceLoopHandling.Ignore,
-            JsonSerializerSettings settings = null)
+             Newtonsoft.Json.Formatting formatting = Newtonsoft.Json.Formatting.None,
+             Newtonsoft.Json.NullValueHandling nullValue = Newtonsoft.Json.NullValueHandling.Ignore,
+             Newtonsoft.Json.ReferenceLoopHandling referenceLoop = Newtonsoft.Json.ReferenceLoopHandling.Ignore,
+             Newtonsoft.Json.JsonSerializerSettings settings = null)
         {
             if (settings == null)
             {
-                settings = new JsonSerializerSettings()
+                settings = new Newtonsoft.Json.JsonSerializerSettings()
                 {
                     ReferenceLoopHandling = referenceLoop, // 忽略循环引用
                     NullValueHandling = nullValue,
                 };
             }
-            var json = JsonConvert.SerializeObject(value, formatting, settings);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(value, formatting, settings);
             return json;
         }
     }
