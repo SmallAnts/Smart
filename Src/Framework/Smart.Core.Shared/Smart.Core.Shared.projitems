@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Caching\DefaultCacheService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\ICacheService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\MemoryCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\UseCacheAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\WcfCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ExtendObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ConnectionStringSettingsCollectionExtensions.cs" />
