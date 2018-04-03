@@ -48,6 +48,7 @@ namespace Smart.Core.Data
 
         public ExtendObject()
         {
+
         }
 
         /// <summary>
@@ -92,10 +93,12 @@ namespace Smart.Core.Data
         /// <typeparam name="T">属性类型</typeparam>
         /// <param name="propertyName">属性名</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void AddProperty<T>(string propertyName)
+        public void AddProperty<T>(string propertyName, T defaultValue = default(T))
         {
-            if (this.properties.ContainsKey(propertyName)) return;
-            this.properties[propertyName] = default(T);
+            if (!this.properties.ContainsKey(propertyName))
+            {
+                this.properties[propertyName] = defaultValue;
+            }
         }
 
         /// <summary>
@@ -103,10 +106,10 @@ namespace Smart.Core.Data
         /// </summary>
         /// <param name="dataMember">当前对象的属性名</param>
         /// <param name="control">控件</param>
-        /// <param name="propertyName">控件绑定值的属性名</param>
+        /// <param name="propertyName">控件绑定值的属性名，不支持 object 类型属性</param>
         /// <param name="dataSourceUpdateMode">数据源更新模式</param>
         public void DataBind(string dataMember, Control control,
-            string propertyName = "EditValue",
+            string propertyName = "Text",
             DataSourceUpdateMode dataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged)
         {
             this.bindings.TryGetValue(dataMember, out Binding bind);
@@ -145,7 +148,6 @@ namespace Smart.Core.Data
         {
             return this.properties.Keys;
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -220,8 +222,14 @@ namespace Smart.Core.Data
             DataSourceUpdateMode dataSourceUpdateMode)
         {
             var bind = new Binding(propertyName, this, null, false, dataSourceUpdateMode);
-            bind.Format += (o, c) => c.Value = this[dataMember];
-            bind.Parse += (o, c) => this[dataMember] = c.Value;
+            bind.Format += (o, c) =>
+            {
+                c.Value = this[dataMember];
+            };
+            bind.Parse += (o, c) =>
+            {
+                this[dataMember] = c.Value;
+            };
             this.bindings.Add(dataMember, bind);
             return bind;
         }
