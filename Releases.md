@@ -1,4 +1,12 @@
-﻿﻿
+﻿﻿		
+
+		1.9.4
+		移除：
+			1. ExtendObject 移除绑定功能，使用单独的类来实现动态对象的绑定。
+
+		1.9.3
+		bug修复：
+			1. 修复 DateTime 的ToChineseString(string format) 扩展方法 0 格式化不正确问题。
 
 		1.9.1
 		修改：
