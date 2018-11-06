@@ -1,5 +1,13 @@
 ﻿﻿		
 
+		1.9.6
+		bug修复：
+			1. 恢复 ExtendObject  被删除的构造函数 public ExtendObject(ExtendObject obj)。
+
+		1.9.5
+		bug修复：
+			1. ExtendObject 修复子对象绑定BUG。
+
 		1.9.4
 		移除：
 			1. ExtendObject 移除绑定功能，使用单独的类来实现动态对象的绑定。
