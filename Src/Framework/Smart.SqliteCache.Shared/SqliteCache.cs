@@ -1,8 +1,8 @@
 ﻿using Smart.Core.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Threading.Tasks;
 
 namespace Smart.Core.Caching
 {
@@ -16,7 +16,7 @@ namespace Smart.Core.Caching
             database.KeepConnectionAlive = true;
         }
 
-        public T Get<T>(string key) where T : class
+        public object Get(string key)
         {
             #region 从数据库获取数据
 
@@ -60,48 +60,44 @@ namespace Smart.Core.Caching
 
             #endregion
 
-            return table.Rows[0]["_value"].ToString().JsonTo<T>();
+            return table.Rows[0]["_value"].ToString();
+        }
+
+        void ICache.Set(string key, CacheInfo cache)
+        {
+            var value = this.Get(key);
+            if (value != null)
+            {
+                this.Remove(key);
+            }
+            database.ExecuteScalar(
+               @"insert into cacheinfo (_key, _value, _created, _lastUpdateUsage, _slidingExpiration, _absoluteExpiration) 
+                                         values (@Key, @Value, @Created, @LastUpdateUsage, @SlidingExpiration, @AbsoluteExpiration)",
+               new SQLiteParameter("@Key", key),
+               new SQLiteParameter("@Value", cache.Value.ToJson()),
+               new SQLiteParameter("@Created", DateTime.Now),
+               new SQLiteParameter("@LastUpdateUsage", DateTime.Now),
+               new SQLiteParameter("@SlidingExpiration", cache.SlidingExpiration),
+               new SQLiteParameter("@AbsoluteExpiration", cache.SlidingExpiration)
+            );
         }
 
         public void Remove(string key)
         {
             var value = database.ExecuteNonQuery(
                 "delete from cacheinfo where _key=@key",
-                new SQLiteParameter("@key", DbType.String, key)
+                new SQLiteParameter("@key", key)
             );
         }
 
-        public void RemoveAll(Predicate<string> match)
+        public IEnumerable<string> GetAllKeys()
         {
-            if (match == null) return;
-            //database.KeepConnectionAlive = true;
             var tb = database.ExecuteQuery("select * from cacheinfo");
             foreach (DataRow item in tb.Rows)
             {
-                if (match(item["Key"].ToString()))
-                {
-                    this.Remove(item["Key"].ToString());
-                }
+                yield return item["Key"].ToString();
             }
-            //database.KeepConnectionAlive = false;
-            //database.CloseConnection();
         }
 
-        public T Set<T>(string key, CacheInfo<T> cache) where T : class
-        {
-            var value = this.Get<T>(key);
-            if (value != null)
-            {
-                this.Remove(key);
-            }
-            database.ExecuteScalar(
-               "insert into cacheinfo (_key,_value,_slidingExpiration,_lastTime) values (@Key,@Value,@SlidingExpiration,@LastTime)",
-               new SQLiteParameter("@Key", key),
-               new SQLiteParameter("@Value", cache.Value.ToJson()),
-               new SQLiteParameter("@SlidingExpiration", cache.SlidingExpiration.ToString()),
-               new SQLiteParameter("@LastTime", DateTime.Now.ToString())
-            );
-            return value;
-        }
     }
 }

@@ -15,6 +15,11 @@ namespace Smart.Core
         /// <summary>
         /// 
         /// </summary>
+        ~DisposableObject() { Dispose(false); }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
@@ -30,12 +35,5 @@ namespace Smart.Core
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        ~DisposableObject()
-        {
-            Dispose(false);
-        }
     }
 }

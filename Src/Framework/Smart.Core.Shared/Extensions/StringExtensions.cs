@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Smart.Core.Utilites;
-using Newtonsoft.Json;
 using System.Globalization;
 using System.Text;
 using System.IO;
 using System.IO.Compression;
 using System.ComponentModel;
+using Smart.Core.Utilites;
 
 namespace Smart.Core.Extensions
 {
@@ -15,6 +14,9 @@ namespace Smart.Core.Extensions
     /// </summary>
     public static class StringExtensions
     {
+        const string NUMBER_UPPER = "负空空零壹贰叁肆伍陆柒捌玖";
+        const string NUMBER_LOWER = "负空空〇一二三四五六七八九";
+
         #region 字符检查 Is
 
         /// <summary>检查字符串的值是否为null或空。</summary>
@@ -380,7 +382,28 @@ namespace Smart.Core.Extensions
         {
             return Regex.Replace(value, @"\d+", m =>
             {
-                return m.Value.AsInt().ToChinese().ToString();
+                string result = m.Length >= 4 ? m.Value.ToChineseByChar(false) : m.Value.AsInt().ToChinese().ToString();
+                //if (m.Value.StartsWith("0") && !m.Value.EndsWith("0")) result = '〇' + result;
+                return result;
+            });
+        }
+
+        /// <summary>
+        /// 将字符串中的数字转换为中文小写字符
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToChineseByChar(this string value, bool uppercase = true)
+        {
+            string strs = uppercase ? NUMBER_UPPER : NUMBER_LOWER;
+            return Regex.Replace(value, @"\d+", m =>
+            {
+                var result = new StringBuilder();
+                foreach (var item in m.Value)
+                {
+                    result.Append(strs[item - '-'].ToString());
+                }
+                return result.ToString();
             });
         }
 
@@ -482,7 +505,7 @@ namespace Smart.Core.Extensions
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public static T JsonDeserialize<T>(this string json)
         {
-            return JsonConvert.DeserializeObject<T>(json);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
         }
 
         /// <summary>
@@ -493,7 +516,7 @@ namespace Smart.Core.Extensions
         /// <returns></returns>
         public static T JsonTo<T>(this string json)
         {
-            return JsonConvert.DeserializeObject<T>(json);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
         }
 
         /// <summary>
@@ -504,7 +527,7 @@ namespace Smart.Core.Extensions
         /// <returns></returns>
         public static object JsonTo(this string json, Type type)
         {
-            return JsonConvert.DeserializeObject(json, type);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject(json, type);
         }
 
         /// <summary>

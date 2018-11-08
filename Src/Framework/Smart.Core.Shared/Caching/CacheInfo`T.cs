@@ -7,7 +7,7 @@ namespace Smart.Core.Caching
     /// 缓存对象信息
     /// </summary>
     /// <typeparam name="T">缓存数据类型</typeparam>
-    public class CacheInfo<T> where T : class
+    public class CacheInfo<T> : CacheInfo where T : class
     {
         /// <summary>
         /// 构造函数
@@ -29,19 +29,9 @@ namespace Smart.Core.Caching
         }
 
         /// <summary>
-        /// 获取缓存键值
-        /// </summary>
-        public string Key { get; internal set; }
-
-        /// <summary>
         /// 获取或设置缓存项
         /// </summary>
-        public T Value { get; set; }
-
-        /// <summary>
-        /// 获取或设置相对过期时间
-        /// </summary>
-        public TimeSpan SlidingExpiration { get; set; }
+        public new T Value { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using Smart.Core.Data;
+﻿using Newtonsoft.Json.Linq;
+using Smart.Core.Data;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -14,6 +15,7 @@ namespace Smart.Core.Extensions
     public static class ObjectExtensions
     {
         #region As
+
         /// <summary>将值转换为指定的数据类型的值。</summary>
         /// <typeparam name="TValue">转换的数据类型。</typeparam>
         /// <param name="value">要转换的值。</param>
@@ -35,12 +37,20 @@ namespace Smart.Core.Extensions
             {
                 var targetType = typeof(TValue);
                 var valueType = value.GetType();
-                // 类型相同
-                if (valueType == targetType)
+
+                if (targetType.IsAssignableFrom(valueType))
                 {
                     return (TValue)value;
                 }
-                if (targetType.IsEnum)
+                else if (value is JToken jtoken)
+                {
+                    return jtoken.Value<TValue>();
+                }
+                else if (valueType.IsEnum)
+                {
+                    return (TValue)value;
+                }
+                else if (targetType.IsEnum)
                 {
                     if (valueType == typeof(int))
                     {
@@ -58,6 +68,7 @@ namespace Smart.Core.Extensions
                     TValue result = (TValue)converter.ConvertFrom(value);
                     return result;
                 }
+
                 // 值是否可以转换为指定的类型
                 converter = TypeDescriptor.GetConverter(value.GetType());
                 if (converter.CanConvertTo(targetType))

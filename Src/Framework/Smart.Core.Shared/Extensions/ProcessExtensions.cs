@@ -81,5 +81,21 @@ namespace Smart.Core.Extensions
             }
             NativeMethods.SendMessage(handle, (int)NativeMethods.WindowsMessage.WM_COPYDATA, 0, ref data);
         }
+
+        /// <summary>
+        /// 释放进程内存
+        /// </summary>
+        /// <param name="process"></param>
+        public static void ReleaseMemory(this Process process)
+        {
+            try
+            {
+                if (process != null && !process.HasExited)
+                {
+                    NativeMethods.SetProcessWorkingSetSize(process.Handle, -1, -1);
+                }
+            }
+            catch (System.ComponentModel.Win32Exception) { }
+        }
     }
 }

@@ -22,16 +22,16 @@ namespace Smart.Core
         public static extern bool CloseHandle(int hObject);
 
         /// <summary>
-        /// 针对之前调用的api函数，用这个函数取得扩展错误信息
-        /// </summary>
-        [DllImport("Kernel32.dll")]
-        public static extern int GetLastError();
-
-        /// <summary>
         /// 获取当前线程一个唯一的线程标识符
         /// </summary>
         [DllImport("kernel32.dll")]
         public static extern int GetCurrentThreadId();
+
+        /// <summary>
+        /// 针对之前调用的api函数，用这个函数取得扩展错误信息
+        /// </summary>
+        [DllImport("Kernel32.dll")]
+        public static extern int GetLastError();
 
         /// <summary>
         /// 获取一个应用程序或动态链接库的模块句柄
@@ -39,6 +39,42 @@ namespace Smart.Core
         /// <param name="name">指定模块名，这通常是与模块的文件名相同的一个名字。例如，NOTEPAD.EXE程序的模块文件名就叫作NOTEPAD</param>
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetModuleHandle(string name);
+
+        /// <summary>
+        /// 获取System32文件夹的路径
+        /// </summary>
+        [DllImport("Kernel32.dll")]
+        public static extern long GetSystemDirectory(StringBuilder lpBuffer, int nSize);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cpuinfo"></param>
+        [DllImport("Kernel32.dll")]
+        public static extern void GetSystemInfo(ref CPUInfo cpuinfo);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stinfo"></param>
+        [DllImport("Kernel32.dll")]
+        public static extern void GetSystem(ref SystemTimeInfo stinfo);
+
+        /// <summary>
+        /// 获取Windows目录的完整路径名
+        /// </summary>
+        /// <param name="lpBuffer">指定一个字符串缓冲区，用于装载Windows目录名</param>
+        /// <param name="nSize">lpBuffer字符串的最大长度</param>
+        /// <returns>复制到lpBuffer的一个字符串的长度。如果lpBuffer不够大，不能容下整个字符串，就会返回lpbuffer要求的长度。零表地失败。会设置GetLastError</returns>
+        [DllImport("Kernel32.dll")]
+        public static extern long GetWindowsDirectory(StringBuilder lpBuffer, int nSize);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="meminfo"></param>
+        [DllImport("Kernel32.dll")]
+        public static extern void GlobalMemory(ref MemoryInfo meminfo);
 
         /// <summary>
         /// 用来打开一个已存在的进程对象，并返回进程的句柄
@@ -76,42 +112,6 @@ namespace Smart.Core
         public static extern Int32 WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, ref int lpBuffer, int nSize, ref int lpNumberOfByteRead);
 
         /// <summary>
-        /// 获取Windows目录的完整路径名
-        /// </summary>
-        /// <param name="lpBuffer">指定一个字符串缓冲区，用于装载Windows目录名</param>
-        /// <param name="nSize">lpBuffer字符串的最大长度</param>
-        /// <returns>复制到lpBuffer的一个字符串的长度。如果lpBuffer不够大，不能容下整个字符串，就会返回lpbuffer要求的长度。零表地失败。会设置GetLastError</returns>
-        [DllImport("Kernel32.dll")]
-        public static extern long GetWindowsDirectory(StringBuilder lpBuffer, int nSize);
-
-        /// <summary>
-        /// 获取System32文件夹的路径
-        /// </summary>
-        [DllImport("Kernel32.dll")]
-        public static extern long GetSystemDirectory(StringBuilder lpBuffer, int nSize);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cpuinfo"></param>
-        [DllImport("Kernel32.dll")]
-        public static extern void GetSystemInfo(ref CPUInfo cpuinfo);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="meminfo"></param>
-        [DllImport("Kernel32.dll")]
-        public static extern void GlobalMemory(ref MemoryInfo meminfo);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="stinfo"></param>
-        [DllImport("Kernel32.dll")]
-        public static extern void GetSystem(ref SystemTimeInfo stinfo);
-
-        /// <summary>
         /// 设置当前本地时间及日期。
         /// </summary>
         /// <param name="lpSystemTime"></param>
@@ -119,9 +119,20 @@ namespace Smart.Core
         [DllImport("Kernel32.dll")]
         public static extern bool SetLocalTime(ref SystemTimeInfo lpSystemTime);
 
+        /// <summary>
+        /// 设置操作系统实际划分给进程使用的内存容量
+        /// </summary>
+        /// <param name="handle">指定一个进程的句柄</param>
+        /// <param name="minimumWorkingSetSize">最小进程容量</param>
+        /// <param name="maximumWorkingSetSize">最大进程容量</param>
+        /// <returns>是否成功</returns>
+        [DllImport("kernel32.dll")]
+        public static extern bool SetProcessWorkingSetSize(IntPtr handle, int minimumWorkingSetSize, int maximumWorkingSetSize);
+
         #endregion
 
         #region shell32.dll
+
         /// <summary>
         /// 返回系统设置的图标
         /// </summary>
@@ -135,46 +146,10 @@ namespace Smart.Core
         /// <param name="uFlags">指明需要返回的文件信息标识符,请参见：enum SHGFI</param>
         [DllImport("shell32.dll")]
         public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref ShfileInfo psfi, int cbfileInfo, uint uFlags);
+
         #endregion
 
         #region user32.dll
-
-        /// <summary>
-        /// 获取焦点控件句柄
-        /// </summary>
-        /// <returns>
-        /// 函数执行成功时返回当前得到焦点控件的引用，发生错误时返回无效引用。
-        /// 用法应用程序利用IsValid()函数可以检测GetFocus()是否返回有效的控件引用。
-        /// 同时，使用TypeOf()函数可以确定控件的类型。
-        /// </returns>
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetFocus();
-
-        /// <summary>
-        /// 设置由不同线程产生的窗口的显示状态。
-        /// </summary>
-        /// <param name="hWnd">窗口句柄</param>
-        /// <param name="cmdShow">指定窗口如何显示。查看允许值列表，请查阅ShowWlndow函数的说明部分。</param>
-        /// <returns>如果函数原来可见，返回值为非零；如果函数原来被隐藏，返回值为零。</returns>
-        [DllImport("user32.dll")]
-        public static extern bool ShowWindowAsync(System.IntPtr hWnd, int cmdShow);
-
-        /// <summary>
-        /// 创建指定窗口的线程设置到前台，并且激活该窗口
-        /// </summary>
-        /// <param name="hWnd">窗口句柄</param>
-        /// <returns>如果窗口设入了前台，返回值为非零；如果窗口未被设入前台，返回值为零。</returns>
-        [DllImport("user32.dll")]
-        public static extern bool SetForegroundWindow(System.IntPtr hWnd);
-
-        /// <summary>
-        /// 返回hWnd参数所指定的窗口的设备环境，
-        /// 用完后一定要用ReleaseDC函数释放场景
-        /// </summary>
-        /// <param name="hWnd">窗口句柄</param>
-        /// <returns></returns>
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetWindowDC(IntPtr hWnd);
 
         /// <summary>
         /// 创建一个圆角矩形区域
@@ -223,6 +198,28 @@ namespace Smart.Core
         public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpClassName, string lpWindowName);
 
         #endregion
+
+        /// <summary>
+        /// 获取焦点控件句柄
+        /// </summary>
+        /// <returns>
+        /// 函数执行成功时返回当前得到焦点控件的引用，发生错误时返回无效引用。
+        /// 用法应用程序利用IsValid()函数可以检测GetFocus()是否返回有效的控件引用。
+        /// 同时，使用TypeOf()函数可以确定控件的类型。
+        /// </returns>
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetFocus();
+
+        /// <summary>
+        /// 返回hWnd参数所指定的窗口的设备环境，
+        /// 用完后一定要用ReleaseDC函数释放场景
+        /// </summary>
+        /// <param name="hWnd">窗口句柄</param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetWindowDC(IntPtr hWnd);
+
+        
 
         /// <summary>
         /// <para>该函数获取窗口客户区的坐标。</para>
@@ -343,6 +340,23 @@ namespace Smart.Core
         /// </summary>
         [DllImport("user32.dll")]
         public static extern int ReleaseCapture();
+
+        /// <summary>
+        /// 创建指定窗口的线程设置到前台，并且激活该窗口
+        /// </summary>
+        /// <param name="hWnd">窗口句柄</param>
+        /// <returns>如果窗口设入了前台，返回值为非零；如果窗口未被设入前台，返回值为零。</returns>
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(System.IntPtr hWnd);
+
+        /// <summary>
+        /// 设置由不同线程产生的窗口的显示状态。
+        /// </summary>
+        /// <param name="hWnd">窗口句柄</param>
+        /// <param name="cmdShow">指定窗口如何显示。查看允许值列表，请查阅ShowWlndow函数的说明部分。</param>
+        /// <returns>如果函数原来可见，返回值为非零；如果函数原来被隐藏，返回值为零。</returns>
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindowAsync(System.IntPtr hWnd, int cmdShow);
 
         #region SendMessage
 
@@ -475,7 +489,7 @@ namespace Smart.Core
         [DllImport("user32.dll", EntryPoint = "WindowFromPoint")]
         public static extern IntPtr WindowFromPoint(Point Point);
 
-        #region hook
+        #region Hook
         /// <summary>
         ///     <para>该函数将一个应用程序定义的挂钩处理过程安装到挂钩链中去,您可以</para>
         ///     <para>通过安装挂钩处理过程来对系统的某些类型事件进行监控,这些事件与</para>
@@ -521,6 +535,129 @@ namespace Smart.Core
         /// <returns></returns>
         [DllImport("user32.dll")]
         public static extern int CallNextHookEx(int idHook, int nCode, int wParam, IntPtr lParam);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nCode"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
+        public delegate int HookProc(int nCode, int wParam, IntPtr lParam);
+
+        /// <summary>
+        /// 键盘钩子
+        /// </summary>
+        public class KeyHook
+        {
+            #region 变量
+
+            private static int hHook = 0;
+            private HookProc KeyBoardHookProcedure;
+            #endregion
+
+            #region 事件
+            /// <summary>
+            /// 当按下键盘按键时发生
+            /// </summary>
+            public event KeyEventHandler KeyDownEvent;
+            /// <summary>
+            /// 当抬起键盘按键时发生
+            /// </summary>
+            public event KeyEventHandler keyUpEvent;
+            #endregion
+
+            #region 激发事件的参数
+            /// <summary>
+            /// 激发KeyDownEvent事件
+            /// </summary>
+            /// <param name="sender">事件源</param>
+            /// <param name="e">包含事件数据的 System.Windows.Forms.KeyEventArgs</param>
+            public void OnKeyDownEvent(object sender, KeyEventArgs e)
+            {
+                if (this.KeyDownEvent != null)
+                {
+                    this.KeyDownEvent(sender, e);
+                }
+            }
+
+            /// <summary>
+            /// 激发KeyUpEvent事件
+            /// </summary>
+            /// <param name="sender">事件源</param>
+            /// <param name="e">包含事件数据的 System.Windows.Forms.KeyEventArgs</param>
+            public void OnKeyUpEvent(object sender, KeyEventArgs e)
+            {
+                if (this.keyUpEvent != null)
+                {
+                    this.keyUpEvent(sender, e);
+                }
+            }
+            #endregion
+
+            #region 方法
+            /// <summary>
+            /// 安装键盘钩子
+            /// </summary>
+            public void Install_Hook()
+            {
+                if (hHook == 0)
+                {
+                    KeyBoardHookProcedure = new HookProc(KeyBoardHookProc);
+                    hHook = SetWindowsHookEx(
+                        HookType.WH_KeyBorard_LL,
+                        KeyBoardHookProcedure,
+                        GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName),
+                        0);
+
+                    //如果设置钩子失败
+                    if (hHook == 0)
+                        Uninstall_Hook();
+                }
+
+            }
+
+            /// <summary>
+            /// 卸载键盘钩子
+            /// </summary>
+            public void Uninstall_Hook()
+            {
+                if (hHook != 0)
+                {
+                    int result = UnhookWindowsHookEx(hHook);
+                    hHook = 0;
+                    if (result == 0)
+                    {
+                        int errorCode = Marshal.GetLastWin32Error();
+                        throw new Win32Exception("KeyHook.Uninstall_Hook()->" + GetLastErrorString(errorCode));
+                    }
+                }
+            }
+
+            private int KeyBoardHookProc(int nCode, int wParam, IntPtr lParam)
+            {
+                if (nCode >= 0)
+                {
+                    var kbh = (KeyBoardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyBoardHookStruct));
+                    var key = (System.Windows.Forms.Keys)Enum.Parse(typeof(Keys), kbh.vkCode.ToString());
+                    if (kbh.flags == 0)
+                    {
+                        //这里写按下后做什么
+                        KeyEventArgs e = new KeyEventArgs(key);
+                        this.OnKeyDownEvent(this, e);
+                    }
+                    else if (kbh.flags == 128)
+                    {
+                        //放开后做什么
+                        KeyEventArgs e = new KeyEventArgs(key);
+                        this.OnKeyUpEvent(this, e);
+                    }
+                    return 1;
+                }
+                return CallNextHookEx(hHook, nCode, wParam, lParam);
+            }
+            #endregion
+        }
 
         #endregion
 
@@ -2993,131 +3130,6 @@ namespace Smart.Core
                 case 11031: return "在 QOS 提供程序特定缓冲区中发现一个保留的策略因素";
             }
             return "错误编号：" + code;
-        }
-        #endregion
-
-        #region Hook
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="nCode"></param>
-        /// <param name="wParam"></param>
-        /// <param name="lParam"></param>
-        /// <returns></returns>
-        public delegate int HookProc(int nCode, int wParam, IntPtr lParam);
-
-        /// <summary>
-        /// 键盘钩子
-        /// </summary>
-        public class KeyHook
-        {
-            #region 变量
-
-            private static int hHook = 0;
-            private HookProc KeyBoardHookProcedure;
-            #endregion
-
-            #region 事件
-            /// <summary>
-            /// 当按下键盘按键时发生
-            /// </summary>
-            public event KeyEventHandler KeyDownEvent;
-            /// <summary>
-            /// 当抬起键盘按键时发生
-            /// </summary>
-            public event KeyEventHandler keyUpEvent;
-            #endregion
-
-            #region 激发事件的参数
-            /// <summary>
-            /// 激发KeyDownEvent事件
-            /// </summary>
-            /// <param name="sender">事件源</param>
-            /// <param name="e">包含事件数据的 System.Windows.Forms.KeyEventArgs</param>
-            public void OnKeyDownEvent(object sender, KeyEventArgs e)
-            {
-                if (this.KeyDownEvent != null)
-                {
-                    this.KeyDownEvent(sender, e);
-                }
-            }
-
-            /// <summary>
-            /// 激发KeyUpEvent事件
-            /// </summary>
-            /// <param name="sender">事件源</param>
-            /// <param name="e">包含事件数据的 System.Windows.Forms.KeyEventArgs</param>
-            public void OnKeyUpEvent(object sender, KeyEventArgs e)
-            {
-                if (this.keyUpEvent != null)
-                {
-                    this.keyUpEvent(sender, e);
-                }
-            }
-            #endregion
-
-            #region 方法
-            /// <summary>
-            /// 安装键盘钩子
-            /// </summary>
-            public void Install_Hook()
-            {
-                if (hHook == 0)
-                {
-                    KeyBoardHookProcedure = new HookProc(KeyBoardHookProc);
-                    hHook = SetWindowsHookEx(
-                        HookType.WH_KeyBorard_LL,
-                        KeyBoardHookProcedure,
-                        GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName),
-                        0);
-
-                    //如果设置钩子失败
-                    if (hHook == 0)
-                        Uninstall_Hook();
-                }
-
-            }
-
-            /// <summary>
-            /// 卸载键盘钩子
-            /// </summary>
-            public void Uninstall_Hook()
-            {
-                if (hHook != 0)
-                {
-                    int result = UnhookWindowsHookEx(hHook);
-                    hHook = 0;
-                    if (result == 0)
-                    {
-                        int errorCode = Marshal.GetLastWin32Error();
-                        throw new Win32Exception("KeyHook.Uninstall_Hook()->" + GetLastErrorString(errorCode));
-                    }
-                }
-            }
-
-            private int KeyBoardHookProc(int nCode, int wParam, IntPtr lParam)
-            {
-                if (nCode >= 0)
-                {
-                    var kbh = (KeyBoardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyBoardHookStruct));
-                    var key = (System.Windows.Forms.Keys)Enum.Parse(typeof(Keys), kbh.vkCode.ToString());
-                    if (kbh.flags == 0)
-                    {
-                        //这里写按下后做什么
-                        KeyEventArgs e = new KeyEventArgs(key);
-                        this.OnKeyDownEvent(this, e);
-                    }
-                    else if (kbh.flags == 128)
-                    {
-                        //放开后做什么
-                        KeyEventArgs e = new KeyEventArgs(key);
-                        this.OnKeyUpEvent(this, e);
-                    }
-                    return 1;
-                }
-                return CallNextHookEx(hHook, nCode, wParam, lParam);
-            }
-            #endregion
         }
         #endregion
 

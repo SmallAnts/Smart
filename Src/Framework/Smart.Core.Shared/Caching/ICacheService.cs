@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace Smart.Core.Caching
 {
-    [ServiceContract(Namespace = "http://schemas.smartants.com/cache")]
+    [ServiceContract(Namespace = "http://www.smartants.com/cache")]
     public interface ICacheService
     {
         [OperationContract]
@@ -16,6 +17,6 @@ namespace Smart.Core.Caching
         void Remove(string key);
 
         [OperationContract]
-        void RemoveAll(Predicate<string> match);
+        IEnumerable<string> GetAllKeys();
     }
 }

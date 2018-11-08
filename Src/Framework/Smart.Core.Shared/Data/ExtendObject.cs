@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using Smart.Core.Extensions;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
-using Smart.Core.Extensions;
+using System.Reflection;
+using System.Linq;
 
 namespace Smart.Core.Data
 {
@@ -13,226 +14,259 @@ namespace Smart.Core.Data
     /// </summary>
     public class ExtendObject : DynamicObject, INotifyPropertyChanged
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        internal protected Dictionary<string, Binding> bindings { get; } = new Dictionary<string, Binding>();
+        protected internal Dictionary<string, object> properties = new Dictionary<string, object>();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal protected Dictionary<string, object> properties = new Dictionary<string, object>();
-
-        #region 属性修改通知 INotifyPropertyChanged
-
-        /// <summary>
-        /// 
-        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
+
+        /// <summary>
+        /// 属性名称，子属性用“.”号隔开（子对象必须实现一个字符串参数的索引）
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public dynamic this[string propertyName]
         {
-            if (this.bindings.TryGetValue(propertyName, out Binding bind))
+            get
             {
-                bind.ReadValue();
+                if (propertyName == null) return null;
+                if (propertyName.IndexOf('.') > 0)
+                {
+                    var names = propertyName.Split('.');
+                    var member = names[0];
+                    if (this.properties.TryGetValue(member, out dynamic value))
+                    {
+                        for (int i = 1; i < names.Length; i++)
+                        {
+                            member = names[i];
+                            value = value?[member];
+                        }
+                    }
+                    return value;
+                }
+                else
+                {
+                    this.properties.TryGetValue(propertyName, out object value);
+                    return value;
+                }
             }
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        protected virtual void RaisePropertyChanged(string propertyName)
-        {
-            OnPropertyChanged(propertyName);
-        }
+            set
+            {
+                if (propertyName.IndexOf('.') > 0)
+                {
+                    var names = propertyName.Split('.');
+                    var member = names[0];
+                    if (this.properties.TryGetValue(member, out dynamic data))
+                    {
+                        for (int i = 1; i < names.Length; i++)
+                        {
+                            if (data == null) break;
 
-        #endregion
-
-        #region 构造函数
+                            member = names[i];
+                            if (i == names.Length - 1)
+                            {
+                                if (value is JObject jobj)
+                                {
+                                    jobj[member] = new JValue(value);
+                                }
+                                else
+                                {
+                                    data[member] = value;
+                                }
+                            }
+                            else
+                            {
+                                data = data[member];
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    this.SetMember(propertyName, value);
+                }
+            }
+        }
 
         public ExtendObject()
         {
-
         }
-
+        public ExtendObject(string json)
+        {
+            this.LoadJSON(json);
+        }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="obj"></param>
         public ExtendObject(ExtendObject obj)
         {
-            this.bindings = obj.bindings;
-            this.properties = obj.properties;
-        }
-
-        #endregion
-
-        #region 索引
-
-        /// <summary>
-        /// 索引属性值
-        /// </summary>
-        /// <param name="propertyName">属性名</param>
-        /// <returns></returns>
-        public object this[string propertyName]
-        {
-            get
+            foreach (var item in obj.properties)
             {
-                this.properties.TryGetValue(propertyName, out object value);
-                return value;
-            }
-            set
-            {
-                this.SetMember(propertyName, value);
+                this.SetMember(item.Key, item.Value);
             }
         }
-
-        #endregion
-
-        #region 公共方法
-
-        /// <summary>
-        /// 添加属性，如果属性名已经存在则忽略该操作
-        /// </summary>
-        /// <typeparam name="T">属性类型</typeparam>
-        /// <param name="propertyName">属性名</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public void AddProperty<T>(string propertyName, T defaultValue = default(T))
+        public ExtendObject(ExpandoObject obj)
         {
-            if (!this.properties.ContainsKey(propertyName))
+            foreach (KeyValuePair<string, object> current in obj)
             {
-                this.properties[propertyName] = defaultValue;
+                this[current.Key] = current.Value;
             }
         }
-
         /// <summary>
-        /// 控件数据绑定
+        /// 使用新的对象替换或新增属性
         /// </summary>
-        /// <param name="dataMember">当前对象的属性名</param>
-        /// <param name="control">控件</param>
-        /// <param name="propertyName">控件绑定值的属性名，不支持 object 类型属性</param>
-        /// <param name="dataSourceUpdateMode">数据源更新模式</param>
-        public void DataBind(string dataMember, Control control,
-            string propertyName = "Text",
-            DataSourceUpdateMode dataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged)
+        /// <param name="obj"></param>
+        public void Extend(object obj)
         {
-            this.bindings.TryGetValue(dataMember, out Binding bind);
-            if (bind == null)
-            {
-                bind = AddBinding(dataMember, propertyName, dataSourceUpdateMode);
-            }
-            control.DataBindings.Add(bind);
+            this.LoadJSON(obj.ToJson(), false);
         }
 
-        /// <summary>
-        /// 加载JSON数据
-        /// </summary>
-        /// <param name="json"></param>
-        public void LoadJSON(string json)
+        public void LoadJSON(string json, bool clear = true)
         {
+            if (clear)
+            {
+                this.Clear();
+            }
+
             if (json.IsEmpty()) return;
 
-            this.properties = json.JsonTo<Dictionary<string, object>>();
-            foreach (var item in properties)
+            var ps = json.JsonTo<Dictionary<string, object>>();
+            foreach (KeyValuePair<string, object> current in ps)
             {
-                this.RaisePropertyChanged(item.Key);
+                if (!clear && this.properties.TryGetValue(current.Key, out object oldValue))
+                {
+                    if (oldValue is INotifyPropertyChanged npc)
+                    {
+                        UnbindPropertyChangedEvent(npc);
+                    }
+                }
+                this.SetMember(current.Key, current.Value);
             }
         }
 
-        #endregion
-
-        #region 重写基类方法
-
-        public override DynamicMetaObject GetMetaObject(Expression parameter)
+        public void RaisePropertyChanged(string propertyName)
         {
-            return base.GetMetaObject(parameter);
+            this.OnPropertyChanged(propertyName);
+        }
+        protected virtual void SetMember(string propertyName, object value)
+        {
+            bool hasValue = this.properties.TryGetValue(propertyName, out object oldValue);
+            if (hasValue && oldValue is INotifyPropertyChanged npc)
+            {
+                UnbindPropertyChangedEvent(npc);
+            }
+            bool isNotEqual = oldValue == null && value != null || oldValue != null && !oldValue.Equals(value);
+            if (!hasValue || isNotEqual)
+            {
+                this.properties[propertyName] = value;
+                this.OnPropertyChanged(propertyName);
+                BindPropertyChangedEvent(value, propertyName);
+            }
+        }
+
+        private void Clear()
+        {
+            var names = this.GetDynamicMemberNames().ToArray();
+            foreach (var item in names)
+            {
+                if (this.properties[item] is INotifyPropertyChanged npc)
+                {
+                    UnbindPropertyChangedEvent(npc);
+                }
+                this.properties[item] = null;
+                this.OnPropertyChanged(item);
+            }
+            this.properties.Clear();
+        }
+
+        private void UnbindPropertyChangedEvent(INotifyPropertyChanged obj)
+        {
+            if (obj == null) return;
+
+            string eventName = "PropertyChanged";
+            var ei = obj.GetType().GetEvent(eventName);
+            if (ei == null) return;
+
+            var fi = ei.DeclaringType.GetField(eventName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (fi == null) return;
+
+            fi.SetValue(obj, null);
+        }
+        private void BindPropertyChangedEvent(object obj, string parentName)
+        {
+            if (obj == null) return;
+            var objType = obj.GetType();
+            if (!objType.IsValueType
+                && objType != typeof(string)
+                && objType != typeof(Enum)
+                && objType != typeof(JToken)
+                && objType != typeof(JValue)
+                && objType != typeof(DynamicObject)
+                && objType != typeof(ExpandoObject)
+                && objType != typeof(ExtendObject)
+                && !(objType.IsGenericType && objType.GetGenericTypeDefinition() == typeof(Nullable<>)))
+            {
+                if (obj is INotifyPropertyChanged npc)
+                {
+                    npc.PropertyChanged += (s, e) =>
+                    {
+                        this.OnPropertyChanged(parentName + "." + e.PropertyName);
+                    };
+                }
+                if (obj is JObject jobj)
+                {
+                    foreach (var item in jobj)
+                    {
+                        BindPropertyChangedEvent(item.Value, parentName + "." + item.Key);
+                    }
+                }
+                else
+                {
+                    var pis = objType.GetProperties();
+                    foreach (var pi in pis)
+                    {
+                        var propValue = pi.GetValue(obj, null);
+                        BindPropertyChangedEvent(propValue, parentName + "." + pi.Name);
+                    }
+                }
+            }
+        }
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             return this.properties.Keys;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="binder"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             return this.properties.TryGetValue(binder.Name, out result);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="binder"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            this.SetMember(binder.Name, value);
-            return true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="binder"></param>
-        /// <returns></returns>
-        public override bool TryDeleteMember(DeleteMemberBinder binder)
-        {
-            if (this.properties.ContainsKey(binder.Name))
+            try
             {
-                this.properties.Remove(binder.Name);
-                this.bindings.Remove(binder.Name);
+                this.SetMember(binder.Name, value);
                 return true;
             }
-            return false;
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("ExtendObject.TrySetMember Error:" + ex.Message);
+                return false;
+            }
         }
-
+        public override bool TryDeleteMember(DeleteMemberBinder binder)
+        {
+            return this.properties.Remove(binder.Name);
+        }
         public override string ToString()
         {
             return this.properties.ToJson();
         }
-
-        #endregion
-
-        /// <summary>
-        /// 属性负值
-        /// </summary>
-        /// <param name="propertyName">属性名</param>
-        /// <param name="value">值</param>
-        protected virtual void SetMember(string propertyName, object value)
+        public string ToString(Newtonsoft.Json.Formatting formatting)
         {
-            var result = this.properties.TryGetValue(propertyName, out object oldValue);
-            if (!result || oldValue != null && !oldValue.Equals(value) || oldValue == null && value != null)
-            {
-                this.properties[propertyName] = value;
-                this.RaisePropertyChanged(propertyName);
-            }
+            return this.properties.ToJson(formatting);
         }
-
-        /// <summary>
-        /// 添加数据绑定对象
-        /// </summary>
-        /// <param name="dataMember">数据源对象的属性名</param>
-        /// <param name="propertyName">控件绑定数据的属性名</param>
-        /// <param name="dataSourceUpdateMode">数据源更新模式</param>
-        /// <returns>数据绑定对象</returns>
-        protected virtual Binding AddBinding(
-            string dataMember,
-            string propertyName,
-            DataSourceUpdateMode dataSourceUpdateMode)
-        {
-            var bind = new Binding(propertyName, this, null, false, dataSourceUpdateMode);
-            bind.Format += (o, c) =>
-            {
-                c.Value = this[dataMember];
-            };
-            bind.Parse += (o, c) =>
-            {
-                this[dataMember] = c.Value;
-            };
-            this.bindings.Add(dataMember, bind);
-            return bind;
-        }
-
     }
 }

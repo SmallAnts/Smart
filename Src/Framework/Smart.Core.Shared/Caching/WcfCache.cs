@@ -2,6 +2,7 @@
 using Smart.Core.Utilites;
 using Smart.Core.WCF;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace Smart.Core.Caching
@@ -28,10 +29,14 @@ namespace Smart.Core.Caching
             }
         }
 
-        public T Get<T>(string key) where T : class
+        public object Get(string key)
         {
             string cacheValue = this.cacheService.Get(key);
-            return cacheValue == null ? default(T) : cacheValue.JsonTo<T>();
+            return cacheValue;
+        }
+        void ICache.Set(string key, CacheInfo cache)
+        {
+            this.cacheService.Set(key, cache.Value.ToJson(), cache.SlidingExpiration);
         }
 
         public void Remove(string key)
@@ -39,15 +44,9 @@ namespace Smart.Core.Caching
             this.cacheService.Remove(key);
         }
 
-        public void RemoveAll(Predicate<string> match)
+        public IEnumerable<string> GetAllKeys()
         {
-            this.cacheService.RemoveAll(match);
-        }
-
-        public T Set<T>(string key, CacheInfo<T> cache) where T : class
-        {
-            this.cacheService.Set(key, cache.Value.ToJson(), cache.SlidingExpiration);
-            return cache.Value;
+            return this.cacheService.GetAllKeys();
         }
 
     }

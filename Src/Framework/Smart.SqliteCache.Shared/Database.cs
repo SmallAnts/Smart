@@ -27,11 +27,13 @@ namespace Smart.Core.Caching
                 SQLiteConnection.CreateFile(cacheDbName);
 
                 string createTb = @"
-CREATE TABLE cacheinfo(
+CREATE TABLE cacheinfo (
    _key TEXT PRIMARY KEY NOT NULL,
    _value TEXT NOT NULL,
-   _lastTime TEXT NOT NULL,
-   _slidingExpiration TEXT NOT NULL
+   _created TEXT NOT NULL,
+   _lastUpdateUsage TEXT NULL,
+   _absoluteExpiration TEXT NULL,
+   _slidingExpiration TEXT NULL
 );";
                 ExecuteNonQuery(createTb);
             }

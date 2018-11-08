@@ -9,6 +9,10 @@
     <Import_RootNamespace>Smart.Core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\CacheInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\CacheManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\CacheMetadata.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caching\CachingLevel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\DefaultCacheService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\ICacheService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\MemoryCache.cs" />
@@ -19,7 +23,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\NumberTypeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\BaseItem`T.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Caching\CacheInfo`T.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\HttpCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caching\ICache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\SmartConfig.cs" />

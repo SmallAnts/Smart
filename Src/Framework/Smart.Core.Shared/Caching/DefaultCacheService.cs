@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Smart.Core.Extensions;
 
 namespace Smart.Core.Caching
 {
@@ -16,7 +18,12 @@ namespace Smart.Core.Caching
 
         public string Get(string key)
         {
-            return this.cacheManager.Get<string>(key);
+            return this.cacheManager.Get(key).AsString();
+        }
+
+        public void Set(string key, string value, TimeSpan slidingExpiration)
+        {
+            this.cacheManager.Set(key, new CacheInfo(key, value, slidingExpiration));
         }
 
         public void Remove(string key)
@@ -24,14 +31,10 @@ namespace Smart.Core.Caching
             this.cacheManager.Remove(key);
         }
 
-        public void RemoveAll(Predicate<string> match)
+        public IEnumerable<string> GetAllKeys()
         {
-            this.cacheManager.RemoveAll(match);
+            return this.cacheManager.GetAllKeys();
         }
 
-        public void Set(string key, string cache, TimeSpan slidingExpiration)
-        {
-            this.cacheManager.Set<string>(key, new CacheInfo<string>(slidingExpiration, cache));
-        }
     }
 }

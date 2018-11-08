@@ -1,5 +1,13 @@
 ﻿﻿		
+		1.9.9
+		修改：
+			1. ExtendObject 新增Extend 方法。
+			2. ExtendObject 支持通过索引获取或设置子对象属性。
 
+		1.9.8
+		bug修复：
+			1. ExtendObject 修复子对象绑定BUG。
+			
 		1.9.6
 		bug修复：
 			1. 恢复 ExtendObject  被删除的构造函数 public ExtendObject(ExtendObject obj)。

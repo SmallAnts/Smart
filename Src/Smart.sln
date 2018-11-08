@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NET40", "NET40", "{CB297CCD-B129-4933-B20C-8A95653A0371}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".NETFramework 4.0", ".NETFramework 4.0", "{CB297CCD-B129-4933-B20C-8A95653A0371}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Smart.Core.Shared", "Framework\Smart.Core.Shared\Smart.Core.Shared.shproj", "{3E82282B-92E0-4B08-A6F5-106BF4401E4A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NET45", "NET45", "{B80EF91F-1626-4BA6-BBDA-3CA46B81A450}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".NETFramework 4.5", ".NETFramework 4.5", "{B80EF91F-1626-4BA6-BBDA-3CA46B81A450}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Smart.Shared", "Smart.Shared", "{9D784D80-1780-47BC-901A-CB1FC8AA3D3A}"
 EndProject
