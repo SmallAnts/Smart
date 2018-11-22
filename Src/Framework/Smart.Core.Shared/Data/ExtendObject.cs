@@ -54,16 +54,23 @@ namespace Smart.Core.Data
                 {
                     var names = propertyName.Split('.');
                     var member = names[0];
+                    bool bindFlag = false;
                     if (!this.properties.TryGetValue(member, out dynamic data) || data == null)
                     {
+                        bindFlag = true;
                         data = new JObject();
-                        this.SetMember(member, data);
+                        this.properties[member] = data;
+                        //this.SetMember(member, data);
                     }
                     for (int i = 1; i < names.Length; i++)
                     {
                         member = names[i];
                         if (i == names.Length - 1)
                         {
+                            if (bindFlag)
+                            {
+                                BindPropertyChangedEvent(this.properties[names[0]], names[0]);
+                            }
                             if (data is JObject jobj)
                             {
                                 jobj[member] = new JValue(value);
