@@ -54,28 +54,34 @@ namespace Smart.Core.Data
                 {
                     var names = propertyName.Split('.');
                     var member = names[0];
-                    if (this.properties.TryGetValue(member, out dynamic data))
+                    if (!this.properties.TryGetValue(member, out dynamic data) || data == null)
                     {
-                        for (int i = 1; i < names.Length; i++)
+                        data = new JObject();
+                        this.SetMember(member, data);
+                    }
+                    for (int i = 1; i < names.Length; i++)
+                    {
+                        member = names[i];
+                        if (i == names.Length - 1)
                         {
-                            if (data == null) break;
-
-                            member = names[i];
-                            if (i == names.Length - 1)
+                            if (data is JObject jobj)
                             {
-                                if (value is JObject jobj)
-                                {
-                                    jobj[member] = new JValue(value);
-                                }
-                                else
-                                {
-                                    data[member] = value;
-                                }
+                                jobj[member] = new JValue(value);
                             }
                             else
                             {
-                                data = data[member];
+                                data[member] = value;
                             }
+                        }
+                        else
+                        {
+                            var temp = data[member];
+                            if (temp == null)
+                            {
+                                temp = new JObject();
+                                data[member] = temp;
+                            }
+                            data = temp;
                         }
                     }
                 }
